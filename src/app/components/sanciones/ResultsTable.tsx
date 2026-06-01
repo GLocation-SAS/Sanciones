@@ -1051,7 +1051,6 @@ export function ResultsTable({
               <div className="flex items-center justify-between">
                 <h3
                   className="text-primary"
-                  style={headingBoldItalic}
                   style={{
                     ...headingBoldItalic,
                     fontSize: "var(--text-xl)",
