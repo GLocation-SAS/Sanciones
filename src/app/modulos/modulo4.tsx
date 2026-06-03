@@ -528,7 +528,12 @@ export const modulo4Config: ModuleConfig = {
       fechaLimiteAlegatos: "25/May/2025",
       presentoAlegatos: "Sí",
       estadoTerminoAlegatos: "A tiempo",
+      fechaPresentacionAlegatos: "21/May/2025",
       fechaRadicacionAlegatos: "22/May/2025",
+      pruebasAlegatos: [
+        { id: "al1-1", descripcion: "Estados financieros certificados", tipo: "Documental", documento: { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" } }
+      ],
+      documentosAlegatos: { archivos: [{ nombre: "Alegato_RAD-AL-001.pdf", tamano: "3.2 MB", tipo: "pdf" }, { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" }] },
       documentos: { archivos: [{ nombre: "Alegato_RAD-AL-001.pdf", tamano: "3.2 MB", tipo: "pdf" }, { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" }] }
     },
     {
@@ -571,7 +576,10 @@ export const modulo4Config: ModuleConfig = {
       fechaLimiteAlegatos: "02/Jun/2025",
       presentoAlegatos: "No",
       estadoTerminoAlegatos: "Sin alegatos",
+      fechaPresentacionAlegatos: "N/A",
       fechaRadicacionAlegatos: "N/A",
+      pruebasAlegatos: [],
+      documentosAlegatos: { archivos: [{ nombre: "Constancia_no_presentacion.pdf", tamano: "720 KB", tipo: "pdf" }] },
       documentos: { archivos: [{ nombre: "Constancia_no_presentacion.pdf", tamano: "720 KB", tipo: "pdf" }] }
     },
     {
