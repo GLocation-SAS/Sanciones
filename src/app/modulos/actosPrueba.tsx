@@ -30,7 +30,7 @@ export const modulo3Config: ModuleConfig = {
     {
       id: "pruebas",
       label: "Descargos y solicitud de pruebas",
-      columns: ["operador", "bdi", "anio", "pliego", "fechaEfectivaNotificacion", "fechaLimite", "descargos", "estadoTermino", "fechaPresentacion", "fechaRadicacion", "documentos"]
+      columns: ["operador", "bdi", "fechaLimite", "presentoDescargos", "estadoTermino", "fechaPresentacion", "fechaRadicacion", "pruebasAsociadas", "acciones"]
     },
     {
       id: "comunicacion-pruebas",
@@ -375,6 +375,24 @@ export const modulo3Config: ModuleConfig = {
         );
       }
     },
+    {
+      key: "pruebasAsociadas",
+      header: "Pruebas asociadas",
+      headerTooltip: "Número y detalle de las pruebas anexadas o solicitadas por el operador en el escrito de descargos.",
+      expandable: true,
+      render: (val: any, row: Record<string, any>) => {
+        const pruebas = row.pruebas || [];
+        const count = pruebas.length;
+        if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>Sin pruebas</span>;
+        return (
+          <div className="inline-flex justify-center w-[120px] items-center gap-1.5 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <Paperclip className="w-3.5 h-3.5" />
+            {count} {count === 1 ? 'prueba' : 'pruebas'}
+          </div>
+        );
+      }
+    },
+
   ],
   mockData: [
     {

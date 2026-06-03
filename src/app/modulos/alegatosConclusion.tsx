@@ -26,7 +26,7 @@ export const modulo4Config: ModuleConfig = {
     {
       id: "descargos",
       label: "Descargos y solicitud de pruebas",
-      columns: ["operador", "bdi", "fechaLimite", "descargos", "estadoTermino", "fechaPresentacion", "fechaRadicacion", "pruebasAsociadas", "documentosDescargos", "acciones"]
+      columns: ["operador", "bdi", "fechaLimite", "descargos", "estadoTermino", "fechaPresentacion", "fechaRadicacion", "pruebasAsociadas", "acciones"]
     },
     {
       id: "comunicacion-pruebas",
@@ -489,7 +489,7 @@ export const modulo4Config: ModuleConfig = {
           </div>
         );
       }
-    },
+    }
   ],
   mockData: [
     {
