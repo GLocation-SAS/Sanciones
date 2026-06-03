@@ -1,5 +1,5 @@
 import React from "react";
-import { FileSearch, Search, Download, FileText, Brain, CheckCircle2, XCircle, XOctagon, Clock, HelpCircle, User, Folder, Database } from "lucide-react";
+import { FileSearch, Search, Download, FileText, Brain, CheckCircle2, XCircle, XOctagon, Clock, HelpCircle, User, Folder, Database, ChevronRight } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import { ModuleConfig, bodyXs, StatusBadge } from "../shared";
 
@@ -76,7 +76,19 @@ export const modulo2Config: ModuleConfig = {
     {
       key: "hallazgosSER",
       header: "Hallazgos",
-      headerTooltip: "Resultados del análisis técnico del Sistema de Evaluación de Resultados (SER). Despliegue para ver los trimestres."
+      headerTooltip: "Resultados del análisis técnico del Sistema de Evaluación de Resultados (SER). Haga clic para desplegar el detalle por trimestre.",
+      expandable: true,
+      render: (val: any) => {
+        if (!val || !val.trimestres) return <span style={{ fontSize: "0.75rem", fontFamily: "var(--font-body)" }}>Sin hallazgos</span>;
+        const totalTrimestres = val.trimestres.length;
+        const totalCargos = val.trimestres.reduce((sum: number, trim: any) => sum + (trim.cargos?.length || 0), 0);
+        return (
+          <div className="inline-flex justify-center w-[140px] items-center gap-1.5 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <ChevronRight className="w-3.5 h-3.5" />
+            {totalTrimestres} trim., {totalCargos} cargo{totalCargos !== 1 ? "s" : ""}
+          </div>
+        );
+      }
     },
 
     

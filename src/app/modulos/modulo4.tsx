@@ -626,7 +626,13 @@ export const modulo4Config: ModuleConfig = {
       fechaLimiteAlegatos: "07/Jul/2025",
       presentoAlegatos: "Sí",
       estadoTerminoAlegatos: "A tiempo",
+      fechaPresentacionAlegatos: "03/Jul/2025",
       fechaRadicacionAlegatos: "04/Jul/2025",
+      pruebasAlegatos: [
+        { id: "al3-1", descripcion: "Concepto jurídico externo", tipo: "Documental", documento: { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" } },
+        { id: "al3-2", descripcion: "Marco normativo vigente", tipo: "Documental", documento: { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" } }
+      ],
+      documentosAlegatos: { archivos: [{ nombre: "Alegato_RAD-AL-003.pdf", tamano: "3.8 MB", tipo: "pdf" }, { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" }, { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" }] },
       documentos: { archivos: [{ nombre: "Alegato_RAD-AL-003.pdf", tamano: "3.8 MB", tipo: "pdf" }, { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" }, { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" }] }
     },
     {
@@ -671,7 +677,12 @@ export const modulo4Config: ModuleConfig = {
       fechaLimiteAlegatos: "14/Jul/2025",
       presentoAlegatos: "Sí",
       estadoTerminoAlegatos: "A tiempo",
+      fechaPresentacionAlegatos: "09/Jul/2025",
       fechaRadicacionAlegatos: "10/Jul/2025",
+      pruebasAlegatos: [
+        { id: "al4-1", descripcion: "Recibos de pago completos", tipo: "Documental", documento: { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" } }
+      ],
+      documentosAlegatos: { archivos: [{ nombre: "Alegato_RAD-AL-004.pdf", tamano: "2.9 MB", tipo: "pdf" }, { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" }] },
       documentos: { archivos: [{ nombre: "Alegato_RAD-AL-004.pdf", tamano: "2.9 MB", tipo: "pdf" }, { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" }] }
     },
     {
@@ -714,7 +725,10 @@ export const modulo4Config: ModuleConfig = {
       fechaLimiteAlegatos: "25/Jul/2025",
       presentoAlegatos: "Sí",
       estadoTerminoAlegatos: "A tiempo",
+      fechaPresentacionAlegatos: "22/Jul/2025",
       fechaRadicacionAlegatos: "23/Jul/2025",
+      pruebasAlegatos: [],
+      documentosAlegatos: { archivos: [{ nombre: "Alegato_RAD-AL-005.pdf", tamano: "2.1 MB", tipo: "pdf" }] },
       documentos: { archivos: [{ nombre: "Alegato_RAD-AL-005.pdf", tamano: "2.1 MB", tipo: "pdf" }] }
     },
   ],
