@@ -22,14 +22,14 @@ export const modulo1Config: ModuleConfig = {
     
     {
       id: "notificacion",
-      label: "Notificación",
+      label: "Notificación del pliego",
       columns: ["operador", "bdi", "pliego", "fechaActo", "tipoNotificacionLegal", "medioEntrega", "direccionCorreo", "fechaEntrega", "fechaNotificacion", "estado", "eventos", "documentos"]
     },
     {
       id: "cumplimiento",
       label: "Verificación de Cumplimiento",
       icon: <Database className="w-4 h-4" />,
-      columns: ["operador", "bdi", "fechaCorte", "cumplimiento", "hallazgosSER"]
+      columns: ["operador", "bdi", "fechaCorte", "pliego", "cumplimiento", "hallazgosSER", "documentos", "acciones"]
     }
   ],
   resultColumns: [
@@ -71,12 +71,6 @@ export const modulo1Config: ModuleConfig = {
     {
       key: "hallazgosSER",
       header: "Hallazgos",
-      headerTooltip: "Resultados del análisis técnico del Sistema de Evaluación de Resultados (SER). Despliegue para ver los trimestres."
-    },
-
-    
-    
-    {
       key: "pliego",
       header: "Número del acto administrativo",
       headerTooltip: "Identificación del acto administrativo mediante el cual se formula el pliego de cargos.",
@@ -219,6 +213,19 @@ export const modulo1Config: ModuleConfig = {
           </div>
         );
       }
+    },
+    {
+      key: "acciones",
+      header: "Acciones",
+      headerTooltip: "Acciones disponibles: descargar el expediente completo en formato ZIP.",
+      render: (_val: any, _row: Record<string, any>) => (
+        <button
+          title="Descargar expediente"
+          className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-muted/60 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors border border-muted"
+        >
+          <Download className="w-3.5 h-3.5" />
+        </button>
+      )
     },
 
   ],

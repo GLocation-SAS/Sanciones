@@ -116,6 +116,7 @@ export function ResultsTable({
   const [docsModalOpen, setDocsModalOpen] = useState(false);
   const [selectedDocsRow, setSelectedDocsRow] = useState<Record<string, any> | null>(null);
   const [selectedDocIndex, setSelectedDocIndex] = useState(0);
+  const [docsModalKey, setDocsModalKey] = useState<string>("documentos");
 
   // Filtros y Selección Generales
   const [showFilters, setShowFilters] = useState(false);
@@ -148,8 +149,9 @@ export function ResultsTable({
     setViewerOpen(true);
   };
 
-  const handleViewDocs = (row: Record<string, any>) => {
+  const handleViewDocs = (row: Record<string, any>, key: string = "documentos") => {
     setSelectedDocsRow(row);
+    setDocsModalKey(key);
     setSelectedDocIndex(0);
     setDocsModalOpen(true);
   };
@@ -727,21 +729,34 @@ export function ResultsTable({
                         className="py-5 text-foreground whitespace-nowrap"
                         style={bodyXs}
                         onClick={(e) => {
-                          if (
-                            (col.key === "pruebasAsociadas" || col.key === "pruebas") &&
-                            row.pruebas?.length > 0
-                          ) {
-                            e.stopPropagation();
-                            toggleRowExpand(row.id, "pruebas");
-                          } else if (col.key === "documentos" && row[col.key]?.archivos?.length > 0) {
-                            e.stopPropagation();
-                            handleViewDocs(row);
-                          } else if (col.key === "eventos" && Array.isArray(row.eventos) && row.eventos.length > 0) {
-                            e.stopPropagation();
-                            toggleRowExpand(row.id, "eventos");
-                          } else if (col.key === "hallazgosSER" && row.hallazgosSER && row.hallazgosSER.trimestres) {
-                            e.stopPropagation();
-                            toggleRowExpand(row.id, "hallazgos");
+                          e.stopPropagation();
+                          const val = row[col.key];
+                          const isDocsKey = col.key.toLowerCase().includes("documento");
+                          if (col.expandable) {
+                            // Array => trazabilidad/eventos/pruebas panel
+                            if (Array.isArray(val) && val.length > 0) {
+                              const section = col.key.toLowerCase().includes("trazabilidad") || col.key.toLowerCase().includes("eventos") ? "eventos" :
+                                col.key.toLowerCase().includes("prueba") ? "pruebas" :
+                                col.key === "hallazgosSER" ? "hallazgos" : col.key;
+                              // Store which key for eventos panel
+                              if (col.key !== "eventos" && col.key !== "hallazgosSER" && col.key !== "pruebasAsociadas" && col.key !== "pruebas") {
+                                toggleRowExpand(row.id, section + ":" + col.key);
+                              } else {
+                                toggleRowExpand(row.id, section);
+                              }
+                            } else if (col.key === "hallazgosSER" && val?.trimestres) {
+                              toggleRowExpand(row.id, "hallazgos");
+                            } else if ((col.key === "pruebasAsociadas" || col.key === "pruebas") && row.pruebas?.length > 0) {
+                              toggleRowExpand(row.id, "pruebas");
+                            }
+                          } else if (col.clickable || isDocsKey) {
+                            // Docs modal — find archivos in val or nested
+                            const archivos = val?.archivos;
+                            if (archivos && archivos.length > 0) {
+                              handleViewDocs(row, col.key);
+                            } else if (col.key === "documentos" && row.documentos?.archivos?.length > 0) {
+                              handleViewDocs(row, "documentos");
+                            }
                           }
                         }}
                       >
@@ -974,6 +989,68 @@ export function ResultsTable({
                         </TableCell>
                       </TableRow>
                     )}
+
+                  {/* Panel expandible genérico para trazabilidad de acto de pruebas */}
+                  {expandedRows[row.id]?.startsWith("eventos:") &&
+                    (() => {
+                      const colKey = expandedRows[row.id].split(":")[1];
+                      const items: any[] = Array.isArray(row[colKey]) ? row[colKey] : [];
+                      if (items.length === 0) return null;
+                      return (
+                        <TableRow className="bg-muted/10 hover:bg-muted/10 border-b-0">
+                          <TableCell colSpan={100} className="py-6 px-4 border-b">
+                            <div className="pl-6 pr-4">
+                              <h3 className="text-foreground mb-6" style={{ ...headingBold, fontSize: "1rem" }}>
+                                Trazabilidad de comunicación • {row.actoPruebas || row.pliego || row.expediente}
+                              </h3>
+                              <div className="relative border-l border-border ml-3 space-y-6 pb-4">
+                                {items.map((evento: any, idx: number) => {
+                                  let dotColor = "bg-[#3F51B5]";
+                                  let badgeBg = "bg-[#3F51B5]/10";
+                                  let badgeText = "text-[#3F51B5]";
+                                  if (evento.tipo === "Devolución" || evento.resultado?.includes("Devuelto") || evento.resultado?.includes("ausente")) {
+                                    dotColor = "bg-[#F44336]"; badgeBg = "bg-[#F44336]/10"; badgeText = "text-[#F44336]";
+                                  } else if (evento.tipo === "Publicación" || evento.resultado?.includes("Publicado")) {
+                                    dotColor = "bg-[#FFC107]"; badgeBg = "bg-[#FFC107]/10"; badgeText = "text-[#FFC107]";
+                                  } else if (evento.tipo === "Comunicación efectiva" || evento.resultado?.includes("firmado")) {
+                                    dotColor = "bg-[#4CAF50]"; badgeBg = "bg-[#4CAF50]/10"; badgeText = "text-[#4CAF50]";
+                                  }
+                                  return (
+                                    <div key={idx} className="relative pl-8">
+                                      <div className={cn("absolute left-[-5.5px] top-1.5 w-3 h-3 rounded-full border-2 border-background", dotColor)} />
+                                      <div className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                                        <div className="flex items-center gap-3 mb-3 flex-wrap">
+                                          <span className="text-foreground" style={{ ...headingBold, fontSize: "0.875rem" }}>{evento.fecha}</span>
+                                          <div className={cn("flex items-center gap-1.5 px-3 py-1 rounded-full", badgeBg, badgeText)} style={{ fontSize: "0.75rem", fontWeight: "var(--font-weight-medium)" }}>
+                                            <FileText className="w-3.5 h-3.5" />
+                                            {evento.tipo}
+                                          </div>
+                                        </div>
+                                        <div className="space-y-2 mt-4">
+                                          {evento.resultado && (
+                                            <p className="m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem" }}>
+                                              <span className="text-foreground" style={{ fontWeight: "var(--font-weight-medium)" }}>Resultado: </span>
+                                              <span className="text-muted-foreground">{evento.resultado}</span>
+                                            </p>
+                                          )}
+                                        </div>
+                                        {evento.documento && (
+                                          <div className="mt-4 inline-flex items-center gap-2 bg-[#3F51B5]/5 text-[#3F51B5] hover:bg-[#3F51B5]/10 px-3 py-2 rounded-lg border border-[#3F51B5]/10 cursor-pointer transition-colors" style={{ fontSize: "0.75rem", fontWeight: "var(--font-weight-medium)" }} onClick={() => setViewerOpen(true)}>
+                                            <Download className="w-4 h-4" />
+                                            {evento.documento.nombre}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })()
+                  }
 
                   {/* Fila expandible con Hallazgos SER (Módulo 5) */}
                   {expandedRows[row.id] === "hallazgos" &&
@@ -1617,9 +1694,9 @@ export function ResultsTable({
               {/* Header */}
               <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
                 <div>
-                  <h2 className="text-[#3F51B5] m-0" style={{ ...headingBold, fontSize: "1.25rem" }}>Documentos de Notificación</h2>
+                  <h2 className="text-[#3F51B5] m-0" style={{ ...headingBold, fontSize: "1.25rem" }}>Documentos asociados</h2>
                   <p className="text-muted-foreground m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem" }}>
-                    {selectedDocsRow.pliego || selectedDocsRow.expediente} • {selectedDocsRow.documentos?.archivos?.length || 0} documentos
+                    {selectedDocsRow.pliego || selectedDocsRow.expediente} • {(selectedDocsRow[docsModalKey] ?? selectedDocsRow.documentos)?.archivos?.length || 0} documentos
                   </p>
                 </div>
                 <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={() => setDocsModalOpen(false)}>
@@ -1631,7 +1708,9 @@ export function ResultsTable({
               <div className="flex-1 flex overflow-hidden">
                 {/* Left Sidebar - File List */}
                 <div className="w-[300px] border-r border-border bg-card/30 flex flex-col overflow-y-auto p-4 gap-3 shrink-0">
-                  {selectedDocsRow.documentos?.archivos?.map((file: any, idx: number) => {
+                {(() => {
+                  const docsData = (selectedDocsRow[docsModalKey] ?? selectedDocsRow.documentos);
+                  return docsData?.archivos?.map((file: any, idx: number) => {
                     const isActive = idx === selectedDocIndex;
                     return (
                       <div 
@@ -1652,40 +1731,43 @@ export function ResultsTable({
                         {isActive && <CheckCircle2 className="w-4 h-4 text-white shrink-0 ml-2" />}
                       </div>
                     );
-                  })}
+                  });
+                })()}
                 </div>
 
                 {/* Right Area - Viewer */}
                 <div className="flex-1 flex flex-col bg-muted/10 overflow-hidden relative p-4">
-                  {selectedDocsRow.documentos?.archivos?.[selectedDocIndex] && (() => {
-                    const activeFile = selectedDocsRow.documentos.archivos[selectedDocIndex];
-                    return (
-                      <>
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-2">
-                            <FileText className="w-5 h-5 text-foreground" />
-                            <div>
-                              <p className="text-foreground m-0" style={{ ...headingBold, fontSize: "1rem" }}>{activeFile.nombre}</p>
-                              <p className="text-muted-foreground m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem" }}>{activeFile.tamano}</p>
-                            </div>
-                          </div>
-                          <Button className="bg-[#3F51B5] hover:bg-[#3F51B5]/90 text-white gap-2 h-9 px-4">
-                            <Download className="w-4 h-4" />
-                            Descargar
-                          </Button>
-                        </div>
-                        
-                        <div className="flex-1 bg-card rounded-xl border border-border shadow-sm flex items-center justify-center relative overflow-hidden">
-                          <div className="text-center">
-                            <FileText className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-                            <h3 className="text-muted-foreground m-0" style={{ ...headingBold, fontSize: "1.25rem" }}>Vista previa de PDF</h3>
-                            <p className="text-muted-foreground/60 mt-2 m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem" }}>"{activeFile.nombre}"</p>
-                            <p className="text-muted-foreground/40 mt-6 m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem" }}>En producción, aquí se mostraría el PDF usando un visor embebido</p>
+                {(() => {
+                  const docsData = (selectedDocsRow[docsModalKey] ?? selectedDocsRow.documentos);
+                  const activeFile = docsData?.archivos?.[selectedDocIndex];
+                  if (!activeFile) return null;
+                  return (
+                    <>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <FileText className="w-5 h-5 text-foreground" />
+                          <div>
+                            <p className="text-foreground m-0" style={{ ...headingBold, fontSize: "1rem" }}>{activeFile.nombre}</p>
+                            <p className="text-muted-foreground m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem" }}>{activeFile.tamano}</p>
                           </div>
                         </div>
-                      </>
-                    );
-                  })()}
+                        <Button className="bg-[#3F51B5] hover:bg-[#3F51B5]/90 text-white gap-2 h-9 px-4">
+                          <Download className="w-4 h-4" />
+                          Descargar
+                        </Button>
+                      </div>
+                      
+                      <div className="flex-1 bg-card rounded-xl border border-border shadow-sm flex items-center justify-center relative overflow-hidden">
+                        <div className="text-center">
+                          <FileText className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
+                          <h3 className="text-muted-foreground m-0" style={{ ...headingBold, fontSize: "1.25rem" }}>Vista previa de PDF</h3>
+                          <p className="text-muted-foreground/60 mt-2 m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem" }}>"{activeFile.nombre}"</p>
+                          <p className="text-muted-foreground/40 mt-6 m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem" }}>En producción, aquí se mostraría el PDF usando un visor embebido</p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
                 </div>
               </div>
 

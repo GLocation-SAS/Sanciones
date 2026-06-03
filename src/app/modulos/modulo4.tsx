@@ -1,5 +1,6 @@
 import React from "react";
-import { ClipboardCheck, Search, Download, FileText, Brain, CheckCircle2, XOctagon, Folder } from "lucide-react";
+import { ClipboardCheck, Search, Download, FileText, Brain, CheckCircle2, XOctagon, Clock, Mail, Folder, Database, ChevronRight } from "lucide-react";
+import { Badge } from "../components/ui/badge";
 import { ModuleConfig, bodyXs, StatusBadge } from "../shared";
 
 export const modulo4Config: ModuleConfig = {
@@ -7,7 +8,7 @@ export const modulo4Config: ModuleConfig = {
   title: "Verificacion de Alegatos de Conclusion",
   shortTitle: "Alegatos de Conclusion",
   epicLabel: "Epica 04",
-  description: "Automatizacion de la busqueda e interpretacion de los alegatos de conclusion presentados por los operadores en INTEGRATIC para asegurar que su derecho a la defensa sea registrado y analizado. Los alegatos son argumentos finales, aunque en la practica algunos operadores adjuntan pruebas complementarias.",
+  description: "Consulta y trazabilidad acumulada del proceso sancionatorio hasta la etapa de alegatos de conclusión. Incluye el historial de notificación del pliego, descargos y solicitud de pruebas, comunicación del acto de pruebas, y los alegatos de conclusión presentados por los operadores.",
   excelFields: ["Acto de prueba", "Año"],
   navIcon: <ClipboardCheck className="w-4 h-4" />,
   processingSteps: [
@@ -18,91 +19,322 @@ export const modulo4Config: ModuleConfig = {
   ],
   columnTabs: [
     {
-      id: "identificacion",
-      label: "Información de Identificación",
-      columns: ["operador", "nit"]
+      id: "notificacion",
+      label: "Notificación Pliego",
+      columns: ["operador", "bdi", "pliego", "fechaActoAdministrativo", "medioEntrega", "direccionNotificacion", "fechaEntrega", "fechaNotificacionPliego", "estadoNotificacion"]
+    },
+    {
+      id: "descargos",
+      label: "Descargos y solicitud de pruebas",
+      columns: ["operador", "bdi", "fechaLimite", "descargos", "estadoTermino", "fechaPresentacion", "fechaRadicacion", "pruebasAsociadas", "documentosDescargos", "acciones"]
+    },
+    {
+      id: "comunicacion-pruebas",
+      label: "Comunicación del Acto de Pruebas",
+      columns: ["operador", "bdi", "actoPruebas", "fechaActoPruebas", "medioEntregaPruebas", "direccionComunicacionPruebas", "fechaEntregaPruebas", "fechaEfectivaComunicacionPruebas", "estadoComunicacionPruebas", "trazabilidadPruebas", "documentosPruebas"]
+    },
+    {
+      id: "verificacion-cumplimiento",
+      label: "Verificación de Cumplimiento",
+      columns: ["operador", "bdi", "fechaCorte", "pliego", "cumplimiento", "hallazgosSER", "documentos", "acciones"]
     },
     {
       id: "alegatos",
-      label: "Alegatos",
-      columns: ["acto", "anio", "radicado", "alegatosEncontrados", "resumenAlegato", "fechaRadicado"]
+      label: "Alegatos de conclusión",
+      columns: ["operador", "bdi", "fechaLimiteAlegatos", "presentoAlegatos", "estadoTerminoAlegatos", "fechaPresentacionAlegatos", "fechaRadicacionAlegatos", "pruebasAlegatos", "documentosAlegatos", "acciones"]
     },
-    {
-      id: "pruebas",
-      label: "Pruebas y Documentos",
-      columns: ["pruebas", "documentos"]
-    }
   ],
   resultColumns: [
     {
-      key: "acto",
-      header: "Acto de prueba",
-      headerTooltip: "Identificador único del acto administrativo emitido después de evaluar las pruebas del proceso sancionatorio",
-      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)", fontFamily: "var(--font-body)" }}>{val}</span>
-    },
-    {
-      key: "anio",
-      header: "Año",
-      headerTooltip: "Año de emisión del acto de prueba",
-      filterable: true
-    },
-    {
-      key: "radicado",
-      header: "Radicado",
-      headerTooltip: "Número de radicado del alegato de conclusión presentado por el operador en respuesta al acto de prueba",
-      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>{val}</span>
-    },
-    {
-      key: "nit",
-      header: "NIT",
-      headerTooltip: "Numero de identificacion tributaria del operador"
-    },
-    {
       key: "operador",
-      header: "Operador",
-      headerTooltip: "Nombre del operador que presenta alegatos de conclusion",
+      header: "Razón Social",
+      headerTooltip: "Nombre o razón social del operador objeto de la actuación administrativa.",
+      filterable: false,
+      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)", fontFamily: "var(--font-body)" }}>{val}</span>
+    },
+    {
+      key: "bdi",
+      header: "BDI",
+      headerTooltip: "Número de BDI completo incluyendo consecutivo y año (ejemplo: 9054-2025).",
       filterable: false
     },
     {
-      key: "alegatosEncontrados",
-      header: "Alegatos encontrados",
-      headerTooltip: "Indica si el operador presentó alegatos de conclusión en el sistema INTEGRATIC dentro del término legal establecido",
+      key: "anio",
+      header: "Año de vigencia",
+      headerTooltip: "Dato de identificación del proceso correspondiente al año de vigencia del expediente.",
       filterable: true,
-      render: (val: boolean) => <StatusBadge label={val ? "Si" : "No"} variant={val ? "success" : "warning"} icon={val ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XOctagon className="w-3.5 h-3.5" />} />
+      render: (val: string, row: Record<string, any>) => (
+        <span className="inline-flex items-center px-2 py-0.5 bg-primary/10 text-primary rounded-md" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
+          {row.anio || val || "—"}
+        </span>
+      )
     },
     {
-      key: "resumenAlegato",
-      header: "Resumen de alegato",
-      headerTooltip: "Síntesis generada por IA de los argumentos de defensa presentados por el operador. NOTA: Los alegatos NO constituyen momento probatorio formal",
-      truncate: true
+      key: "pliego",
+      header: "Número de acto administrativo",
+      headerTooltip: "Identificación del acto administrativo (pliego de cargos) que da inicio al proceso.",
+      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)", fontFamily: "var(--font-body)" }}>{val || "—"}</span>
     },
     {
-      key: "fechaRadicado",
-      header: "Fecha radicación",
-      headerTooltip: "Fecha en que el operador presentó formalmente el alegato de conclusión ante la entidad",
-      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val}</span>
+      key: "fechaActoAdministrativo",
+      header: "Fecha del acto administrativo",
+      headerTooltip: "Fecha de expedición del acto administrativo del pliego de cargos.",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
     },
     {
-      key: "pruebas",
-      header: "Pruebas anexadas",
-      headerTooltip: "Documentos adicionales que algunos operadores adjuntan con sus alegatos, aunque técnicamente los alegatos no son momento probatorio. Estos anexos se registran para el análisis integral del caso",
+      key: "medioEntrega",
+      header: "Medio de entrega de notificación",
+      headerTooltip: "Canal utilizado para materializar la entrega de la actuación (físico o electrónico).",
+      filterable: true,
+      render: (val: string) => (
+        <div className="flex items-center gap-2">
+          {val === "Correo electrónico" ? <Mail className="w-3.5 h-3.5 text-primary" /> : <FileText className="w-3.5 h-3.5 text-muted-foreground" />}
+          <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
+        </div>
+      )
+    },
+    {
+      key: "direccionNotificacion",
+      header: "Dirección física / correo electrónico",
+      headerTooltip: "Destino utilizado para la notificación del pliego de cargos.",
+      truncate: true,
+      render: (val: string) => {
+        if (!val) return <span className="text-muted-foreground" style={bodyXs}>—</span>;
+        return <span className="text-foreground inline-block max-w-[220px] truncate align-middle" title={val} style={bodyXs}>{val}</span>;
+      }
+    },
+    {
+      key: "fechaEntrega",
+      header: "Fecha de entrega",
+      headerTooltip: "Fecha en la cual la Entidad realizó el envío o puso a disposición la actuación.",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
+    },
+    {
+      key: "fechaNotificacionPliego",
+      header: "Fecha efectiva de notificación",
+      headerTooltip: "Fecha en la cual se entiende surtida jurídicamente la notificación del pliego de cargos.",
+      filterable: true,
+      render: (val: string, row: Record<string, any>) => {
+        const fecha = val || row.fechaComunicacion;
+        const diferida = row.fechaEntrega !== fecha && fecha;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="text-foreground" style={bodyXs}>{fecha || "—"}</span>
+            {diferida && <Badge className="bg-chart-4/15 text-chart-4 border-none px-2 py-0.5 text-[10px]">+1 día</Badge>}
+          </div>
+        );
+      }
+    },
+    {
+      key: "estadoNotificacion",
+      header: "Estado de notificación",
+      headerTooltip: "Estado procesal de la notificación del pliego (notificado, devuelto, pendiente, etc.).",
+      filterable: true,
+      render: (val: string) => {
+        const config: Record<string, { variant: "success" | "warning" | "neutral" | "destructive" | "info"; icon: React.ReactNode }> = {
+          "Notificado": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+          "Devuelto": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
+          "Pendiente": { variant: "neutral", icon: <Clock className="w-3.5 h-3.5" /> },
+        };
+        const cfg = config[val] || config["Pendiente"];
+        return <StatusBadge label={val || "—"} variant={cfg.variant} icon={cfg.icon} />;
+      }
+    },
+    // ── Descargos y solicitud de pruebas ───────────────────────────────────
+    {
+      key: "fechaEfectivaNotificacion",
+      header: "Fecha efectiva de notificación",
+      headerTooltip: "Fecha en la cual se entiende surtida jurídicamente la notificación del pliego. A partir de esta fecha corre el término de descargos.",
+      filterable: true,
+      render: (val: string, row: Record<string, any>) => {
+        const fecha = val || row.fechaComunicacion;
+        return <span className="text-foreground" style={bodyXs}>{fecha || "—"}</span>;
+      }
+    },
+    {
+      key: "fechaLimite",
+      header: "Fecha límite de presentación de descargos",
+      headerTooltip: "Fecha máxima establecida legalmente para que el operador presente sus descargos.",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
+    },
+    {
+      key: "descargos",
+      header: "¿Presentó descargos?",
+      headerTooltip: "Indica si el operador ejerció su derecho de defensa presentando descargos.",
+      filterable: true,
+      render: (val: string) => {
+        const si = val === "Sí" || val === "Si" || val?.toLowerCase() === "sí";
+        return <StatusBadge label={val || "—"} variant={si ? "success" : "neutral"} icon={si ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XOctagon className="w-3.5 h-3.5" />} />;
+      }
+    },
+    {
+      key: "estadoTermino",
+      header: "Estado del término",
+      headerTooltip: "Indica si los descargos fueron presentados dentro del término legal o fuera de él.",
+      filterable: true,
+      render: (val: string) => {
+        const config: Record<string, { variant: "success" | "warning" | "neutral" | "destructive" }> = {
+          "Dentro del término": { variant: "success" },
+          "A tiempo": { variant: "success" },
+          "Fuera del término": { variant: "destructive" },
+          "Extemporáneo": { variant: "warning" },
+          "Sin descargos": { variant: "neutral" },
+          "Vencido": { variant: "destructive" },
+        };
+        const cfg = config[val] || { variant: "neutral" as const };
+        return <StatusBadge label={val || "—"} variant={cfg.variant} />;
+      }
+    },
+    {
+      key: "fechaPresentacion",
+      header: "Fecha de presentación de descargos",
+      headerTooltip: "Fecha en que el operador presentó los descargos ante la entidad.",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
+    },
+    {
+      key: "fechaRadicacion",
+      header: "Fecha de radicación de descargos",
+      headerTooltip: "Fecha oficial de radicación del descargo en el sistema INTEGRATIC.",
+      render: (val: string) => {
+        if (!val || val === "N/A") return <span className="text-muted-foreground" style={bodyXs}>—</span>;
+        return <span className="text-foreground" style={bodyXs}>{val}</span>;
+      }
+    },
+    {
+      key: "pruebasAsociadas",
+      header: "Pruebas asociadas",
+      headerTooltip: "Pruebas presentadas por el operador junto con sus descargos.",
       expandable: true,
-      render: (val: any) => {
-        const count = Array.isArray(val) ? val.length : 0;
-        if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>Sin pruebas</span>;
+      render: (val: any, row: Record<string, any>) => {
+        const pruebas = row.pruebas || [];
+        if (pruebas.length === 0) return <span className="text-muted-foreground" style={bodyXs}>Sin pruebas</span>;
         return (
           <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
             <span className="text-primary underline underline-offset-2 font-medium" style={bodyXs}>
-              {count} prueba{count !== 1 ? "s" : ""}
+              {pruebas.length} prueba{pruebas.length !== 1 ? "s" : ""}
             </span>
           </div>
         );
       }
     },
     {
-      key: "documentos",
-      header: "Documento",
-      headerTooltip: "Archivos PDF del alegato y sus anexos descargados del sistema INTEGRATIC",
+      key: "documentosDescargos",
+      header: "Documentos asociados",
+      headerTooltip: "Documentos radicados junto con los descargos y solicitud de pruebas.",
+      render: (val: any, row: Record<string, any>) => {
+        const docs = (val || row.documentos)?.archivos || [];
+        const count = docs.length;
+        if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
+        return (
+          <div className="inline-flex justify-center w-[110px] items-center gap-2 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <Folder className="w-3.5 h-3.5" />
+            Ver docs
+            <span className="bg-background text-primary rounded-full px-1.5 py-0.5 text-[10px] font-bold border border-primary/20 min-w-[18px] text-center flex items-center justify-center">
+              {count}
+            </span>
+          </div>
+        );
+      }
+    },
+    // ── Comunicación del Acto de Pruebas ──────────────────────────────────
+    {
+      key: "actoPruebas",
+      header: "Número de acto administrativo (pruebas)",
+      headerTooltip: "Identificación del acto administrativo de pruebas dentro del proceso sancionatorio.",
+      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)", fontFamily: "var(--font-body)" }}>{val || "—"}</span>
+    },
+    {
+      key: "fechaActoPruebas",
+      header: "Fecha del acto de pruebas",
+      headerTooltip: "Fecha de expedición del acto administrativo de pruebas.",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
+    },
+    {
+      key: "medioEntregaPruebas",
+      header: "Medio de entrega de la comunicación",
+      headerTooltip: "Canal utilizado: Comunicación electrónica, Comunicación física o Publicación.",
+      filterable: true,
+      render: (val: string) => {
+        const isElec = val === "Comunicación electrónica";
+        const isPub = val === "Publicación";
+        return (
+          <div className="flex items-center gap-2">
+            {isElec ? <Mail className="w-3.5 h-3.5 text-primary" /> : isPub ? <CheckCircle2 className="w-3.5 h-3.5 text-chart-4" /> : <FileText className="w-3.5 h-3.5 text-muted-foreground" />}
+            <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
+          </div>
+        );
+      }
+    },
+    {
+      key: "direccionComunicacionPruebas",
+      header: "Dirección física / correo electrónico",
+      headerTooltip: "Destino utilizado para la comunicación del acto de pruebas.",
+      truncate: true,
+      render: (val: string) => {
+        if (!val) return <span className="text-muted-foreground" style={bodyXs}>—</span>;
+        return <span className="text-foreground inline-block max-w-[220px] truncate align-middle" title={val} style={bodyXs}>{val}</span>;
+      }
+    },
+    {
+      key: "fechaEntregaPruebas",
+      header: "Fecha de entrega",
+      headerTooltip: "Fecha en la cual la Entidad realizó el envío del acto de pruebas.",
+      render: (val: string, row: Record<string, any>) => {
+        const fecha = val || row.fechaComunicacionPruebas;
+        return <span className="text-foreground" style={bodyXs}>{fecha || "—"}</span>;
+      }
+    },
+    {
+      key: "fechaEfectivaComunicacionPruebas",
+      header: "Fecha de entrega efectiva",
+      headerTooltip: "Fecha en la cual se entiende surtida jurídicamente la comunicación del acto de pruebas.",
+      filterable: true,
+      render: (val: string, row: Record<string, any>) => {
+        const entrega = row.fechaEntregaPruebas || row.fechaComunicacionPruebas;
+        const diferida = entrega !== val && val;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
+            {diferida && <Badge className="bg-chart-4/15 text-chart-4 border-none px-2 py-0.5 text-[10px]">+1 día</Badge>}
+          </div>
+        );
+      }
+    },
+    {
+      key: "estadoComunicacionPruebas",
+      header: "Estado de la comunicación",
+      headerTooltip: "Resultado procesal de la comunicación del acto de pruebas.",
+      filterable: true,
+      render: (val: string) => {
+        const config: Record<string, { variant: "success" | "warning" | "neutral" | "destructive" | "info"; icon: React.ReactNode }> = {
+          "Comunicado": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+          "Devuelto": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
+          "Pendiente": { variant: "neutral", icon: <Clock className="w-3.5 h-3.5" /> },
+          "Publicado": { variant: "warning", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+        };
+        const cfg = config[val] || config["Pendiente"];
+        return <StatusBadge label={val || "—"} variant={cfg.variant} icon={cfg.icon} />;
+      }
+    },
+    {
+      key: "trazabilidadPruebas",
+      header: "Trazabilidad (Eventos)",
+      headerTooltip: "Histórico cronológico de eventos de la comunicación del acto de pruebas.",
+      expandable: true,
+      render: (val: any) => {
+        const count = Array.isArray(val) ? val.length : 0;
+        return (
+          <div className="inline-flex justify-center w-[110px] items-center gap-1.5 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <ChevronRight className="w-3.5 h-3.5" />
+            {count} {count === 1 ? 'evento' : 'eventos'}
+          </div>
+        );
+      }
+    },
+    {
+      key: "documentosPruebas",
+      header: "Documentos asociados",
+      headerTooltip: "Documentos relacionados con la comunicación del acto de pruebas.",
       render: (val: any) => {
         const count = val?.archivos?.length || 0;
         if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
@@ -117,81 +349,364 @@ export const modulo4Config: ModuleConfig = {
         );
       }
     },
-,
+    // ── Alegatos de conclusión ─────────────────────────────────────────────
+    {
+      key: "fechaLimiteAlegatos",
+      header: "Fecha límite de presentación de alegatos",
+      headerTooltip: "Fecha máxima establecida legalmente para que el operador presente sus alegatos de conclusión.",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
+    },
+    {
+      key: "presentoAlegatos",
+      header: "¿Presentó alegatos?",
+      headerTooltip: "Indica si el operador ejerció su derecho de presentar alegatos de conclusión dentro del término legal.",
+      filterable: true,
+      render: (val: string | boolean) => {
+        const si = val === "Sí" || val === "Si" || val === true;
+        return <StatusBadge label={si ? "Sí" : "No"} variant={si ? "success" : "neutral"} icon={si ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XOctagon className="w-3.5 h-3.5" />} />;
+      }
+    },
+    {
+      key: "estadoTerminoAlegatos",
+      header: "Estado del término",
+      headerTooltip: "Indica si los alegatos fueron presentados dentro del término legal (A tiempo), fuera de él (Extemporáneo), o si el operador no presentó (Sin alegatos).",
+      filterable: true,
+      render: (val: string) => {
+        const config: Record<string, { variant: "success" | "warning" | "neutral" | "destructive" }> = {
+          "A tiempo": { variant: "success" },
+          "Dentro del término": { variant: "success" },
+          "Extemporáneo": { variant: "warning" },
+          "Sin alegatos": { variant: "neutral" },
+          "Vencido": { variant: "destructive" },
+        };
+        const cfg = config[val] || { variant: "neutral" as const };
+        return <StatusBadge label={val || "—"} variant={cfg.variant} />;
+      }
+    },
+    {
+      key: "fechaPresentacionAlegatos",
+      header: "Fecha de presentación de alegatos",
+      headerTooltip: "Fecha en que el operador presentó los alegatos de conclusión ante la entidad.",
+      render: (val: string) => {
+        if (!val || val === "N/A" || val === "--") return <span className="text-muted-foreground" style={bodyXs}>—</span>;
+        return <span className="text-foreground" style={bodyXs}>{val}</span>;
+      }
+    },
+    {
+      key: "fechaRadicacionAlegatos",
+      header: "Fecha de radicación de alegatos",
+      headerTooltip: "Fecha oficial de radicación del escrito de alegatos de conclusión en el sistema INTEGRATIC.",
+      render: (val: string) => {
+        if (!val || val === "N/A" || val === "--") return <span className="text-muted-foreground" style={bodyXs}>—</span>;
+        return <span className="text-foreground" style={bodyXs}>{val}</span>;
+      }
+    },
+    {
+      key: "pruebasAlegatos",
+      header: "Pruebas asociadas",
+      headerTooltip: "Pruebas o soportes adicionales presentados por el operador junto con sus alegatos de conclusión.",
+      expandable: true,
+      render: (val: any, row: Record<string, any>) => {
+        const items = val || row.pruebasAlegatos || [];
+        const count = Array.isArray(items) ? items.length : 0;
+        if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>Sin pruebas</span>;
+        return (
+          <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+            <span className="text-primary underline underline-offset-2 font-medium" style={bodyXs}>
+              {count} prueba{count !== 1 ? "s" : ""}
+            </span>
+          </div>
+        );
+      }
+    },
+    {
+      key: "documentosAlegatos",
+      header: "Documentos asociados",
+      headerTooltip: "Archivos y soportes radicados con los alegatos de conclusión. Haga clic para ver o descargar.",
+      render: (val: any, row: Record<string, any>) => {
+        const docs = (val || row.documentos)?.archivos || [];
+        const count = docs.length;
+        if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
+        return (
+          <div className="inline-flex justify-center w-[110px] items-center gap-2 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <Folder className="w-3.5 h-3.5" />
+            Ver docs
+            <span className="bg-background text-primary rounded-full px-1.5 py-0.5 text-[10px] font-bold border border-primary/20 min-w-[18px] text-center flex items-center justify-center">
+              {count}
+            </span>
+          </div>
+        );
+      }
+    },
+    {
+      key: "fechaCorte",
+      header: "Fecha de corte",
+      headerTooltip: "Fecha en la que el usuario realiza la consulta de verificación de cumplimiento.",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "--"}</span>
+    },
+    {
+      key: "cumplimiento",
+      header: "Cumplimiento",
+      headerTooltip: "Resultado de la verificación de cumplimiento del operador para el periodo evaluado.",
+      filterable: false,
+      render: (val: string) => {
+        if (!val) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
+        const ok = val === "Cumplió";
+        return <StatusBadge label={val} variant={ok ? "success" : "destructive"} icon={ok ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XOctagon className="w-3.5 h-3.5" />} />;
+      }
+    },
+    {
+      key: "hallazgosSER",
+      header: "Hallazgos",
+      headerTooltip: "Resultados del análisis técnico del SER. Haga clic para desplegar los trimestres.",
+      expandable: true,
+      render: (val: any) => {
+        if (!val || !val.trimestres) return <span style={bodyXs}>Sin hallazgos</span>;
+        const n = val.trimestres.length;
+        return (
+          <div className="inline-flex justify-center w-[110px] items-center gap-1.5 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <ChevronRight className="w-3.5 h-3.5" />
+            Ver detalle ({n} trimestre{n !== 1 ? "s" : ""})
+          </div>
+        );
+      }
+    },
+    {
+      key: "acciones",
+      header: "Acciones",
+      headerTooltip: "Acciones disponibles: descargar el expediente completo en formato ZIP.",
+      render: (_val: any, _row: Record<string, any>) => (
+        <button
+          title="Descargar expediente"
+          className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-muted/60 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors border border-muted"
+        >
+          <Download className="w-3.5 h-3.5" />
+        </button>
+      )
+    },
   ],
   mockData: [
     {
       id: "1",
-      acto: "ACT-2025-08-01",
+      operador: "Operador Andino SAS",
+      bdi: "9054-2025",
       anio: "2025",
-      radicado: "RAD-AL-001",
-      nit: "901112223-4",
-      operador: "Servicios Integrados Andinos SAS",
-      alegatosEncontrados: true,
-      resumenAlegato: "El operador presenta alegatos de conclusión argumentando cumplimiento parcial de las obligaciones. Se adjunta documentación que evidencia pagos realizados durante el periodo evaluado y se solicita valoración de atenuantes por colaboración con la entidad.",
+      pliego: "SPL-2025-03-18",
+      medioEntrega: "Dirección física",
+      direccionNotificacion: "Calle 72 #10-34, Oficina 501, Bogotá D.C.",
+      fechaEntrega: "20/Mar/2025",
+      fechaNotificacionPliego: "20/Mar/2025",
+      estadoNotificacion: "Notificado",
+      fechaEfectivaNotificacion: "20/Mar/2025",
+      fechaLimite: "27/Mar/2025",
+      descargos: "Sí",
+      estadoTermino: "A tiempo",
+      fechaPresentacion: "25/Mar/2025",
+      fechaRadicacion: "25/Mar/2025",
       pruebas: [
-        { id: "pr1-1", nombre: "Estados financieros certificados", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Estados financieros certificados del periodo fiscal 2024-2025", documento: { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" } },
-        { id: "pr1-2", nombre: "Comprobantes bancarios", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Comprobantes de transferencias bancarias por pagos de contraprestaciones", documento: { nombre: "Comprobantes_bancarios.pdf", tamano: "1.5 MB", tipo: "pdf" } },
+        { id: "pr1-1", nombre: "Planillas de pago PILA", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Planillas PILA Q1 2024", documento: { nombre: "Planilla_Q1_2024.pdf", tamano: "1.2 MB", tipo: "pdf" } }
       ],
-      fechaRadicado: "25/Mar/2025",
-      documentos: { archivos: [{ nombre: "Alegato_RAD-AL-001.pdf", tamano: "3.2 MB", tipo: "pdf" }, { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" }, { nombre: "Comprobantes_bancarios.pdf", tamano: "1.5 MB", tipo: "pdf" }] }
+      actoPruebas: "ACT-PRU-2025-001",
+      fechaActoPruebas: "10/Abr/2025",
+      medioEntregaPruebas: "Comunicación electrónica",
+      direccionComunicacionPruebas: "notificaciones@operadorandino.com",
+      fechaEntregaPruebas: "12/Abr/2025",
+      fechaEfectivaComunicacionPruebas: "12/Abr/2025",
+      estadoComunicacionPruebas: "Comunicado",
+      trazabilidadPruebas: [
+        { id: "t1-1", fecha: "12/Abr/2025", tipo: "Envío electrónico", resultado: "Entregado al servidor", documento: { nombre: "Oficio_Comunicacion.pdf", tamano: "1.2 MB", tipo: "pdf" } }
+      ],
+      documentosPruebas: { archivos: [{ nombre: "Oficio_Comunicacion.pdf", tamano: "1.2 MB", tipo: "pdf" }] },
+      fechaCorte: "31/May/2025",
+      cumplimiento: "No cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "No reportar información de aportes", estadoPago: "No Pagado (NPA)" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "No reportar información de aportes", estadoPago: "Extemporáneo" }] }
+        ]
+      },
+      fechaLimiteAlegatos: "25/May/2025",
+      presentoAlegatos: "Sí",
+      estadoTerminoAlegatos: "A tiempo",
+      fechaRadicacionAlegatos: "22/May/2025",
+      documentos: { archivos: [{ nombre: "Alegato_RAD-AL-001.pdf", tamano: "3.2 MB", tipo: "pdf" }, { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" }] }
     },
     {
       id: "2",
-      acto: "ACT-2025-08-15",
+      operador: "Telecom Norte SA",
+      bdi: "9055-2025",
       anio: "2025",
-      radicado: "RAD-AL-002",
-      nit: "830445566-7",
-      operador: "Redes del Norte Telecom SA",
-      alegatosEncontrados: false,
-      resumenAlegato: "N/A",
+      pliego: "SPL-2025-04-22",
+      medioEntrega: "Correo electrónico",
+      direccionNotificacion: "notificaciones@telecomnorte.com.co",
+      fechaEntrega: "25/Abr/2025",
+      fechaNotificacionPliego: "26/Abr/2025",
+      estadoNotificacion: "Notificado",
+      fechaEfectivaNotificacion: "26/Abr/2025",
+      fechaLimite: "08/May/2025",
+      descargos: "No",
+      estadoTermino: "Sin descargos",
+      fechaPresentacion: "N/A",
+      fechaRadicacion: "N/A",
       pruebas: [],
-      fechaRadicado: "--",
+      actoPruebas: "ACT-PRU-2025-002",
+      fechaActoPruebas: "15/May/2025",
+      medioEntregaPruebas: "Comunicación física",
+      direccionComunicacionPruebas: "Cra 45 #22-10, Medellín",
+      fechaEntregaPruebas: "18/May/2025",
+      fechaEfectivaComunicacionPruebas: "19/May/2025",
+      estadoComunicacionPruebas: "Comunicado",
+      trazabilidadPruebas: [
+        { id: "t2-1", fecha: "18/May/2025", tipo: "Entrega física", resultado: "Entregado en dirección registrada" },
+        { id: "t2-2", fecha: "19/May/2025", tipo: "Comunicación efectiva", resultado: "Firmado acuse de recibo" }
+      ],
+      documentosPruebas: { archivos: [{ nombre: "Acto_Pruebas_002.pdf", tamano: "2.1 MB", tipo: "pdf" }] },
+      fechaCorte: "30/Jun/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Reportar información extemporáneamente", estadoPago: "Extemporáneo" }] }
+        ]
+      },
+      fechaLimiteAlegatos: "02/Jun/2025",
+      presentoAlegatos: "No",
+      estadoTerminoAlegatos: "Sin alegatos",
+      fechaRadicacionAlegatos: "N/A",
       documentos: { archivos: [{ nombre: "Constancia_no_presentacion.pdf", tamano: "720 KB", tipo: "pdf" }] }
     },
     {
       id: "3",
-      acto: "ACT-2025-09-15",
-      anio: "2025",
-      radicado: "RAD-AL-003",
-      nit: "900778899-1",
       operador: "Conectividad Caribe Digital SAS",
-      alegatosEncontrados: true,
-      resumenAlegato: "Alegatos finales en los cuales el operador solicita archivo del proceso sancionatorio por interpretación normativa diferente. Se argumenta que la metodología de cálculo aplicada por la entidad no corresponde con la establecida en la regulación vigente.",
+      bdi: "9077-2025",
+      anio: "2025",
+      pliego: "SPL-2025-05-10",
+      medioEntrega: "Dirección física",
+      direccionNotificacion: "Cra 51B #80-58, Barranquilla",
+      fechaEntrega: "12/May/2025",
+      fechaNotificacionPliego: "12/May/2025",
+      estadoNotificacion: "Devuelto",
+      fechaEfectivaNotificacion: "19/May/2025",
+      fechaLimite: "02/Jun/2025",
+      descargos: "Sí",
+      estadoTermino: "A tiempo",
+      fechaPresentacion: "30/May/2025",
+      fechaRadicacion: "30/May/2025",
       pruebas: [
-        { id: "pr3-1", nombre: "Concepto jurídico externo", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Concepto jurídico externo sobre interpretación de normativa aplicable", documento: { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" } },
-        { id: "pr3-2", nombre: "Declaración representante legal", tipo: "anexada", tipoPrueba: "Testimonial", descripcion: "Declaración jurada del representante legal sobre cumplimiento de obligaciones", documento: { nombre: "Declaracion_representante_legal.pdf", tamano: "980 KB", tipo: "pdf" } },
-        { id: "pr3-3", nombre: "Marco normativo vigente", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Normativa aplicable y marco regulatorio vigente citado en alegatos", documento: { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" } },
+        { id: "pr3-1", nombre: "Concepto jurídico externo", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Concepto sobre interpretación normativa", documento: { nombre: "Concepto_juridico.pdf", tamano: "1.9 MB", tipo: "pdf" } },
+        { id: "pr3-2", nombre: "Marco normativo vigente", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Normativa aplicable", documento: { nombre: "Marco_normativo.pdf", tamano: "2.3 MB", tipo: "pdf" } }
       ],
-      fechaRadicado: "15/Sep/2025",
-      documentos: { archivos: [{ nombre: "Alegato_RAD-AL-003.pdf", tamano: "3.8 MB", tipo: "pdf" }, { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" }, { nombre: "Declaracion_representante_legal.pdf", tamano: "980 KB", tipo: "pdf" }, { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" }] }
+      actoPruebas: "ACT-PRU-2025-003",
+      fechaActoPruebas: "20/Jun/2025",
+      medioEntregaPruebas: "Comunicación electrónica",
+      direccionComunicacionPruebas: "legal@caribeDigital.com.co",
+      fechaEntregaPruebas: "22/Jun/2025",
+      fechaEfectivaComunicacionPruebas: "22/Jun/2025",
+      estadoComunicacionPruebas: "Comunicado",
+      trazabilidadPruebas: [
+        { id: "t3-1", fecha: "22/Jun/2025", tipo: "Envío electrónico", resultado: "Acuse de recibo firmado digitalmente" }
+      ],
+      documentosPruebas: { archivos: [{ nombre: "Acto_Pruebas_003.pdf", tamano: "1.8 MB", tipo: "pdf" }, { nombre: "Oficio_comunicacion.pdf", tamano: "950 KB", tipo: "pdf" }] },
+      fechaCorte: "31/Jul/2025",
+      cumplimiento: "No cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Reportar información con inconsistencias", estadoPago: "No Pagado (NPA)" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Reportar información con inconsistencias", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 3 2024", cargos: [{ cargo: "Reportar información con inconsistencias", estadoPago: "No Pagado (NPA)" }] }
+        ]
+      },
+      fechaLimiteAlegatos: "07/Jul/2025",
+      presentoAlegatos: "Sí",
+      estadoTerminoAlegatos: "A tiempo",
+      fechaRadicacionAlegatos: "04/Jul/2025",
+      documentos: { archivos: [{ nombre: "Alegato_RAD-AL-003.pdf", tamano: "3.8 MB", tipo: "pdf" }, { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" }, { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" }] }
     },
     {
       id: "4",
-      acto: "ACT-2026-03-05",
-      anio: "2026",
-      radicado: "RAD-AL-004",
-      nit: "901223344-5",
       operador: "Operadora Metropolitana de Servicios SAS",
-      alegatosEncontrados: true,
-      resumenAlegato: "El operador solicita el archivo del proceso por cumplimiento total de la obligación. Se adjunta evidencia de pagos realizados con posterioridad a la notificación del pliego de cargos, con solicitud expresa de reconocimiento de buena fe procesal.",
+      bdi: "9102-2025",
+      anio: "2025",
+      pliego: "SPL-2025-05-28",
+      medioEntrega: "Correo electrónico",
+      direccionNotificacion: "juridico@operametro.com",
+      fechaEntrega: "28/May/2025",
+      fechaNotificacionPliego: "29/May/2025",
+      estadoNotificacion: "Notificado",
+      fechaEfectivaNotificacion: "29/May/2025",
+      fechaLimite: "12/Jun/2025",
+      descargos: "Sí",
+      estadoTermino: "Extemporáneo",
+      fechaPresentacion: "15/Jun/2025",
+      fechaRadicacion: "15/Jun/2025",
       pruebas: [
-        { id: "pr4-1", nombre: "Recibos de pago", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Recibos de pago y comprobantes bancarios de contraprestaciones adeudadas", documento: { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" } },
+        { id: "pr4-1", nombre: "Recibos de pago", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Comprobantes bancarios", documento: { nombre: "Recibos_pago.pdf", tamano: "2.4 MB", tipo: "pdf" } }
       ],
-      fechaRadicado: "05/Mar/2026",
-      documentos: { archivos: [{ nombre: "Alegato_RAD-AL-004.pdf", tamano: "2.9 MB", tipo: "pdf" }, { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" }, { nombre: "Comprobantes_bancarios_anexos.pdf", tamano: "3.1 MB", tipo: "pdf" }] }
+      actoPruebas: "ACT-PRU-2025-004",
+      fechaActoPruebas: "25/Jun/2025",
+      medioEntregaPruebas: "Comunicación física",
+      direccionComunicacionPruebas: "Av. El Dorado #68C-61, Bogotá D.C.",
+      fechaEntregaPruebas: "27/Jun/2025",
+      fechaEfectivaComunicacionPruebas: "27/Jun/2025",
+      estadoComunicacionPruebas: "Pendiente",
+      trazabilidadPruebas: [
+        { id: "t4-1", fecha: "27/Jun/2025", tipo: "Entrega física", resultado: "Destinatario ausente" },
+        { id: "t4-2", fecha: "28/Jun/2025", tipo: "Devolución", resultado: "Devuelto — ausente" }
+      ],
+      documentosPruebas: { archivos: [{ nombre: "Acto_Pruebas_004.pdf", tamano: "2.5 MB", tipo: "pdf" }] },
+      fechaCorte: "31/Jul/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "No reportar información de aportes", estadoPago: "Pagado" }] }
+        ]
+      },
+      fechaLimiteAlegatos: "14/Jul/2025",
+      presentoAlegatos: "Sí",
+      estadoTerminoAlegatos: "A tiempo",
+      fechaRadicacionAlegatos: "10/Jul/2025",
+      documentos: { archivos: [{ nombre: "Alegato_RAD-AL-004.pdf", tamano: "2.9 MB", tipo: "pdf" }, { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" }] }
     },
     {
       id: "5",
-      acto: "ACT-2026-03-20",
-      anio: "2026",
-      radicado: "RAD-AL-005",
-      nit: "860998877-2",
-      operador: "Comunicaciones del Pacifico Ltda",
-      alegatosEncontrados: true,
-      resumenAlegato: "Alegatos de conclusión presentando argumentos sobre fuerza mayor y caso fortuito. El operador manifiesta que eventos externos impidieron el cumplimiento oportuno de las obligaciones, solicitando consideración de circunstancias extraordinarias.",
+      operador: "Comunicaciones del Pacífico Ltda",
+      bdi: "9119-2025",
+      anio: "2025",
+      pliego: "SPL-2025-06-05",
+      medioEntrega: "Dirección física",
+      direccionNotificacion: "Cra 3 #12-25, Cali",
+      fechaEntrega: "07/Jun/2025",
+      fechaNotificacionPliego: "07/Jun/2025",
+      estadoNotificacion: "Notificado",
+      fechaEfectivaNotificacion: "07/Jun/2025",
+      fechaLimite: "23/Jun/2025",
+      descargos: "Sí",
+      estadoTermino: "A tiempo",
+      fechaPresentacion: "20/Jun/2025",
+      fechaRadicacion: "20/Jun/2025",
       pruebas: [],
-      fechaRadicado: "20/Mar/2026",
+      actoPruebas: "ACT-PRU-2025-005",
+      fechaActoPruebas: "10/Jul/2025",
+      medioEntregaPruebas: "Comunicación electrónica",
+      direccionComunicacionPruebas: "notificaciones@compacifico.co",
+      fechaEntregaPruebas: "11/Jul/2025",
+      fechaEfectivaComunicacionPruebas: "11/Jul/2025",
+      estadoComunicacionPruebas: "Comunicado",
+      trazabilidadPruebas: [
+        { id: "t5-1", fecha: "11/Jul/2025", tipo: "Envío electrónico", resultado: "Entregado" }
+      ],
+      documentosPruebas: { archivos: [{ nombre: "Acto_Pruebas_005.pdf", tamano: "1.7 MB", tipo: "pdf" }] },
+      fechaCorte: "31/Ago/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2025", cargos: [{ cargo: "No reportar información de afiliados", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2025", cargos: [{ cargo: "No reportar información de afiliados", estadoPago: "Pagado" }] }
+        ]
+      },
+      fechaLimiteAlegatos: "25/Jul/2025",
+      presentoAlegatos: "Sí",
+      estadoTerminoAlegatos: "A tiempo",
+      fechaRadicacionAlegatos: "23/Jul/2025",
       documentos: { archivos: [{ nombre: "Alegato_RAD-AL-005.pdf", tamano: "2.1 MB", tipo: "pdf" }] }
     },
   ],

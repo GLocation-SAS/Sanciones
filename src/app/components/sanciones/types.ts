@@ -3,6 +3,11 @@ import type { ReactNode } from "react";
 export interface ColumnDef {
   key: string;
   header: string;
+  headerTooltip?: string;
+  filterable?: boolean;
+  truncate?: boolean;
+  expandable?: boolean;
+  clickable?: boolean;
   render?: (value: any, row: Record<string, any>) => ReactNode;
 }
 

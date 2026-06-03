@@ -1,12 +1,12 @@
 import React from "react";
-import { FileSearch, Search, Download, FileText, Brain, CheckCircle2, XCircle, XOctagon, Clock, HelpCircle, User, Folder } from "lucide-react";
+import { FileSearch, Search, Download, FileText, Brain, CheckCircle2, XCircle, XOctagon, Clock, HelpCircle, User, Folder, Database } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import { ModuleConfig, bodyXs, StatusBadge } from "../shared";
 
 export const modulo2Config: ModuleConfig = {
   id: "descargos-pruebas",
-  title: "Verificacion de Descargos y Pruebas",
-  shortTitle: "Descargos y Pruebas",
+  title: "Verificacion de Descargos y Solicitud de Pruebas",
+  shortTitle: "Descargos y Solicitud de Pruebas",
   epicLabel: "Epica 02",
   description: "Consulta, validación y trazabilidad del ejercicio del derecho de defensa: identificación del operador y expediente, cálculo automático del término de descargos a partir de la notificación, calidad de quien presenta, resumen argumentativo estructurado, actividad probatoria (pruebas anexadas, solicitadas, tipo, origen y estado) y documentos soporte.",
   excelFields: ["Pliego", "Año"],
@@ -18,41 +18,69 @@ export const modulo2Config: ModuleConfig = {
     { label: "Interpretando descargos con IA", icon: <Brain className="w-4 h-4" /> },
   ],
   columnTabs: [
-    {
-      id: "identificacion",
-      label: "Información del Operador",
-      columns: ["operador", "bdi"]
-    },
+    
     {
       id: "notificacion",
-      label: "Notificación",
-      columns: ["anio", "pliego", "fechaEfectivaNotificacion"]
+      label: "Notificación del pliego",
+      columns: ["operador", "bdi", "anio", "pliego", "fechaEfectivaNotificacion", "documentos"]
     },
     {
       id: "descargos-pruebas",
-      label: "Descargos y Pruebas",
-      columns: ["fechaLimite", "descargos", "fechaPresentacion", "fechaRadicacion", "estadoTermino", "pruebasAsociadas"]
+      label: "Descargos y solicitud de pruebas",
+      columns: ["operador", "bdi", "fechaLimite", "descargos", "fechaPresentacion", "fechaRadicacion", "estadoTermino", "pruebasAsociadas"]
     },
+    
     {
-      id: "soportes",
-      label: "Soportes y Acciones",
-      columns: ["documentos"]
+      id: "cumplimiento",
+      label: "Verificación de Cumplimiento",
+      icon: <Database className="w-4 h-4" />,
+      columns: ["operador", "bdi", "fechaCorte", "cumplimiento", "hallazgosSER"]
     }
   ],
   resultColumns: [
     {
       key: "operador",
       header: "Razón social",
-      headerTooltip: "Corresponde al nombre o razón social del operador objeto de la actuación administrativa.",
+      headerTooltip: "Nombre o razón social",
       filterable: false,
       render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)", fontFamily: "var(--font-body)" }}>{val}</span>
     },
     {
       key: "bdi",
       header: "BDI",
-      headerTooltip: "Número de BDI completo incluyendo consecutivo y año (ejemplo: 9054-2025), permitiendo adicionalmente filtros independientes tanto por número como por vigencia.",
-      filterable: false
+      headerTooltip: "Número de BDI completo",
+      filterable: false,
+      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontFamily: "var(--font-body)" }}>{val}</span>
     },
+    {
+      key: "fechaCorte",
+      header: "Fecha de corte",
+      headerTooltip: "Fecha en la que el usuario realiza la consulta",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "--"}</span>
+    },
+    {
+      key: "cumplimiento",
+      header: "Cumplimiento",
+      headerTooltip: "Resultado de la verificación",
+      filterable: true,
+      render: (val: string) => {
+        if (!val) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
+        const config: Record<string, { variant: "success" | "destructive"; icon: React.ReactNode }> = {
+          "Cumplió": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+          "No cumplió": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
+        };
+        const cfg = config[val] || config["No cumplió"];
+        return <StatusBadge label={val} variant={cfg.variant} icon={cfg.icon} />;
+      }
+    },
+    {
+      key: "hallazgosSER",
+      header: "Hallazgos",
+      headerTooltip: "Resultados del análisis técnico del Sistema de Evaluación de Resultados (SER). Despliegue para ver los trimestres."
+    },
+
+    
+    
     {
       key: "anio",
       header: "Año / Vigencia BDI",
@@ -227,6 +255,14 @@ export const modulo2Config: ModuleConfig = {
         { id: "p1-3", nombre: "Testimonio contador público", tipo: "solicitada", tipoPrueba: "Testimonial", descripcion: "Se solicita testimonio del contador público certificado sobre la situación financiera", documento: null },
         { id: "p1-4", nombre: "Prueba contable de pagos", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Comprobantes de pagos y movimientos contables", documento: { nombre: "Prueba_1_Contabilidad.pdf", tamano: "1.2 MB", tipo: "pdf" } }
       ],
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Descargos_RAD-2025-4501.pdf", tamano: "3.1 MB", tipo: "pdf" },
@@ -269,6 +305,14 @@ export const modulo2Config: ModuleConfig = {
       resumenDescargo: "No se presentaron descargos",
       resumenCompletoDescargo: "No se presentaron descargos dentro del término legal establecido para el presente proceso sancionatorio.",
       pruebas: [],
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: { archivos: [{ nombre: "Notificacion_extemporanea.pdf", tamano: "890 KB", tipo: "pdf" }] }
     },
     {
@@ -308,6 +352,14 @@ export const modulo2Config: ModuleConfig = {
         { id: "p3-2", nombre: "Evidencia de subsanación", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Documentación que acredita la subsanación de obligaciones", documento: { nombre: "Evidencia_subsanacion.pdf", tamano: "980 KB", tipo: "pdf" } },
         { id: "p3-3", nombre: "Oficio a contratista", tipo: "solicitada", tipoPrueba: "Requerimiento", descripcion: "Se solicita oficiar a la empresa contratista para validar responsabilidad", documento: null }
       ],
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Descargos_RAD-2025-4503.pdf", tamano: "2.2 MB", tipo: "pdf" },
@@ -355,6 +407,14 @@ export const modulo2Config: ModuleConfig = {
         { id: "p4-4", nombre: "Soporte bancario", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Extractos y certificaciones bancarias de respaldo", documento: { nombre: "Anexo_soporte_bancario.pdf", tamano: "1.9 MB", tipo: "pdf" } },
         { id: "p4-5", nombre: "Informe revisor fiscal", tipo: "solicitada", tipoPrueba: "Requerimiento", descripcion: "Se solicita informe oficial del revisor fiscal de la empresa", documento: null }
       ],
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Descargos_RAD-2025-4504.pdf", tamano: "3.8 MB", tipo: "pdf" },
@@ -397,6 +457,14 @@ export const modulo2Config: ModuleConfig = {
       descargos: "No",
       resumenDescargo: "Operador no presentó descargos ni pruebas. Se mantiene silencio administrativo.",
       pruebas: [],
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: { archivos: [{ nombre: "Acta_silencio_administrativo.pdf", tamano: "620 KB", tipo: "pdf" }] }
     },
     {
@@ -434,6 +502,14 @@ export const modulo2Config: ModuleConfig = {
         { id: "p6-1", nombre: "Acta de reunión", tipo: "anexada", tipoPrueba: "Documental", descripcion: "Acta de reunión con funcionarios donde se establece prórroga", documento: { nombre: "Acta_reunion.pdf", tamano: "1.4 MB", tipo: "pdf" } },
         { id: "p6-2", nombre: "Declaración de testigos", tipo: "anexada", tipoPrueba: "Testimonial", descripcion: "Declaraciones testimoniales de participantes en la reunión", documento: { nombre: "Declaracion_testigos.pdf", tamano: "1.1 MB", tipo: "pdf" } }
       ],
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Descargos_RAD-2026-0201.pdf", tamano: "2.7 MB", tipo: "pdf" },
