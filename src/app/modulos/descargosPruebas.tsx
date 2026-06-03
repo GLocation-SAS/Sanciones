@@ -18,7 +18,7 @@ export const modulo2Config: ModuleConfig = {
     { label: "Interpretando descargos con IA", icon: <Brain className="w-4 h-4" /> },
   ],
   columnTabs: [
-    
+
     {
       id: "notificacion",
       label: "Notificación del pliego",
@@ -29,12 +29,12 @@ export const modulo2Config: ModuleConfig = {
       label: "Descargos y solicitud de pruebas",
       columns: ["operador", "bdi", "fechaLimite", "descargos", "fechaPresentacion", "fechaRadicacion", "estadoTermino", "pruebasAsociadas"]
     },
-    
+
     {
       id: "cumplimiento",
       label: "Verificación de Cumplimiento",
       icon: <Database className="w-4 h-4" />,
-      columns: ["operador", "bdi", "fechaCorte", "cumplimiento", "hallazgosSER"]
+      columns: ["operador", "bdi", "fechaCorte", "pliego", "cumplimiento", "hallazgosSER", "documentos"]
     }
   ],
   resultColumns: [
@@ -57,6 +57,12 @@ export const modulo2Config: ModuleConfig = {
       header: "Fecha de corte",
       headerTooltip: "Fecha en la que el usuario realiza la consulta",
       render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "--"}</span>
+    },
+    {
+      key: "pliego",
+      header: "Número de Acto Administrativo",
+      headerTooltip: "Identificación del acto administrativo mediante el cual se formula el pliego de cargos.",
+      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)", fontFamily: "var(--font-body)" }}>{val}</span>
     },
     {
       key: "cumplimiento",
@@ -90,21 +96,12 @@ export const modulo2Config: ModuleConfig = {
         );
       }
     },
-
-    
-    
     {
       key: "anio",
       header: "Año / Vigencia BDI",
       headerTooltip: "Dato de identificación del proceso correspondiente al año de vigencia.",
       filterable: true,
       render: (val: string) => <span className="text-foreground" style={bodyXs}>{val}</span>
-    },
-    {
-      key: "pliego",
-      header: "N.º de Acto Administrativo",
-      headerTooltip: "Identificación del acto administrativo mediante el cual se formula el pliego de cargos.",
-      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)", fontFamily: "var(--font-body)" }}>{val}</span>
     },
     {
       key: "fechaEfectivaNotificacion",

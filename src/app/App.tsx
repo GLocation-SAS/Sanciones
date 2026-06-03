@@ -16,12 +16,12 @@ import TicLogo from "../imports/Svg";
 import HeaderFrame from "../imports/Frame1321316704";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { ColumnDef, ProcessingStep, ModuleConfig, bodyXs, bodyBase, headingBold, headingBoldItalic, StatusBadge } from "./shared";
-import { modulo1Config } from "./modulos/modulo1";
-import { modulo2Config } from "./modulos/modulo2";
+import { modulo1Config } from "./modulos/notificacioPliego";
+import { modulo2Config } from "./modulos/descargosPruebas";
 import { SancionesModule } from "./components/sanciones/SancionesModule";
-import { modulo3Config } from "./modulos/modulo3";
-import { modulo4Config } from "./modulos/modulo4";
-import { modulo5Config } from "./modulos/modulo5";
+import { modulo3Config } from "./modulos/actosPrueba";
+import { modulo4Config } from "./modulos/alegatosConclusion";
+import { modulo5Config } from "./modulos/hallazgos";
 
 /* ConfirmDialog */
 function ConfirmDialog({
@@ -263,73 +263,73 @@ function ExcelUpload({ onFileAccepted, onIndividualSearch, moduleConfig }: { onF
             </div>
           </div>
 
-      <div
-        onDrop={handleDrop}
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-        onDragLeave={() => setIsDragging(false)}
-        onClick={() => !file && inputRef.current?.click()}
-        className={cn(
-          "relative border-2 border-dashed rounded-xl py-10 sm:py-16 px-4 sm:px-8 text-center transition-all duration-300 group",
-          isDragging
-            ? "border-primary bg-primary/5 cursor-copy"
-            : file
-              ? "border-primary/30 bg-primary/5 cursor-default"
-              : "border-border bg-background cursor-pointer hover:border-primary/50 hover:bg-primary/5",
-          justDropped && "animate-pulse"
-        )}
-      >
-        <input ref={inputRef} type="file" accept=".xlsx,.xls" onChange={(e) => { const s = e.target.files?.[0]; if (s) handleFile(s); }} className="hidden" />
-        {file ? (
-          <div className="flex flex-col items-center gap-6">
-            <div className="flex items-center gap-2 bg-chart-2/10 text-chart-2 px-4 py-1.5 rounded-full" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
-              <CheckCircle className="w-3.5 h-3.5" />
-              Archivo listo para procesar
-            </div>
-            <div className={cn("w-full max-w-md border border-border rounded-xl bg-background p-5 flex items-center gap-4 transition-all duration-300", justDropped && "shadow-elevation-sm")}>
-              <div className="w-12 h-12 rounded-lg bg-chart-2/10 flex items-center justify-center shrink-0">
-                <FileSpreadsheet className="w-6 h-6 text-chart-2" />
+          <div
+            onDrop={handleDrop}
+            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onClick={() => !file && inputRef.current?.click()}
+            className={cn(
+              "relative border-2 border-dashed rounded-xl py-10 sm:py-16 px-4 sm:px-8 text-center transition-all duration-300 group",
+              isDragging
+                ? "border-primary bg-primary/5 cursor-copy"
+                : file
+                  ? "border-primary/30 bg-primary/5 cursor-default"
+                  : "border-border bg-background cursor-pointer hover:border-primary/50 hover:bg-primary/5",
+              justDropped && "animate-pulse"
+            )}
+          >
+            <input ref={inputRef} type="file" accept=".xlsx,.xls" onChange={(e) => { const s = e.target.files?.[0]; if (s) handleFile(s); }} className="hidden" />
+            {file ? (
+              <div className="flex flex-col items-center gap-6">
+                <div className="flex items-center gap-2 bg-chart-2/10 text-chart-2 px-4 py-1.5 rounded-full" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  Archivo listo para procesar
+                </div>
+                <div className={cn("w-full max-w-md border border-border rounded-xl bg-background p-5 flex items-center gap-4 transition-all duration-300", justDropped && "shadow-elevation-sm")}>
+                  <div className="w-12 h-12 rounded-lg bg-chart-2/10 flex items-center justify-center shrink-0">
+                    <FileSpreadsheet className="w-6 h-6 text-chart-2" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-foreground truncate" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>{file.name}</p>
+                    <p className="text-muted-foreground mt-0.5" style={{ ...bodyXs, fontSize: "11px" }}>{(file.size / 1024).toFixed(1)} KB - Excel</p>
+                  </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
+                    className="w-9 h-9 rounded-lg border border-border bg-background flex items-center justify-center shrink-0 text-muted-foreground hover:text-destructive hover:border-destructive/40 hover:bg-destructive/5 active:scale-90 transition-all duration-200"
+                    title="Eliminar archivo"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200"
+                  style={bodyXs}
+                >
+                  Cambiar archivo
+                </button>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-foreground truncate" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>{file.name}</p>
-                <p className="text-muted-foreground mt-0.5" style={{ ...bodyXs, fontSize: "11px" }}>{(file.size / 1024).toFixed(1)} KB - Excel</p>
+            ) : (
+              <div className="flex flex-col items-center gap-5">
+                <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300", isDragging ? "bg-primary/20 scale-110" : "bg-primary/10 group-hover:bg-primary/15 group-hover:scale-105")}>
+                  <Upload className={cn("w-7 h-7 text-primary transition-transform duration-300", isDragging && "-translate-y-1")} />
+                </div>
+                <div className="space-y-1">
+                  <p className={cn("transition-colors duration-200", isDragging ? "text-primary" : "text-foreground")} style={bodyBase}>
+                    {isDragging ? "Suelta el archivo aqui" : "Selecciona un archivo o arrastralo aqui"}
+                  </p>
+                  <p className="text-muted-foreground" style={bodyXs}>Cada archivo debe estar en formato .xlsx o .xls</p>
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
+                  className={cn("border border-primary text-primary bg-background rounded-lg px-6 py-2.5 transition-all duration-200", "hover:bg-primary hover:text-primary-foreground hover:shadow-elevation-sm", "active:scale-95", isDragging && "opacity-0 pointer-events-none")}
+                  style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
+                >
+                  Seleccionar Archivo
+                </button>
               </div>
-              <button
-                onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
-                className="w-9 h-9 rounded-lg border border-border bg-background flex items-center justify-center shrink-0 text-muted-foreground hover:text-destructive hover:border-destructive/40 hover:bg-destructive/5 active:scale-90 transition-all duration-200"
-                title="Eliminar archivo"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-            <button
-              onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
-              className="text-muted-foreground hover:text-primary transition-colors duration-200"
-              style={bodyXs}
-            >
-              Cambiar archivo
-            </button>
+            )}
           </div>
-        ) : (
-          <div className="flex flex-col items-center gap-5">
-            <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300", isDragging ? "bg-primary/20 scale-110" : "bg-primary/10 group-hover:bg-primary/15 group-hover:scale-105")}>
-              <Upload className={cn("w-7 h-7 text-primary transition-transform duration-300", isDragging && "-translate-y-1")} />
-            </div>
-            <div className="space-y-1">
-              <p className={cn("transition-colors duration-200", isDragging ? "text-primary" : "text-foreground")} style={bodyBase}>
-                {isDragging ? "Suelta el archivo aqui" : "Selecciona un archivo o arrastralo aqui"}
-              </p>
-              <p className="text-muted-foreground" style={bodyXs}>Cada archivo debe estar en formato .xlsx o .xls</p>
-            </div>
-            <button
-              onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
-              className={cn("border border-primary text-primary bg-background rounded-lg px-6 py-2.5 transition-all duration-200", "hover:bg-primary hover:text-primary-foreground hover:shadow-elevation-sm", "active:scale-95", isDragging && "opacity-0 pointer-events-none")}
-              style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
-            >
-              Seleccionar Archivo
-            </button>
-          </div>
-        )}
-      </div>
           {error && (
             <div className="bg-destructive/10 border border-destructive/20 text-destructive p-4 rounded-lg flex items-center gap-3" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
               <AlertCircle className="w-4 h-4 shrink-0" />{error}
@@ -439,16 +439,16 @@ function Processing({ steps, onComplete }: { steps: ProcessingStep[]; onComplete
 }
 
 /* DocumentosModal Component */
-function DocumentosModal({ 
-  open, 
-  onOpenChange, 
-  archivos, 
+function DocumentosModal({
+  open,
+  onOpenChange,
+  archivos,
   pliego,
   titulo = "Documentos"
-}: { 
-  open: boolean; 
-  onOpenChange: (open: boolean) => void; 
-  archivos: Array<{ nombre: string; tamano: string; tipo: string }>; 
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  archivos: Array<{ nombre: string; tamano: string; tipo: string }>;
   pliego: string;
   titulo?: string;
 }) {
@@ -471,7 +471,7 @@ function DocumentosModal({
       <DialogContent className="max-w-[1400px] w-[95vw] h-[90vh] sm:h-[85vh] p-0 gap-0 bg-background border-2 border-border rounded-xl overflow-hidden flex flex-col [&>button]:hidden">
         <DialogTitle className="sr-only">Documentos de {pliego}</DialogTitle>
         <DialogDescription className="sr-only">Visualización y gestión de documentos</DialogDescription>
-        
+
         {/* Header con Breadcrumb */}
         <div className="bg-card border-b-2 border-border flex-shrink-0">
           <div className="flex flex-col gap-2 px-4 md:px-6 py-3 md:py-4">
@@ -485,7 +485,7 @@ function DocumentosModal({
                 {titulo}
               </span>
             </div>
-            
+
             {/* Título */}
             <div className="flex items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
@@ -661,7 +661,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
   const [selectedResumen, setSelectedResumen] = useState<any>(null);
   const [selectedDocIndexResumen, setSelectedDocIndexResumen] = useState(0); // Para el visor de documentos en resumen
   const [expandedCargo, setExpandedCargo] = useState<number | null>(0); // Para controlar acordeón de cargos en modal cumplimiento
-  
+
   // Estados para módulo 3 - Actos de Prueba
   const [validacionActoModalOpen, setValidacionActoModalOpen] = useState(false);
   const [selectedActoValidacion, setSelectedActoValidacion] = useState<any>(null);
@@ -1068,13 +1068,13 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
         )}
         {/* Botones de acción */}
         <div className="flex gap-2 md:gap-3 sm:ml-auto self-end">
-        <Button variant="outline" className="h-[44px] md:h-[48px] border-2 border-border hover:border-primary text-foreground hover:text-primary rounded-lg gap-2 px-4 md:px-5" style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", fontWeight: "var(--font-weight-medium)" }} onClick={() => setShowResetConfirm(true)}>
-          <FileSpreadsheet className="w-4 h-4" /><span className="hidden sm:inline">Nuevo analisis</span><span className="sm:hidden">Nuevo</span>
-        </Button>
-        <Button className="h-[44px] md:h-[48px] bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg gap-2 px-4 md:px-5" style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", fontWeight: "var(--font-weight-medium)" }} onClick={() => setShowExportConfirm(true)}>
-          <Download className="w-4 h-4" /><span className="hidden sm:inline">Exportar Excel</span><span className="sm:hidden">Exportar</span>
-        </Button>
-      </div>
+          <Button variant="outline" className="h-[44px] md:h-[48px] border-2 border-border hover:border-primary text-foreground hover:text-primary rounded-lg gap-2 px-4 md:px-5" style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", fontWeight: "var(--font-weight-medium)" }} onClick={() => setShowResetConfirm(true)}>
+            <FileSpreadsheet className="w-4 h-4" /><span className="hidden sm:inline">Nuevo analisis</span><span className="sm:hidden">Nuevo</span>
+          </Button>
+          <Button className="h-[44px] md:h-[48px] bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg gap-2 px-4 md:px-5" style={{ fontFamily: "var(--font-body)", fontSize: "var(--text-xs)", fontWeight: "var(--font-weight-medium)" }} onClick={() => setShowExportConfirm(true)}>
+            <Download className="w-4 h-4" /><span className="hidden sm:inline">Exportar Excel</span><span className="sm:hidden">Exportar</span>
+          </Button>
+        </div>
       </div>
       <div className="rounded-xl overflow-hidden border border-border">
         {/* Vista de tabla para desktop */}
@@ -1168,432 +1168,432 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
               {paginatedData.length === 0 ? (
                 <TableRow><TableCell colSpan={columns.length + 1 + (showRowCheckboxColumn ? 1 : 0)} className="h-32 text-center text-muted-foreground" style={bodyBase}>No se encontraron resultados</TableCell></TableRow>
               ) : paginatedData.map((row) => {
-              const rowKey = getRowKey(row);
-              const hasDocuments = row.documentos && row.documentos.archivos && row.documentos.archivos.length > 0;
-              const isRUESInactive = row.estadoRUES && row.estadoRUES !== "Activa";
-              const hasDescargos = row.descargos && row.descargos.length > 0;
-              const hasPruebas = row.pruebas && row.pruebas.length > 0;
-              const hasEventos = Array.isArray(row.eventos) && row.eventos.length > 0;
-              const isExpandable = hasDescargos || hasPruebas || hasEventos;
-              const isExpanded = expandedRows.has(row.id);
-              
-              return (
-                <React.Fragment key={rowKey}>
-                  <TableRow 
-                    className={cn("hover:bg-muted/5 border-b border-border/40", isRUESInactive && "bg-[#FEF3C7]")}
-                    title={isRUESInactive ? "Archivo automático por estado RUES" : undefined}
-                  >
-                  {showRowCheckboxColumn && (
-                    <TableCell className="py-4 md:py-5 pl-4 md:pl-6 pr-2 w-10">
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.has(rowKey)}
-                        onChange={() => toggleRowSelection(rowKey)}
-                        style={{
-                          width: 16,
-                          height: 16,
-                          cursor: "pointer",
-                          accentColor: "var(--primary)"
-                        }}
-                        aria-label={`Seleccionar fila ${row.pliego || row.radicado || row.acto || rowKey}`}
-                      />
-                    </TableCell>
-                  )}
-                  {columns.map((col, colIdx) => (
-                    <TableCell key={`cell-${rowKey}-${col.key}-${colIdx}`} className={cn("py-4 md:py-5 text-foreground first:pl-4 md:first:pl-6 last:pr-4 md:last:pr-6", (col.truncate && col.key === "resumenDescargo") || (col.truncate && col.key === "resumenAlegato") ? "max-w-[300px]" : "whitespace-nowrap max-w-[200px] md:max-w-[250px] truncate")} style={bodyXs}>
-                      {col.key === "documentos" && hasDocuments ? (
-                        <button
-                          onClick={() => {
-                            const identifier = row.pliego || row.radicado || row.acto || "Registro";
-                            let docTitulo = "Documentos";
-                            if (moduleTitle.includes("Notificacion")) docTitulo = "Documentos de Notificación";
-                            else if (moduleTitle.includes("Descargos")) docTitulo = "Documentos de Descargos";
-                            else if (moduleTitle.includes("Actos")) docTitulo = "Documentos del Acto de Prueba";
-                            else if (moduleTitle.includes("Alegatos")) docTitulo = "Documentos de Alegatos";
-                            else if (moduleTitle.includes("Cumplimiento")) docTitulo = "Documentos de Cumplimiento";
-                            handleOpenDocumentos(row.documentos.archivos, identifier, docTitulo);
-                          }}
-                          className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 hover:bg-primary/15 text-primary rounded-lg transition-colors duration-200 w-fit"
-                          style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
-                        >
-                          <Folder className="w-3.5 h-3.5" />
-                          Ver docs
-                          <Badge className="bg-white/90 text-primary border-none px-2 py-0 ml-1" style={{ fontSize: "11px", fontWeight: "var(--font-weight-bold)" }}>
-                            {row.documentos.archivos.length}
-                          </Badge>
-                        </button>
-                      ) : col.expandable && col.key === "eventos" ? (
-                        !hasEventos ? (
-                          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 text-muted-foreground rounded-md opacity-60 cursor-not-allowed" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
-                            <XCircle className="w-3.5 h-3.5" />
-                            Sin eventos
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              const newExpanded = new Set(expandedRows);
-                              if (newExpanded.has(row.id)) newExpanded.delete(row.id);
-                              else newExpanded.add(row.id);
-                              setExpandedRows(newExpanded);
+                const rowKey = getRowKey(row);
+                const hasDocuments = row.documentos && row.documentos.archivos && row.documentos.archivos.length > 0;
+                const isRUESInactive = row.estadoRUES && row.estadoRUES !== "Activa";
+                const hasDescargos = row.descargos && row.descargos.length > 0;
+                const hasPruebas = row.pruebas && row.pruebas.length > 0;
+                const hasEventos = Array.isArray(row.eventos) && row.eventos.length > 0;
+                const isExpandable = hasDescargos || hasPruebas || hasEventos;
+                const isExpanded = expandedRows.has(row.id);
+
+                return (
+                  <React.Fragment key={rowKey}>
+                    <TableRow
+                      className={cn("hover:bg-muted/5 border-b border-border/40", isRUESInactive && "bg-[#FEF3C7]")}
+                      title={isRUESInactive ? "Archivo automático por estado RUES" : undefined}
+                    >
+                      {showRowCheckboxColumn && (
+                        <TableCell className="py-4 md:py-5 pl-4 md:pl-6 pr-2 w-10">
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.has(rowKey)}
+                            onChange={() => toggleRowSelection(rowKey)}
+                            style={{
+                              width: 16,
+                              height: 16,
+                              cursor: "pointer",
+                              accentColor: "var(--primary)"
                             }}
-                            className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors duration-200"
-                            style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
-                          >
-                            {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRightIcon className="w-3.5 h-3.5" />}
-                            {`${row.eventos.length} evento${row.eventos.length !== 1 ? "s" : ""}`}
-                          </button>
-                        )
-                      ) : col.expandable && col.key === "pruebasAsociadas" ? (
-                        typeof row[col.key] === "number" && row[col.key] === 0 ? (
-                          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 text-muted-foreground rounded-md opacity-60 cursor-not-allowed" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
-                            <XCircle className="w-3.5 h-3.5" />
-                            Sin pruebas
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              const newExpanded = new Set(expandedRows);
-                              if (newExpanded.has(row.id)) {
-                                newExpanded.delete(row.id);
-                              } else {
-                                newExpanded.add(row.id);
-                              }
-                              setExpandedRows(newExpanded);
-                            }}
-                            className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors duration-200"
-                            style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
-                          >
-                            {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRightIcon className="w-3.5 h-3.5" />}
-                            {typeof row[col.key] === "number" ? (
-                              row[col.key] === 0 ? "Sin pruebas" : `${row[col.key]} prueba${row[col.key] !== 1 ? 's' : ''}`
-                            ) : typeof row[col.key] === "object" && row[col.key] !== null ? null : row[col.key]}
-                          </button>
-                        )
-                      ) : col.expandable && col.key === "pruebas" && moduleTitle.includes("Alegatos") ? (
-                        // Módulo 4: Alegatos de Conclusión - columna expandible de pruebas
-                        (() => {
-                          const hasPruebas = row.pruebas && row.pruebas.length > 0;
-                          const canExpand = row.alegatosEncontrados && hasPruebas;
-                          return (
-                            <div className="flex items-center gap-2 max-w-[130px]">
-                              <button
-                                onClick={() => {
-                                  if (canExpand) {
-                                    const newExpanded = new Set(expandedRows);
-                                    if (newExpanded.has(row.id)) {
-                                      newExpanded.delete(row.id);
-                                    } else {
-                                      newExpanded.add(row.id);
-                                    }
-                                    setExpandedRows(newExpanded);
-                                  }
-                                }}
-                                disabled={!canExpand}
-                                className={cn(
-                                  "flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors duration-200",
-                                  hasPruebas ? "bg-primary/10 hover:bg-primary/15 text-primary" : "bg-muted/30 text-muted-foreground cursor-default"
-                                )}
-                                style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
-                                aria-disabled={!canExpand}
-                              >
-                                {canExpand && (isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRightIcon className="w-3.5 h-3.5" />)}
-                                {hasPruebas ? `${row.pruebas.length} prueba${row.pruebas.length > 1 ? 's' : ''}` : "Sin pruebas"}
-                              </button>
-                              <div className="relative group">
-                                <AlertTriangle className="w-3.5 h-3.5 text-chart-4" />
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50">
-                                  <div className="bg-foreground text-background text-xs rounded px-2 py-1 whitespace-nowrap">
-                                    ⚠ Los alegatos no son momento probatorio
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })()
-                      ) : col.truncate && col.key === "resumenDescargo" ? (
-                        <div className="flex items-center gap-2">
-                          <span className="text-foreground" style={bodyXs}>
-                            {row[col.key] && row[col.key] !== "Sin descargos presentados" ? "Sí" : "No"}
-                          </span>
-                          {row[col.key] && row[col.key] !== "Sin descargos presentados" && (
+                            aria-label={`Seleccionar fila ${row.pliego || row.radicado || row.acto || rowKey}`}
+                          />
+                        </TableCell>
+                      )}
+                      {columns.map((col, colIdx) => (
+                        <TableCell key={`cell-${rowKey}-${col.key}-${colIdx}`} className={cn("py-4 md:py-5 text-foreground first:pl-4 md:first:pl-6 last:pr-4 md:last:pr-6", (col.truncate && col.key === "resumenDescargo") || (col.truncate && col.key === "resumenAlegato") ? "max-w-[300px]" : "whitespace-nowrap max-w-[200px] md:max-w-[250px] truncate")} style={bodyXs}>
+                          {col.key === "documentos" && hasDocuments ? (
                             <button
                               onClick={() => {
-                                const identifier = row.radicado || row.pliego || row.acto || "Registro";
-                                handleOpenResumenDescargo(
-                                  row.resumenCompletoDescargo || row[col.key], 
-                                  row.documentos?.archivos || [], 
-                                  identifier
-                                );
+                                const identifier = row.pliego || row.radicado || row.acto || "Registro";
+                                let docTitulo = "Documentos";
+                                if (moduleTitle.includes("Notificacion")) docTitulo = "Documentos de Notificación";
+                                else if (moduleTitle.includes("Descargos")) docTitulo = "Documentos de Descargos";
+                                else if (moduleTitle.includes("Actos")) docTitulo = "Documentos del Acto de Prueba";
+                                else if (moduleTitle.includes("Alegatos")) docTitulo = "Documentos de Alegatos";
+                                else if (moduleTitle.includes("Cumplimiento")) docTitulo = "Documentos de Cumplimiento";
+                                handleOpenDocumentos(row.documentos.archivos, identifier, docTitulo);
                               }}
-                              className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors duration-200"
+                              className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 hover:bg-primary/15 text-primary rounded-lg transition-colors duration-200 w-fit"
                               style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
                             >
-                              <FileText className="w-3.5 h-3.5" />
-                              Ver documentos
+                              <Folder className="w-3.5 h-3.5" />
+                              Ver docs
+                              <Badge className="bg-white/90 text-primary border-none px-2 py-0 ml-1" style={{ fontSize: "11px", fontWeight: "var(--font-weight-bold)" }}>
+                                {row.documentos.archivos.length}
+                              </Badge>
                             </button>
-                          )}
-                        </div>
-                      ) : col.truncate && col.key === "resumenAlegato" && moduleTitle.includes("Alegatos") ? (
-                        // Módulo 4: Resumen de alegato con modal - mejorado
-                        !row.alegatosEncontrados ? (
-                          <span className="text-muted-foreground italic" style={bodyXs}>N/A</span>
-                        ) : (
-                          <div className="max-w-[300px]">
-                            <div className="bg-muted/20 border border-border rounded-lg p-3 space-y-2">
-                              <p 
-                                className="text-foreground line-clamp-3" 
-                                style={{ 
-                                  fontFamily: "var(--font-body)", 
-                                  fontSize: "13px", 
-                                  fontWeight: "var(--font-weight-normal)",
-                                  lineHeight: "1.6"
-                                }}
-                              >
-                                {row[col.key]}
-                              </p>
+                          ) : col.expandable && col.key === "eventos" ? (
+                            !hasEventos ? (
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 text-muted-foreground rounded-md opacity-60 cursor-not-allowed" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
+                                <XCircle className="w-3.5 h-3.5" />
+                                Sin eventos
+                              </div>
+                            ) : (
                               <button
                                 onClick={() => {
-                                  setResumenModalOpen(true);
-                                  setSelectedResumen(row);
+                                  const newExpanded = new Set(expandedRows);
+                                  if (newExpanded.has(row.id)) newExpanded.delete(row.id);
+                                  else newExpanded.add(row.id);
+                                  setExpandedRows(newExpanded);
                                 }}
-                                className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors duration-200 w-full justify-center"
-                                style={{ fontFamily: "var(--font-body)", fontSize: "12px", fontWeight: "var(--font-weight-medium)" }}
+                                className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors duration-200"
+                                style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
                               >
-                                <FileText className="w-3.5 h-3.5" />
-                                Ver alegato completo
+                                {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRightIcon className="w-3.5 h-3.5" />}
+                                {`${row.eventos.length} evento${row.eventos.length !== 1 ? "s" : ""}`}
                               </button>
+                            )
+                          ) : col.expandable && col.key === "pruebasAsociadas" ? (
+                            typeof row[col.key] === "number" && row[col.key] === 0 ? (
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 text-muted-foreground rounded-md opacity-60 cursor-not-allowed" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
+                                <XCircle className="w-3.5 h-3.5" />
+                                Sin pruebas
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  const newExpanded = new Set(expandedRows);
+                                  if (newExpanded.has(row.id)) {
+                                    newExpanded.delete(row.id);
+                                  } else {
+                                    newExpanded.add(row.id);
+                                  }
+                                  setExpandedRows(newExpanded);
+                                }}
+                                className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors duration-200"
+                                style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
+                              >
+                                {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRightIcon className="w-3.5 h-3.5" />}
+                                {typeof row[col.key] === "number" ? (
+                                  row[col.key] === 0 ? "Sin pruebas" : `${row[col.key]} prueba${row[col.key] !== 1 ? 's' : ''}`
+                                ) : typeof row[col.key] === "object" && row[col.key] !== null ? null : row[col.key]}
+                              </button>
+                            )
+                          ) : col.expandable && col.key === "pruebas" && moduleTitle.includes("Alegatos") ? (
+                            // Módulo 4: Alegatos de Conclusión - columna expandible de pruebas
+                            (() => {
+                              const hasPruebas = row.pruebas && row.pruebas.length > 0;
+                              const canExpand = row.alegatosEncontrados && hasPruebas;
+                              return (
+                                <div className="flex items-center gap-2 max-w-[130px]">
+                                  <button
+                                    onClick={() => {
+                                      if (canExpand) {
+                                        const newExpanded = new Set(expandedRows);
+                                        if (newExpanded.has(row.id)) {
+                                          newExpanded.delete(row.id);
+                                        } else {
+                                          newExpanded.add(row.id);
+                                        }
+                                        setExpandedRows(newExpanded);
+                                      }
+                                    }}
+                                    disabled={!canExpand}
+                                    className={cn(
+                                      "flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors duration-200",
+                                      hasPruebas ? "bg-primary/10 hover:bg-primary/15 text-primary" : "bg-muted/30 text-muted-foreground cursor-default"
+                                    )}
+                                    style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
+                                    aria-disabled={!canExpand}
+                                  >
+                                    {canExpand && (isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRightIcon className="w-3.5 h-3.5" />)}
+                                    {hasPruebas ? `${row.pruebas.length} prueba${row.pruebas.length > 1 ? 's' : ''}` : "Sin pruebas"}
+                                  </button>
+                                  <div className="relative group">
+                                    <AlertTriangle className="w-3.5 h-3.5 text-chart-4" />
+                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50">
+                                      <div className="bg-foreground text-background text-xs rounded px-2 py-1 whitespace-nowrap">
+                                        ⚠ Los alegatos no son momento probatorio
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })()
+                          ) : col.truncate && col.key === "resumenDescargo" ? (
+                            <div className="flex items-center gap-2">
+                              <span className="text-foreground" style={bodyXs}>
+                                {row[col.key] && row[col.key] !== "Sin descargos presentados" ? "Sí" : "No"}
+                              </span>
+                              {row[col.key] && row[col.key] !== "Sin descargos presentados" && (
+                                <button
+                                  onClick={() => {
+                                    const identifier = row.radicado || row.pliego || row.acto || "Registro";
+                                    handleOpenResumenDescargo(
+                                      row.resumenCompletoDescargo || row[col.key],
+                                      row.documentos?.archivos || [],
+                                      identifier
+                                    );
+                                  }}
+                                  className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors duration-200"
+                                  style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
+                                >
+                                  <FileText className="w-3.5 h-3.5" />
+                                  Ver documentos
+                                </button>
+                              )}
                             </div>
-                          </div>
-                        )
-                      ) : col.truncate && col.key === "resumenDescargos" && moduleTitle.includes("Actos") ? (
-                        // Módulo 3: Resumen de descargos con modal
-                        row[col.key] === "Sin descargos presentados" || !row[col.key] ? (
-                          <span className="text-muted-foreground italic" style={bodyXs}>Sin resumen</span>
-                        ) : (
-                          <div className="max-w-[250px]">
-                            <p 
-                              className="text-muted-foreground line-clamp-2" 
-                              style={{ 
-                                fontFamily: "var(--font-body)", 
-                                fontSize: "13px", 
-                                fontWeight: "var(--font-weight-normal)",
-                                lineHeight: "1.5"
-                              }}
-                            >
-                              {row[col.key]}
-                            </p>
+                          ) : col.truncate && col.key === "resumenAlegato" && moduleTitle.includes("Alegatos") ? (
+                            // Módulo 4: Resumen de alegato con modal - mejorado
+                            !row.alegatosEncontrados ? (
+                              <span className="text-muted-foreground italic" style={bodyXs}>N/A</span>
+                            ) : (
+                              <div className="max-w-[300px]">
+                                <div className="bg-muted/20 border border-border rounded-lg p-3 space-y-2">
+                                  <p
+                                    className="text-foreground line-clamp-3"
+                                    style={{
+                                      fontFamily: "var(--font-body)",
+                                      fontSize: "13px",
+                                      fontWeight: "var(--font-weight-normal)",
+                                      lineHeight: "1.6"
+                                    }}
+                                  >
+                                    {row[col.key]}
+                                  </p>
+                                  <button
+                                    onClick={() => {
+                                      setResumenModalOpen(true);
+                                      setSelectedResumen(row);
+                                    }}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors duration-200 w-full justify-center"
+                                    style={{ fontFamily: "var(--font-body)", fontSize: "12px", fontWeight: "var(--font-weight-medium)" }}
+                                  >
+                                    <FileText className="w-3.5 h-3.5" />
+                                    Ver alegato completo
+                                  </button>
+                                </div>
+                              </div>
+                            )
+                          ) : col.truncate && col.key === "resumenDescargos" && moduleTitle.includes("Actos") ? (
+                            // Módulo 3: Resumen de descargos con modal
+                            row[col.key] === "Sin descargos presentados" || !row[col.key] ? (
+                              <span className="text-muted-foreground italic" style={bodyXs}>Sin resumen</span>
+                            ) : (
+                              <div className="max-w-[250px]">
+                                <p
+                                  className="text-muted-foreground line-clamp-2"
+                                  style={{
+                                    fontFamily: "var(--font-body)",
+                                    fontSize: "13px",
+                                    fontWeight: "var(--font-weight-normal)",
+                                    lineHeight: "1.5"
+                                  }}
+                                >
+                                  {row[col.key]}
+                                </p>
+                                <button
+                                  onClick={() => {
+                                    setResumenModalOpen(true);
+                                    setSelectedResumen({
+                                      resumenCompleto: row[col.key],
+                                      documentos: row.documentos?.archivos || [],
+                                      radicado: row.acto
+                                    });
+                                  }}
+                                  className="text-primary hover:underline text-xs mt-0.5"
+                                  style={{ fontFamily: "var(--font-body)", fontSize: "13px", fontWeight: "var(--font-weight-normal)" }}
+                                >
+                                  ...Ver más
+                                </button>
+                              </div>
+                            )
+                          ) : col.key === "cargosFormulados" ? (
                             <button
-                              onClick={() => {
-                                setResumenModalOpen(true);
-                                setSelectedResumen({
-                                  resumenCompleto: row[col.key],
-                                  documentos: row.documentos?.archivos || [],
-                                  radicado: row.acto
-                                });
-                              }}
-                              className="text-primary hover:underline text-xs mt-0.5"
-                              style={{ fontFamily: "var(--font-body)", fontSize: "13px", fontWeight: "var(--font-weight-normal)" }}
+                              onClick={() => handleOpenValidation(row.acto, row.estadoRUES, row.pliego)}
+                              className="hover:opacity-80 cursor-pointer text-left transition-opacity"
+                              title="Click para ver validación completa"
                             >
-                              ...Ver más
+                              {col.render ? col.render(row[col.key], row) : (typeof row[col.key] === "object" && row[col.key] !== null ? null : row[col.key])}
                             </button>
-                          </div>
-                        )
-                      ) : col.key === "cargosFormulados" ? (
-                        <button
-                          onClick={() => handleOpenValidation(row.acto, row.estadoRUES, row.pliego)}
-                          className="hover:opacity-80 cursor-pointer text-left transition-opacity"
-                          title="Click para ver validación completa"
-                        >
-                          {col.render ? col.render(row[col.key], row) : (typeof row[col.key] === "object" && row[col.key] !== null ? null : row[col.key])}
-                        </button>
-                      ) : col.key === "hallazgosSER" ? (
-                        // Para Módulo 3 (objeto con cargos) o Módulo 5 (clickeable)
-                        typeof row.hallazgosSER === 'object' && row.hallazgosSER?.cargos ? (
-                          <button
-                            onClick={() => handleOpenHallazgosSER(row.hallazgosSER, row.acto, row.pliego, row.estadoRUES)}
-                            className="hover:opacity-80 cursor-pointer text-left transition-opacity"
-                            title="Click para ver hallazgos del SER"
-                          >
-                            {col.render ? col.render(row[col.key], row) : <span style={bodyXs}>Sin datos</span>}
-                          </button>
-                        ) : moduleTitle.includes("Cumplimiento") ? (
-                          <button
-                            onClick={() => handleOpenValidation(row.acto || "", row.estadoRUES, row.pliego)}
-                            className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                            style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
-                            title="Click para ver validación completa"
-                          >
-                            <ClipboardCheck className="w-3.5 h-3.5" />
-                            {String(row.hallazgosSER || 'Ver validación completa')}
-                          </button>
-                        ) : (
-                          <span style={bodyXs}>{String(row.hallazgosSER || 'N/A')}</span>
-                        )
-                      ) : col.key === "validacionCompleta" ? (
-                        <button
-                          onClick={() => handleOpenCumplimiento(row.acto, row.operador, row.estadoRUES)}
-                          className="flex items-center gap-2 text-chart-2 hover:text-chart-2/80 transition-colors font-medium"
-                          style={bodyXs}
-                          title="Click para ver validación completa por cargo y periodo"
-                        >
-                          <ClipboardCheck className="w-3.5 h-3.5" />
-                          {typeof row[col.key] === "object" && row[col.key] !== null ? null : row[col.key]}
-                        </button>
-                      ) : col.render ? col.render(row[col.key], row) : (
-                        typeof row[col.key] === 'object' && row[col.key] !== null
-                          ? <span style={bodyXs}>-</span>
-                          : row[col.key]
-                      )}
-                  </TableCell>
-                ))}
-                  <TableCell className="text-right pr-4 md:pr-6 py-4 md:py-5 whitespace-nowrap">
-                    <Button variant="ghost" className="text-foreground hover:text-primary hover:bg-transparent gap-1 md:gap-2 h-auto p-0 text-xs" style={bodyXs}>
-                      <Download className="h-3.5 w-3.5 md:h-4 md:w-4" /><span className="hidden sm:inline">Descargar</span>
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                          ) : col.key === "hallazgosSER" ? (
+                            // Para Módulo 3 (objeto con cargos) o Módulo 5 (clickeable)
+                            typeof row.hallazgosSER === 'object' && row.hallazgosSER?.cargos ? (
+                              <button
+                                onClick={() => handleOpenHallazgosSER(row.hallazgosSER, row.acto, row.pliego, row.estadoRUES)}
+                                className="hover:opacity-80 cursor-pointer text-left transition-opacity"
+                                title="Click para ver hallazgos del SER"
+                              >
+                                {col.render ? col.render(row[col.key], row) : <span style={bodyXs}>Sin datos</span>}
+                              </button>
+                            ) : moduleTitle.includes("Cumplimiento") ? (
+                              <button
+                                onClick={() => handleOpenValidation(row.acto || "", row.estadoRUES, row.pliego)}
+                                className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                                style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
+                                title="Click para ver validación completa"
+                              >
+                                <ClipboardCheck className="w-3.5 h-3.5" />
+                                {String(row.hallazgosSER || 'Ver validación completa')}
+                              </button>
+                            ) : (
+                              <span style={bodyXs}>{String(row.hallazgosSER || 'N/A')}</span>
+                            )
+                          ) : col.key === "validacionCompleta" ? (
+                            <button
+                              onClick={() => handleOpenCumplimiento(row.acto, row.operador, row.estadoRUES)}
+                              className="flex items-center gap-2 text-chart-2 hover:text-chart-2/80 transition-colors font-medium"
+                              style={bodyXs}
+                              title="Click para ver validación completa por cargo y periodo"
+                            >
+                              <ClipboardCheck className="w-3.5 h-3.5" />
+                              {typeof row[col.key] === "object" && row[col.key] !== null ? null : row[col.key]}
+                            </button>
+                          ) : col.render ? col.render(row[col.key], row) : (
+                            typeof row[col.key] === 'object' && row[col.key] !== null
+                              ? <span style={bodyXs}>-</span>
+                              : row[col.key]
+                          )}
+                        </TableCell>
+                      ))}
+                      <TableCell className="text-right pr-4 md:pr-6 py-4 md:py-5 whitespace-nowrap">
+                        <Button variant="ghost" className="text-foreground hover:text-primary hover:bg-transparent gap-1 md:gap-2 h-auto p-0 text-xs" style={bodyXs}>
+                          <Download className="h-3.5 w-3.5 md:h-4 md:w-4" /><span className="hidden sm:inline">Descargar</span>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
 
-                {/* Fila expandida con timeline de eventos de notificación */}
-                {isExpanded && hasEventos && (
-                  <TableRow>
-                    <TableCell colSpan={columns.length + 1 + (showRowCheckboxColumn ? 1 : 0)} className="bg-muted/10 p-4">
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between gap-2 flex-wrap">
-                          <h4 className="text-foreground" style={{ ...bodyBase, fontWeight: "var(--font-weight-bold)" }}>
-                            Trazabilidad de la notificación · {row.pliego}
-                          </h4>
-                          <span className="text-muted-foreground" style={bodyXs}>
-                            {row.eventos.length} evento{row.eventos.length !== 1 ? "s" : ""} registrados
-                          </span>
-                        </div>
-                        <ol className="relative border-l-2 border-border ml-2 space-y-3">
-                          {row.eventos.map((ev: any, idx: number) => {
-                            const tipoVariants: Record<string, { variant: "info" | "success" | "warning" | "destructive" | "neutral"; icon: React.ReactNode }> = {
-                              "Citación": { variant: "info", icon: <FileCheck className="w-3 h-3" /> },
-                              "Envío electrónico": { variant: "info", icon: <FileText className="w-3 h-3" /> },
-                              "Entrega física": { variant: "info", icon: <FileText className="w-3 h-3" /> },
-                              "Devolución": { variant: "destructive", icon: <XOctagon className="w-3 h-3" /> },
-                              "Relanzamiento": { variant: "warning", icon: <Clock className="w-3 h-3" /> },
-                              "Aviso": { variant: "warning", icon: <AlertTriangle className="w-3 h-3" /> },
-                              "Notificación efectiva": { variant: "success", icon: <CheckCircle2 className="w-3 h-3" /> },
-                            };
-                            const cfg = tipoVariants[ev.tipo] || { variant: "neutral" as const, icon: <Clock className="w-3 h-3" /> };
-                            const dotColor: Record<string, string> = {
-                              info: "bg-primary border-primary",
-                              success: "bg-chart-2 border-chart-2",
-                              warning: "bg-chart-4 border-chart-4",
-                              destructive: "bg-destructive border-destructive",
-                              neutral: "bg-muted-foreground border-muted-foreground",
-                            };
-                            return (
-                              <li key={ev.id || idx} className="ml-4 relative">
-                                <span className={cn("absolute -left-[1.45rem] top-1.5 w-3 h-3 rounded-full border-2 border-background", dotColor[cfg.variant])} aria-hidden />
-                                <div className="bg-card border border-border rounded-lg p-3 space-y-2">
-                                  <div className="flex items-center justify-between gap-2 flex-wrap">
-                                    <div className="flex items-center gap-2 flex-wrap">
-                                      <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>{ev.fecha}</span>
-                                      <StatusBadge label={ev.tipo} variant={cfg.variant} icon={cfg.icon} />
-                                      {ev.medio && (
-                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-muted/40 text-muted-foreground rounded-md" style={{ ...bodyXs, fontSize: "11px" }}>
-                                          {ev.medio === "Correo electrónico" ? <FileText className="w-3 h-3 text-primary" /> : <FileText className="w-3 h-3" />}
-                                          {ev.medio}
-                                        </span>
+                    {/* Fila expandida con timeline de eventos de notificación */}
+                    {isExpanded && hasEventos && (
+                      <TableRow>
+                        <TableCell colSpan={columns.length + 1 + (showRowCheckboxColumn ? 1 : 0)} className="bg-muted/10 p-4">
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between gap-2 flex-wrap">
+                              <h4 className="text-foreground" style={{ ...bodyBase, fontWeight: "var(--font-weight-bold)" }}>
+                                Trazabilidad de la notificación · {row.pliego}
+                              </h4>
+                              <span className="text-muted-foreground" style={bodyXs}>
+                                {row.eventos.length} evento{row.eventos.length !== 1 ? "s" : ""} registrados
+                              </span>
+                            </div>
+                            <ol className="relative border-l-2 border-border ml-2 space-y-3">
+                              {row.eventos.map((ev: any, idx: number) => {
+                                const tipoVariants: Record<string, { variant: "info" | "success" | "warning" | "destructive" | "neutral"; icon: React.ReactNode }> = {
+                                  "Citación": { variant: "info", icon: <FileCheck className="w-3 h-3" /> },
+                                  "Envío electrónico": { variant: "info", icon: <FileText className="w-3 h-3" /> },
+                                  "Entrega física": { variant: "info", icon: <FileText className="w-3 h-3" /> },
+                                  "Devolución": { variant: "destructive", icon: <XOctagon className="w-3 h-3" /> },
+                                  "Relanzamiento": { variant: "warning", icon: <Clock className="w-3 h-3" /> },
+                                  "Aviso": { variant: "warning", icon: <AlertTriangle className="w-3 h-3" /> },
+                                  "Notificación efectiva": { variant: "success", icon: <CheckCircle2 className="w-3 h-3" /> },
+                                };
+                                const cfg = tipoVariants[ev.tipo] || { variant: "neutral" as const, icon: <Clock className="w-3 h-3" /> };
+                                const dotColor: Record<string, string> = {
+                                  info: "bg-primary border-primary",
+                                  success: "bg-chart-2 border-chart-2",
+                                  warning: "bg-chart-4 border-chart-4",
+                                  destructive: "bg-destructive border-destructive",
+                                  neutral: "bg-muted-foreground border-muted-foreground",
+                                };
+                                return (
+                                  <li key={ev.id || idx} className="ml-4 relative">
+                                    <span className={cn("absolute -left-[1.45rem] top-1.5 w-3 h-3 rounded-full border-2 border-background", dotColor[cfg.variant])} aria-hidden />
+                                    <div className="bg-card border border-border rounded-lg p-3 space-y-2">
+                                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>{ev.fecha}</span>
+                                          <StatusBadge label={ev.tipo} variant={cfg.variant} icon={cfg.icon} />
+                                          {ev.medio && (
+                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-muted/40 text-muted-foreground rounded-md" style={{ ...bodyXs, fontSize: "11px" }}>
+                                              {ev.medio === "Correo electrónico" ? <FileText className="w-3 h-3 text-primary" /> : <FileText className="w-3 h-3" />}
+                                              {ev.medio}
+                                            </span>
+                                          )}
+                                        </div>
+                                        {ev.usuario && (
+                                          <span className="text-muted-foreground" style={{ ...bodyXs, fontSize: "11px" }}>
+                                            <User className="w-3 h-3 inline mr-1" />{ev.usuario}
+                                          </span>
+                                        )}
+                                      </div>
+                                      {ev.direccion && (
+                                        <div className="text-muted-foreground" style={bodyXs}>
+                                          <span className="text-foreground" style={{ fontWeight: "var(--font-weight-medium)" }}>Dirección/correo:</span> {ev.direccion}
+                                        </div>
+                                      )}
+                                      {ev.resultado && (
+                                        <div className="text-muted-foreground" style={bodyXs}>
+                                          <span className="text-foreground" style={{ fontWeight: "var(--font-weight-medium)" }}>Resultado:</span> {ev.resultado}
+                                        </div>
+                                      )}
+                                      {ev.observacion && (
+                                        <div className="text-muted-foreground" style={bodyXs}>
+                                          <span className="text-foreground" style={{ fontWeight: "var(--font-weight-medium)" }}>Observación:</span> {ev.observacion}
+                                        </div>
+                                      )}
+                                      {ev.documento && (
+                                        <button
+                                          onClick={() => handleDownloadFile(ev.documento.nombre)}
+                                          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors w-fit"
+                                          style={{ ...bodyXs, fontSize: "11px" }}
+                                        >
+                                          <Download className="w-3.5 h-3.5" />
+                                          {ev.documento.nombre}
+                                        </button>
                                       )}
                                     </div>
-                                    {ev.usuario && (
-                                      <span className="text-muted-foreground" style={{ ...bodyXs, fontSize: "11px" }}>
-                                        <User className="w-3 h-3 inline mr-1" />{ev.usuario}
-                                      </span>
+                                  </li>
+                                );
+                              })}
+                            </ol>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+
+                    {/* Fila expandida con grilla de pruebas */}
+                    {isExpanded && row.pruebas && row.pruebas.length > 0 && (
+                      <TableRow>
+                        <TableCell colSpan={columns.length + 1 + (showRowCheckboxColumn ? 1 : 0)} className="bg-muted/10 p-4">
+                          <div className="space-y-3">
+                            <h4 className="text-foreground font-medium" style={{ ...bodyBase, fontWeight: "var(--font-weight-bold)" }}>
+                              Detalle de pruebas
+                            </h4>
+                            <div className="grid grid-cols-1 gap-3">
+                              {row.pruebas.map((prueba: any) => (
+                                <div key={prueba.id} className="bg-card border border-border rounded-lg p-3 space-y-2">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex-1 space-y-1">
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="text-foreground font-medium" style={bodyXs}>{prueba.nombre}</span>
+                                        <StatusBadge
+                                          label={prueba.tipo === "anexada" ? "Anexada" : "Solicitada"}
+                                          variant={prueba.tipo === "anexada" ? "success" : "info"}
+                                        />
+                                        <span className="text-muted-foreground text-xs">
+                                          Tipo: {prueba.tipoPrueba}
+                                        </span>
+                                      </div>
+                                      {prueba.descripcion && (
+                                        <p className="text-muted-foreground text-xs">{prueba.descripcion}</p>
+                                      )}
+                                    </div>
+                                    {prueba.documento && (
+                                      <button
+                                        onClick={() => handleDownloadFile(prueba.documento.nombre)}
+                                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors"
+                                        style={{ ...bodyXs, fontSize: "11px" }}
+                                      >
+                                        <Download className="w-3.5 h-3.5" />
+                                        <span className="hidden sm:inline">{prueba.documento.nombre}</span>
+                                        <span className="sm:hidden">Descargar</span>
+                                      </button>
                                     )}
                                   </div>
-                                  {ev.direccion && (
-                                    <div className="text-muted-foreground" style={bodyXs}>
-                                      <span className="text-foreground" style={{ fontWeight: "var(--font-weight-medium)" }}>Dirección/correo:</span> {ev.direccion}
-                                    </div>
-                                  )}
-                                  {ev.resultado && (
-                                    <div className="text-muted-foreground" style={bodyXs}>
-                                      <span className="text-foreground" style={{ fontWeight: "var(--font-weight-medium)" }}>Resultado:</span> {ev.resultado}
-                                    </div>
-                                  )}
-                                  {ev.observacion && (
-                                    <div className="text-muted-foreground" style={bodyXs}>
-                                      <span className="text-foreground" style={{ fontWeight: "var(--font-weight-medium)" }}>Observación:</span> {ev.observacion}
-                                    </div>
-                                  )}
-                                  {ev.documento && (
-                                    <button
-                                      onClick={() => handleDownloadFile(ev.documento.nombre)}
-                                      className="flex items-center gap-1.5 px-2.5 py-1.5 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors w-fit"
-                                      style={{ ...bodyXs, fontSize: "11px" }}
-                                    >
-                                      <Download className="w-3.5 h-3.5" />
-                                      {ev.documento.nombre}
-                                    </button>
-                                  )}
                                 </div>
-                              </li>
-                            );
-                          })}
-                        </ol>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )}
-
-                {/* Fila expandida con grilla de pruebas */}
-                {isExpanded && row.pruebas && row.pruebas.length > 0 && (
-                  <TableRow>
-                    <TableCell colSpan={columns.length + 1 + (showRowCheckboxColumn ? 1 : 0)} className="bg-muted/10 p-4">
-                      <div className="space-y-3">
-                        <h4 className="text-foreground font-medium" style={{ ...bodyBase, fontWeight: "var(--font-weight-bold)" }}>
-                          Detalle de pruebas
-                        </h4>
-                        <div className="grid grid-cols-1 gap-3">
-                          {row.pruebas.map((prueba: any) => (
-                            <div key={prueba.id} className="bg-card border border-border rounded-lg p-3 space-y-2">
-                              <div className="flex items-start justify-between gap-2">
-                                <div className="flex-1 space-y-1">
-                                  <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="text-foreground font-medium" style={bodyXs}>{prueba.nombre}</span>
-                                    <StatusBadge 
-                                      label={prueba.tipo === "anexada" ? "Anexada" : "Solicitada"} 
-                                      variant={prueba.tipo === "anexada" ? "success" : "info"} 
-                                    />
-                                    <span className="text-muted-foreground text-xs">
-                                      Tipo: {prueba.tipoPrueba}
-                                    </span>
-                                  </div>
-                                  {prueba.descripcion && (
-                                    <p className="text-muted-foreground text-xs">{prueba.descripcion}</p>
-                                  )}
-                                </div>
-                                {prueba.documento && (
-                                  <button
-                                    onClick={() => handleDownloadFile(prueba.documento.nombre)}
-                                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors"
-                                    style={{ ...bodyXs, fontSize: "11px" }}
-                                  >
-                                    <Download className="w-3.5 h-3.5" />
-                                    <span className="hidden sm:inline">{prueba.documento.nombre}</span>
-                                    <span className="sm:hidden">Descargar</span>
-                                  </button>
-                                )}
-                              </div>
+                              ))}
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </React.Fragment>
-              );
-            })}
-          </TableBody>
-        </Table>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </TableBody>
+          </Table>
         </div>
-        
+
         {/* Vista de cards para móvil */}
         <div className="md:hidden">
           {paginatedData.length === 0 ? (
@@ -1605,9 +1605,9 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
               {paginatedData.map((row, index) => {
                 const hasDocuments = row.documentos && row.documentos.archivos && row.documentos.archivos.length > 0;
                 const isRUESInactive = row.estadoRUES && row.estadoRUES !== "Activa";
-                
+
                 return (
-                  <div 
+                  <div
                     key={row.id || index}
                     className={cn(
                       "p-4 space-y-3",
@@ -1622,7 +1622,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                         </span>
                       </div>
                     )}
-                    
+
                     {columns.map((col, colIdx) => {
                       if (col.key === "documentos" && !hasDocuments) return null;
 
@@ -1738,11 +1738,11 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                                 <span className="text-muted-foreground italic" style={bodyXs}>N/A</span>
                               ) : (
                                 <div className="bg-muted/20 border border-border rounded-lg p-3 space-y-2">
-                                  <p 
-                                    className="text-foreground line-clamp-3" 
-                                    style={{ 
-                                      fontFamily: "var(--font-body)", 
-                                      fontSize: "13px", 
+                                  <p
+                                    className="text-foreground line-clamp-3"
+                                    style={{
+                                      fontFamily: "var(--font-body)",
+                                      fontSize: "13px",
                                       fontWeight: "var(--font-weight-normal)",
                                       lineHeight: "1.6"
                                     }}
@@ -1768,11 +1768,11 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                                 <span className="text-muted-foreground italic" style={bodyXs}>Sin resumen</span>
                               ) : (
                                 <div>
-                                  <p 
-                                    className="text-muted-foreground line-clamp-2" 
-                                    style={{ 
-                                      fontFamily: "var(--font-body)", 
-                                      fontSize: "13px", 
+                                  <p
+                                    className="text-muted-foreground line-clamp-2"
+                                    style={{
+                                      fontFamily: "var(--font-body)",
+                                      fontSize: "13px",
                                       fontWeight: "var(--font-weight-normal)",
                                       lineHeight: "1.5"
                                     }}
@@ -1867,7 +1867,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                         </div>
                       );
                     })}
-                    
+
                     {/* Grilla de pruebas expandida (móvil) */}
                     {expandedRows.has(row.id) && row.pruebas && row.pruebas.length > 0 && (
                       <div className="pt-3 space-y-3 border-t border-border/40 mt-3">
@@ -1880,9 +1880,9 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                               <div className="space-y-2">
                                 <div className="flex items-center gap-2 flex-wrap">
                                   <span className="text-foreground font-medium" style={bodyXs}>{prueba.nombre}</span>
-                                  <StatusBadge 
-                                    label={prueba.tipo === "anexada" ? "Anexada" : "Solicitada"} 
-                                    variant={prueba.tipo === "anexada" ? "success" : "info"} 
+                                  <StatusBadge
+                                    label={prueba.tipo === "anexada" ? "Anexada" : "Solicitada"}
+                                    variant={prueba.tipo === "anexada" ? "success" : "info"}
                                   />
                                 </div>
                                 <div className="text-muted-foreground text-xs">
@@ -1907,11 +1907,11 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                         </div>
                       </div>
                     )}
-                    
+
                     <div className="pt-2 border-t border-border/40 mt-3">
-                      <Button 
-                        variant="ghost" 
-                        className="text-foreground hover:text-primary hover:bg-transparent gap-2 h-auto p-0 w-full justify-center py-2" 
+                      <Button
+                        variant="ghost"
+                        className="text-foreground hover:text-primary hover:bg-transparent gap-2 h-auto p-0 w-full justify-center py-2"
                         style={bodyXs}
                       >
                         <Download className="h-4 w-4" />
@@ -1952,7 +1952,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
         <DialogContent className="max-w-[90vw] w-full md:max-w-[70vw] lg:max-w-[60vw] h-[80vh] sm:h-[75vh] p-0 gap-0 bg-background rounded-xl overflow-hidden flex flex-col border-none outline-none shadow-elevation-sm">
           <DialogTitle className="sr-only">Visor de documento</DialogTitle>
           <DialogDescription className="sr-only">Vista previa del documento seleccionado</DialogDescription>
-          
+
           {/* Header con Breadcrumb */}
           <div className="bg-card border-b border-border shrink-0">
             <div className="px-4 sm:px-6 py-3 space-y-2">
@@ -1966,7 +1966,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                   Visor de documento
                 </span>
               </div>
-              
+
               {/* Título */}
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -2017,7 +2017,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
       <ConfirmDialog
         open={showExportConfirm}
         onOpenChange={setShowExportConfirm}
-        onConfirm={() => {}}
+        onConfirm={() => { }}
         title="Exportar resultados"
         description={moduleTitle.includes("Verificacion de Notificacion del Pliego")
           ? `Se generará un archivo Excel con los ${selectedRowCount} registros del análisis de “Verificación de Notificación del Pliego”. ¿Desea continuar con la descarga?\n\nEl documento descargado incluirá la siguiente información: medio de entrega, tipo de notificación, fecha de notificación, si fue o no notificado, y el año, mes y día del pliego.`
@@ -2183,8 +2183,8 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                                     <Badge className={cn(
                                       "border-none",
                                       prueba.origen === "Operador" ? "bg-blue-500/10 text-blue-600" :
-                                      prueba.origen === "Entidad" ? "bg-amber-500/10 text-amber-600" :
-                                      "bg-purple-500/10 text-purple-600"
+                                        prueba.origen === "Entidad" ? "bg-amber-500/10 text-amber-600" :
+                                          "bg-purple-500/10 text-purple-600"
                                     )} style={{ fontSize: "10px" }}>
                                       {prueba.origen}
                                     </Badge>
@@ -2198,9 +2198,9 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                                     <Badge className={cn(
                                       "border-none",
                                       prueba.estado === "Decretada" || prueba.estado === "Aportada" ? "bg-green-500/10 text-green-600" :
-                                      prueba.estado === "Rechazada" ? "bg-red-500/10 text-red-600" :
-                                      prueba.estado === "Desistida" ? "bg-gray-500/10 text-gray-600" :
-                                      "bg-blue-500/10 text-blue-600"
+                                        prueba.estado === "Rechazada" ? "bg-red-500/10 text-red-600" :
+                                          prueba.estado === "Desistida" ? "bg-gray-500/10 text-gray-600" :
+                                            "bg-blue-500/10 text-blue-600"
                                     )} style={{ fontSize: "10px" }}>
                                       {prueba.estado}
                                     </Badge>
@@ -2261,7 +2261,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
           <DialogContent className="max-w-[95vw] w-full md:max-w-[85vw] lg:max-w-[75vw] max-h-[90vh] p-0 gap-0 bg-background rounded-xl overflow-hidden flex flex-col border-none outline-none shadow-elevation-sm">
             <DialogTitle className="sr-only">Validación completa de cumplimiento</DialogTitle>
             <DialogDescription className="sr-only">Detalle completo por cargo y periodo del proceso sancionatorio</DialogDescription>
-            
+
             {/* Header con Breadcrumb */}
             <div className="bg-card border-b border-border shrink-0">
               <div className="px-4 sm:px-6 py-3 space-y-3">
@@ -2277,7 +2277,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                     Validación completa
                   </span>
                 </div>
-                
+
                 {/* Título y Badge */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -2294,7 +2294,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                     </div>
                   </div>
                   {selectedCumplimiento.estadoRUES !== "Activa" && (
-                    <Badge 
+                    <Badge
                       className="bg-warning/10 text-warning border-none flex-shrink-0"
                       style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
                     >
@@ -2317,8 +2317,8 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                         Archivo automático por estado RUES
                       </p>
                       <p className="text-muted-foreground" style={{ ...bodyXs, lineHeight: 1.6 }}>
-                        La empresa se encuentra en estado <strong>{selectedCumplimiento.estadoRUES}</strong> según el sistema RUES. 
-                        De acuerdo con la normativa vigente, se procede al archivo automático del proceso sancionatorio sin importar 
+                        La empresa se encuentra en estado <strong>{selectedCumplimiento.estadoRUES}</strong> según el sistema RUES.
+                        De acuerdo con la normativa vigente, se procede al archivo automático del proceso sancionatorio sin importar
                         el resultado de la validación de cargos individuales.
                       </p>
                     </div>
@@ -2333,7 +2333,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                       Validación por cargos y periodos
                     </h4>
                   </div>
-                  
+
                   <div className="bg-muted/30 border border-border rounded-lg p-8 text-center">
                     <div className="space-y-3">
                       <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
@@ -2343,8 +2343,8 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                         Vista detallada por cargo y periodo
                       </p>
                       <p className="text-muted-foreground max-w-md mx-auto" style={{ ...bodyXs, lineHeight: 1.6 }}>
-                        Esta sección mostrará la información consolidada de todas las etapas anteriores, 
-                        organizada por cada cargo formulado y sus respectivos periodos de evaluación, 
+                        Esta sección mostrará la información consolidada de todas las etapas anteriores,
+                        organizada por cada cargo formulado y sus respectivos periodos de evaluación,
                         incluyendo hallazgos SER, descargos, pruebas, alegatos y la recomendación final.
                       </p>
                     </div>
@@ -2355,15 +2355,15 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
 
             {/* Footer */}
             <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-card shrink-0">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setCumplimientoModalOpen(false)}
                 className="border-border hover:border-foreground text-foreground rounded-lg gap-2"
                 style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
               >
                 Cerrar
               </Button>
-              <Button 
+              <Button
                 className="bg-chart-2 hover:bg-chart-2/90 text-white rounded-lg gap-2"
                 style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
               >
@@ -2380,7 +2380,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
           <DialogContent className="w-[calc(100vw-2rem)] max-w-[1000px] mx-4 max-h-[90vh] overflow-y-auto p-0 gap-0 bg-background border-2 border-border rounded-xl outline-none shadow-elevation-sm [&>button]:hidden">
             <DialogTitle className="sr-only">Hallazgos del SER - {selectedHallazgosSER.acto}</DialogTitle>
             <DialogDescription className="sr-only">Detalle de hallazgos del SER por cargo y periodo</DialogDescription>
-            
+
             {/* Header */}
             <div className="bg-card border-b-2 border-border p-4 md:p-6">
               {/* Breadcrumb */}
@@ -2395,7 +2395,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                   Hallazgos SER
                 </span>
               </div>
-              
+
               {/* Título */}
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-2 flex-1 min-w-0">
@@ -2412,7 +2412,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                       </p>
                     </div>
                   </div>
-                  
+
                   {/* Info del acto */}
                   <div className="flex flex-wrap gap-x-6 gap-y-2 text-muted-foreground mt-3" style={bodyXs}>
                     <span>
@@ -2423,11 +2423,11 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                     </span>
                     <span>
                       <span style={{ fontWeight: "var(--font-weight-medium)" }}>Estado RUES:</span>{" "}
-                      <Badge 
+                      <Badge
                         className={cn(
                           "border-none",
-                          (selectedHallazgosSER.estadoRUES === "Liquidada" || selectedHallazgosSER.estadoRUES === "Cancelada" || selectedHallazgosSER.estadoRUES === "En liquidación") 
-                            ? "bg-destructive/10 text-destructive" 
+                          (selectedHallazgosSER.estadoRUES === "Liquidada" || selectedHallazgosSER.estadoRUES === "Cancelada" || selectedHallazgosSER.estadoRUES === "En liquidación")
+                            ? "bg-destructive/10 text-destructive"
                             : "bg-chart-2/10 text-chart-2"
                         )}
                         style={{ fontSize: "10px" }}
@@ -2437,7 +2437,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                     </span>
                   </div>
                 </div>
-                
+
                 <button
                   onClick={() => setHallazgosSERModalOpen(false)}
                   className="p-2 rounded-lg hover:bg-muted transition-colors shrink-0"
@@ -2493,7 +2493,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                               <span className="text-muted-foreground" style={bodyXs}>
                                 Recomendación:
                               </span>
-                              <Badge 
+                              <Badge
                                 className={cn(
                                   "border-none",
                                   cargo.recomendacion === "Se sanciona" && "bg-destructive/10 text-destructive",
@@ -2521,7 +2521,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                                       <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
                                         {periodo.periodo}
                                       </span>
-                                      <Badge 
+                                      <Badge
                                         className={cn(
                                           "border-none",
                                           periodo.estado === "Pagó" && "bg-chart-2/10 text-chart-2",
@@ -2536,7 +2536,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                                         {periodo.estado}
                                       </Badge>
                                     </div>
-                                    
+
                                     {periodo.imagenes && periodo.imagenes.length > 0 && (
                                       <div className="flex items-center gap-2 text-muted-foreground" style={bodyXs}>
                                         <ImageIcon className="w-3.5 h-3.5" />
@@ -2546,7 +2546,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                                   </div>
 
                                   {periodo.imagenes && periodo.imagenes.length > 0 && (
-                                    <button 
+                                    <button
                                       className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/15 text-primary rounded-lg transition-colors duration-200 w-full md:w-auto justify-center"
                                       style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
                                       onClick={() => {
@@ -2586,15 +2586,15 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
 
             {/* Footer */}
             <div className="flex items-center justify-end gap-3 px-6 py-4 border-t-2 border-border bg-card shrink-0">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setHallazgosSERModalOpen(false)}
                 className="border-border hover:border-foreground text-foreground rounded-lg"
                 style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
               >
                 Cerrar
               </Button>
-              <Button 
+              <Button
                 className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg gap-2"
                 style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
               >
@@ -2610,14 +2610,14 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
       {selectedResumen && resumenModalOpen && (() => {
         // Detectar si es alegato o descargo
         const esAlegato = selectedResumen.resumenAlegato !== undefined;
-        const hayDocumentos = esAlegato 
+        const hayDocumentos = esAlegato
           ? (selectedResumen.documentos?.archivos && selectedResumen.documentos.archivos.length > 0)
           : (selectedResumen.documentos && selectedResumen.documentos.length > 0);
-        
-        const documentos = esAlegato 
+
+        const documentos = esAlegato
           ? (selectedResumen.documentos?.archivos || [])
           : (selectedResumen.documentos || []);
-        
+
         const selectedDoc = hayDocumentos ? documentos[selectedDocIndexResumen] : null;
         const textoResumen = esAlegato ? selectedResumen.resumenAlegato : selectedResumen.resumenCompleto;
 
@@ -2633,7 +2633,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
             <DialogContent className="w-[calc(100vw-2rem)] max-w-[900px] mx-4 max-h-[85vh] overflow-y-auto p-0 gap-0 bg-background border-2 border-border rounded-xl outline-none shadow-elevation-sm [&>button]:hidden flex flex-col">
               <DialogTitle className="sr-only">Descargos - {selectedResumen.radicado}</DialogTitle>
               <DialogDescription className="sr-only">Información de descargos y documentos adjuntos</DialogDescription>
-              
+
               {/* Header */}
               <div className="bg-card border-b-2 border-border p-4 md:p-6 shrink-0">
                 {/* Breadcrumb */}
@@ -2685,7 +2685,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                   <div className="mt-4 bg-[#FEF3C7] border border-[#F59E0B] rounded-lg p-3 flex items-start gap-3">
                     <AlertTriangle className="w-4 h-4 text-[#F59E0B] shrink-0 mt-0.5" />
                     <p className="text-muted-foreground" style={{ ...bodyXs, fontSize: "11px" }}>
-                      <strong>NOTA IMPORTANTE:</strong> Los alegatos de conclusión NO constituyen momento probatorio formal. 
+                      <strong>NOTA IMPORTANTE:</strong> Los alegatos de conclusión NO constituyen momento probatorio formal.
                       Son argumentos finales de defensa presentados por el operador.
                     </p>
                   </div>
@@ -2846,7 +2846,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
           <DialogContent className="w-[calc(100vw-2rem)] max-w-[900px] mx-4 max-h-[85vh] overflow-y-auto p-0 gap-0 bg-background border-2 border-border rounded-xl outline-none shadow-elevation-sm [&>button]:hidden">
             <DialogTitle className="sr-only">Validación del Acto {selectedActoValidacion.acto}</DialogTitle>
             <DialogDescription className="sr-only">Detalle completo de cargos, periodos y hallazgos del SER</DialogDescription>
-            
+
             {/* Header */}
             <div className="bg-card border-b-2 border-border p-6">
               <div className="flex items-center justify-between gap-4">
@@ -2934,15 +2934,15 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                             "Cesó": { color: "#6B7280", bg: "#F3F4F6" },
                           };
                           const config = hallazgoConfig[periodo.hallazgo] || { color: "#6B7280", bg: "#F3F4F6" };
-                          
+
                           return (
                             <tr key={periodoIndex} className="border-b border-border last:border-0 hover:bg-muted/10">
                               <td className="p-3 text-foreground" style={bodyXs}>{periodo.periodo}</td>
                               <td className="p-3">
-                                <Badge 
+                                <Badge
                                   className="border-none px-3 py-1"
-                                  style={{ 
-                                    backgroundColor: config.bg, 
+                                  style={{
+                                    backgroundColor: config.bg,
                                     color: config.color,
                                     ...bodyXs,
                                     fontWeight: "var(--font-weight-medium)"
@@ -2985,8 +2985,8 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                   {/* Recomendación del cargo */}
                   <div className={cn(
                     "rounded-lg border-2 p-4",
-                    cargo.recomendacion === "Sanción" 
-                      ? "border-destructive/40 bg-destructive/5" 
+                    cargo.recomendacion === "Sanción"
+                      ? "border-destructive/40 bg-destructive/5"
                       : "border-chart-2/40 bg-chart-2/5"
                   )}>
                     <div className="flex items-start gap-3">
@@ -2996,7 +2996,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                         <CheckCircle2 className="w-5 h-5 text-chart-2 shrink-0 mt-0.5" />
                       )}
                       <div className="flex-1 space-y-1">
-                        <p 
+                        <p
                           className={cargo.recomendacion === "Sanción" ? "text-destructive" : "text-chart-2"}
                           style={{ ...bodyBase, fontWeight: "var(--font-weight-bold)" }}
                         >
@@ -3024,11 +3024,11 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                     : "border-chart-2 bg-chart-2/5"
                 )}>
                   <div className="text-center space-y-3">
-                    <h3 
+                    <h3
                       className={selectedActoValidacion.hallazgosSER?.recomendacionFinal === "Sanción" ? "text-destructive" : "text-chart-2"}
                       style={{ ...headingBold, fontSize: "var(--text-lg)" }}
                     >
-                      {selectedActoValidacion.hallazgosSER?.recomendacionFinal === "Sanción" 
+                      {selectedActoValidacion.hallazgosSER?.recomendacionFinal === "Sanción"
                         ? "🔴 CONTINUAR A DECISIÓN DE SANCIÓN"
                         : "🟢 ARCHIVO DEL PROCESO"}
                     </h3>
@@ -3042,8 +3042,8 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
 
             {/* Footer */}
             <div className="flex items-center justify-end gap-3 px-6 py-4 border-t-2 border-border bg-card">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setValidacionActoModalOpen(false)}
                 className="border-border hover:border-foreground text-foreground rounded-lg"
                 style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
@@ -3061,7 +3061,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
           <DialogContent className="w-[calc(100vw-2rem)] max-w-[800px] mx-4 max-h-[90vh] overflow-y-auto p-0 gap-0 bg-background border-2 border-border rounded-xl outline-none shadow-elevation-sm [&>button]:hidden">
             <DialogTitle className="sr-only">Imágenes SER - {selectedImagenesGaleria.periodo}</DialogTitle>
             <DialogDescription className="sr-only">Galería de imágenes del sistema SER</DialogDescription>
-            
+
             {/* Header */}
             <div className="bg-card border-b-2 border-border p-6">
               <div className="flex items-center justify-between gap-4">
@@ -3121,10 +3121,10 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                     };
                     const config = hallazgoConfig[selectedImagenesGaleria.hallazgo] || { color: "#6B7280", bg: "#F3F4F6" };
                     return (
-                      <Badge 
+                      <Badge
                         className="border-none px-3 py-1"
-                        style={{ 
-                          backgroundColor: config.bg, 
+                        style={{
+                          backgroundColor: config.bg,
                           color: config.color,
                           ...bodyBase,
                           fontWeight: "var(--font-weight-medium)"
@@ -3139,8 +3139,8 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
 
               {/* Imagen actual */}
               <div className="bg-muted/20 rounded-lg border-2 border-border overflow-hidden aspect-video flex items-center justify-center">
-                <img 
-                  src={selectedImagenesGaleria.imagenes[currentImageIndex]?.url} 
+                <img
+                  src={selectedImagenesGaleria.imagenes[currentImageIndex]?.url}
                   alt={selectedImagenesGaleria.imagenes[currentImageIndex]?.descripcion || `Imagen ${currentImageIndex + 1}`}
                   className="w-full h-full object-contain"
                 />
@@ -3155,11 +3155,11 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
-                
+
                 <span className="text-foreground" style={{ ...bodyBase, fontWeight: "var(--font-weight-medium)" }}>
                   {currentImageIndex + 1} de {selectedImagenesGaleria.imagenes.length}
                 </span>
-                
+
                 <button
                   onClick={() => setCurrentImageIndex(Math.min(selectedImagenesGaleria.imagenes.length - 1, currentImageIndex + 1))}
                   disabled={currentImageIndex === selectedImagenesGaleria.imagenes.length - 1}
@@ -3193,8 +3193,8 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
 
             {/* Footer */}
             <div className="flex items-center justify-end gap-3 px-6 py-4 border-t-2 border-border bg-card">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setGaleriaImagenesModalOpen(false)}
                 className="border-border hover:border-foreground text-foreground rounded-lg"
                 style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
@@ -3218,8 +3218,8 @@ const STEPS: { key: Step; label: string }[] = [
 ];
 
 /* Modal de Galería de Imágenes SER */
-function ImageGalleryModal({ 
-  open, 
+function ImageGalleryModal({
+  open,
   onOpenChange,
   cargo,
   periodo,
@@ -3244,7 +3244,7 @@ function ImageGalleryModal({
       <DialogContent className="w-[calc(100vw-2rem)] max-w-[800px] mx-4 max-h-[90vh] overflow-y-auto p-0 gap-0 bg-background border-2 border-border rounded-xl overflow-hidden outline-none shadow-elevation-sm [&>button]:hidden">
         <DialogTitle className="sr-only">Galería de Imágenes SER</DialogTitle>
         <DialogDescription className="sr-only">Visualización de evidencias del Sistema de Emisión y Recaudo</DialogDescription>
-        
+
         <div className="p-4 md:p-6 space-y-4">
           {/* Breadcrumb y botón volver */}
           <div className="space-y-3">
@@ -3259,8 +3259,8 @@ function ImageGalleryModal({
                 Imágenes SER
               </span>
             </div>
-            
-            <button 
+
+            <button
               onClick={() => onOpenChange(false)}
               className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
               style={bodyXs}
@@ -3269,7 +3269,7 @@ function ImageGalleryModal({
               Volver a validación
             </button>
           </div>
-          
+
           <div className="space-y-3">
             <h2 className="text-foreground" style={{ ...headingBold, fontSize: "clamp(var(--text-lg), 4vw, var(--text-xl))" }}>
               Imágenes SER - {periodo}
@@ -3402,7 +3402,7 @@ function ValidationModal({
         <DialogContent className="w-[calc(100vw-2rem)] max-w-[1000px] mx-4 max-h-[90vh] overflow-y-auto p-0 gap-0 bg-background border-2 border-border rounded-xl outline-none shadow-elevation-sm [&>button]:hidden">
           <DialogTitle className="sr-only">Validación Final - {pliego}</DialogTitle>
           <DialogDescription className="sr-only">Validación completa de cargos y periodos</DialogDescription>
-          
+
           <div className="p-4 md:p-6 space-y-4 md:space-y-6">
             {/* Header */}
             <div className="flex items-start justify-between gap-3">
@@ -3437,8 +3437,8 @@ function ValidationModal({
                 </div>
                 <div className="flex items-center gap-2" style={bodyXs}>
                   <span style={{ fontWeight: "var(--font-weight-bold)" }}>Estado RUES:</span>
-                  <StatusBadge 
-                    label={estadoRUES} 
+                  <StatusBadge
+                    label={estadoRUES}
                     variant={estadoRUES === "Activa" ? "success" : "destructive"}
                     icon={estadoRUES === "Activa" ? <CheckCircle2 className="w-3.5 h-3.5" /> : <AlertCircle className="w-3.5 h-3.5" />}
                   />
@@ -3477,7 +3477,7 @@ function ValidationModal({
                       </tbody>
                     </table>
                   </div>
-                  
+
                   {/* Vista móvil */}
                   <div className="md:hidden divide-y divide-border">
                     {mockEtapas.map((etapa, idx) => (
@@ -3545,27 +3545,98 @@ function ValidationModal({
                               <tr key={pIdx} className="border-t border-border">
                                 <td className="px-3 md:px-4 py-2 md:py-3 text-foreground whitespace-nowrap" style={bodyXs}>{periodo.periodo}</td>
                                 <td className="px-3 md:px-4 py-2 md:py-3">
-                                <Badge 
+                                  <Badge
+                                    className={cn(
+                                      "border-none",
+                                      periodo.hallazgo === "No pagó" ? "bg-destructive/10 text-destructive" :
+                                        periodo.hallazgo === "Pagó" ? "bg-chart-2/10 text-chart-2" :
+                                          periodo.hallazgo === "Subsanó" ? "bg-primary/10 text-primary" :
+                                            "bg-muted text-muted-foreground"
+                                    )}
+                                    style={bodyXs}
+                                  >
+                                    {periodo.hallazgo}
+                                  </Badge>
+                                </td>
+                                <td className="px-3 md:px-4 py-2 md:py-3 text-foreground" style={bodyXs}>{periodo.descargos}</td>
+                                <td className="px-3 md:px-4 py-2 md:py-3 text-center">
+                                  <Badge className="bg-muted/30 text-foreground border-none" style={bodyXs}>
+                                    {periodo.pruebas}
+                                  </Badge>
+                                </td>
+                                <td className="px-3 md:px-4 py-2 md:py-3">
+                                  <Badge
+                                    className={cn(
+                                      "border-none",
+                                      periodo.resultado === "Sanción" ? "bg-destructive/10 text-destructive" : "bg-chart-2/10 text-chart-2"
+                                    )}
+                                    style={bodyXs}
+                                  >
+                                    {periodo.resultado === "Sanción" ? "🔴" : "🟢"} {periodo.resultado}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* Cards para móvil */}
+                      <div className="md:hidden divide-y divide-border">
+                        {cargo.periodos.map((periodo, pIdx) => (
+                          <div key={pIdx} className="p-4 space-y-3">
+                            <div className="space-y-1">
+                              <div className="text-muted-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
+                                Periodo
+                              </div>
+                              <div className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
+                                {periodo.periodo}
+                              </div>
+                            </div>
+
+                            <div className="space-y-1">
+                              <div className="text-muted-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
+                                Hallazgo
+                              </div>
+                              <div>
+                                <Badge
                                   className={cn(
                                     "border-none",
                                     periodo.hallazgo === "No pagó" ? "bg-destructive/10 text-destructive" :
-                                    periodo.hallazgo === "Pagó" ? "bg-chart-2/10 text-chart-2" :
-                                    periodo.hallazgo === "Subsanó" ? "bg-primary/10 text-primary" :
-                                    "bg-muted text-muted-foreground"
+                                      periodo.hallazgo === "Pagó" ? "bg-chart-2/10 text-chart-2" :
+                                        periodo.hallazgo === "Pagó sanción" ? "bg-chart-4/10 text-chart-4" :
+                                          periodo.hallazgo === "Pagó fuera tiempo" ? "bg-[#F97316]/10 text-[#F97316]" :
+                                            periodo.hallazgo === "Subsanó" ? "bg-primary/10 text-primary" :
+                                              "bg-muted text-muted-foreground"
                                   )}
                                   style={bodyXs}
                                 >
                                   {periodo.hallazgo}
                                 </Badge>
-                              </td>
-                              <td className="px-3 md:px-4 py-2 md:py-3 text-foreground" style={bodyXs}>{periodo.descargos}</td>
-                              <td className="px-3 md:px-4 py-2 md:py-3 text-center">
-                                <Badge className="bg-muted/30 text-foreground border-none" style={bodyXs}>
-                                  {periodo.pruebas}
-                                </Badge>
-                              </td>
-                              <td className="px-3 md:px-4 py-2 md:py-3">
-                                <Badge 
+                              </div>
+                            </div>
+
+                            <div className="space-y-1">
+                              <div className="text-muted-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
+                                Imágenes
+                              </div>
+                              <div>
+                                <button
+                                  onClick={() => handleOpenImageModal(cargo.nombre, periodo.periodo, periodo.hallazgo)}
+                                  className="text-primary hover:text-primary/80 underline"
+                                  style={bodyXs}
+                                >
+                                  Ver imágenes
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="space-y-1">
+                              <div className="text-muted-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
+                                Resultado
+                              </div>
+                              <div>
+                                <Badge
                                   className={cn(
                                     "border-none",
                                     periodo.resultado === "Sanción" ? "bg-destructive/10 text-destructive" : "bg-chart-2/10 text-chart-2"
@@ -3574,188 +3645,117 @@ function ValidationModal({
                                 >
                                   {periodo.resultado === "Sanción" ? "🔴" : "🟢"} {periodo.resultado}
                                 </Badge>
-                              </td>
-                            </tr>
-                          ))}
-                    </tbody>
-                  </table>
-                  </div>
-                  
-                  {/* Cards para móvil */}
-                  <div className="md:hidden divide-y divide-border">
-                    {cargo.periodos.map((periodo, pIdx) => (
-                      <div key={pIdx} className="p-4 space-y-3">
-                        <div className="space-y-1">
-                          <div className="text-muted-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
-                            Periodo
+                              </div>
+                            </div>
                           </div>
-                          <div className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
-                            {periodo.periodo}
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-1">
-                          <div className="text-muted-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
-                            Hallazgo
-                          </div>
-                          <div>
-                            <Badge 
-                              className={cn(
-                                "border-none",
-                                periodo.hallazgo === "No pagó" ? "bg-destructive/10 text-destructive" :
-                                periodo.hallazgo === "Pagó" ? "bg-chart-2/10 text-chart-2" :
-                                periodo.hallazgo === "Pagó sanción" ? "bg-chart-4/10 text-chart-4" :
-                                periodo.hallazgo === "Pagó fuera tiempo" ? "bg-[#F97316]/10 text-[#F97316]" :
-                                periodo.hallazgo === "Subsanó" ? "bg-primary/10 text-primary" :
-                                "bg-muted text-muted-foreground"
-                              )}
-                              style={bodyXs}
-                            >
-                              {periodo.hallazgo}
-                            </Badge>
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-1">
-                          <div className="text-muted-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
-                            Imágenes
-                          </div>
-                          <div>
-                            <button 
-                              onClick={() => handleOpenImageModal(cargo.nombre, periodo.periodo, periodo.hallazgo)}
-                              className="text-primary hover:text-primary/80 underline" 
-                              style={bodyXs}
-                            >
-                              Ver imágenes
-                            </button>
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-1">
-                          <div className="text-muted-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
-                            Resultado
-                          </div>
-                          <div>
-                            <Badge 
-                              className={cn(
-                                "border-none",
-                                periodo.resultado === "Sanción" ? "bg-destructive/10 text-destructive" : "bg-chart-2/10 text-chart-2"
-                              )}
-                              style={bodyXs}
-                            >
-                              {periodo.resultado === "Sanción" ? "🔴" : "🟢"} {periodo.resultado}
-                            </Badge>
-                          </div>
-                        </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+
+                    <div className={cn(
+                      "p-4 rounded-lg border-l-4",
+                      cargo.tipo === "sancion" ? "bg-muted/30 border-destructive" : "bg-muted/30 border-chart-2"
+                    )}>
+                      <p className="text-foreground mb-1" style={{ ...bodyBase, fontWeight: "var(--font-weight-bold)" }}>
+                        {cargo.tipo === "sancion" ? "🔴" : "🟢"} {cargo.recomendacion}
+                      </p>
+                      <p className="text-muted-foreground" style={bodyXs}>
+                        Razón: {cargo.razon}
+                      </p>
+                    </div>
+
+                    {idx < mockCargos.length - 1 && <div className="border-t-2 border-border my-6" />}
                   </div>
-                </div>
-
-                <div className={cn(
-                  "p-4 rounded-lg border-l-4",
-                  cargo.tipo === "sancion" ? "bg-muted/30 border-destructive" : "bg-muted/30 border-chart-2"
-                )}>
-                  <p className="text-foreground mb-1" style={{ ...bodyBase, fontWeight: "var(--font-weight-bold)" }}>
-                    {cargo.tipo === "sancion" ? "🔴" : "🟢"} {cargo.recomendacion}
-                  </p>
-                  <p className="text-muted-foreground" style={bodyXs}>
-                    Razón: {cargo.razon}
-                  </p>
-                </div>
-
-                {idx < mockCargos.length - 1 && <div className="border-t-2 border-border my-6" />}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* RECOMENDACIÓN FINAL - MUY DESTACADA */}
-        <div className="space-y-2">
-          <h3 className="text-foreground uppercase tracking-wider" style={{ ...bodyBase, fontWeight: "var(--font-weight-bold)" }}>
-            RECOMENDACIÓN FINAL
-          </h3>
-          <div className="border-t-2 border-border pt-3">
-            <div className={cn(
-              "p-6 md:p-8 rounded-xl text-center space-y-4",
-              tieneAlgunaSancion ? "bg-[#FEE2E2]" : "bg-[#D1FAE5]"
-            )} style={{ 
-              borderWidth: "3px", 
-              borderStyle: "solid", 
-              borderColor: tieneAlgunaSancion ? "#EF4444" : "#10B981" 
-            }}>
-              <div className="flex justify-center">
-                <div className={cn(
-                  "w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center",
-                  tieneAlgunaSancion ? "bg-[#EF4444]/20" : "bg-[#10B981]/20"
-                )}>
-                  {tieneAlgunaSancion ? (
-                    <AlertCircle className="w-10 h-10 md:w-12 md:h-12 text-[#EF4444]" />
-                  ) : (
-                    <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12 text-[#10B981]" />
-                  )}
-                </div>
-              </div>
-              
-              <h3 className={cn(
-                "uppercase font-bold",
-                tieneAlgunaSancion ? "text-[#EF4444]" : "text-[#10B981]"
-              )} style={{ ...headingBold, fontSize: "clamp(18px, 4vw, 20px)" }}>
-                {tieneAlgunaSancion ? "🔴 CONTINUAR A DECISIÓN DE SANCIÓN" : "🟢 ARCHIVAR PROCESO"}
-              </h3>
-              
-              <div className="space-y-2 text-left max-w-2xl mx-auto">
-                {tieneAlgunaSancion && tipoSancionFinal && (
-                  <p className="text-foreground" style={{ ...bodyBase, lineHeight: 1.6 }}>
-                    <span style={{ fontWeight: "var(--font-weight-bold)" }}>Tipo sanción:</span> {tipoSancionFinal}
-                  </p>
-                )}
-                {tieneAlgunaSancion && conductaFinal && (
-                  <p className="text-foreground" style={{ ...bodyBase, lineHeight: 1.6 }}>
-                    <span style={{ fontWeight: "var(--font-weight-bold)" }}>Conducta:</span> {conductaFinal}
-                  </p>
-                )}
-                <p className="text-foreground" style={{ ...bodyBase, lineHeight: 1.6 }}>
-                  <span style={{ fontWeight: "var(--font-weight-bold)" }}>Fundamento:</span>{" "}
-                  {tieneAlgunaSancion 
-                    ? `Al menos un cargo con sanción (${mockCargos.filter(c => c.tipo === "sancion").map((c, i) => `Cargo ${mockCargos.indexOf(c) + 1}`).join(", ")})`
-                    : "Todos los cargos archivados por cumplimiento o subsanación"
-                  }
-                </p>
-                {tieneAlgunaSancion && (
-                  <p className="text-foreground" style={{ ...bodyBase, lineHeight: 1.6 }}>
-                    <span style={{ fontWeight: "var(--font-weight-bold)" }}>Siguiente etapa:</span> Cálculo valor sanción
-                  </p>
-                )}
+                ))}
               </div>
             </div>
+
+            {/* RECOMENDACIÓN FINAL - MUY DESTACADA */}
+            <div className="space-y-2">
+              <h3 className="text-foreground uppercase tracking-wider" style={{ ...bodyBase, fontWeight: "var(--font-weight-bold)" }}>
+                RECOMENDACIÓN FINAL
+              </h3>
+              <div className="border-t-2 border-border pt-3">
+                <div className={cn(
+                  "p-6 md:p-8 rounded-xl text-center space-y-4",
+                  tieneAlgunaSancion ? "bg-[#FEE2E2]" : "bg-[#D1FAE5]"
+                )} style={{
+                  borderWidth: "3px",
+                  borderStyle: "solid",
+                  borderColor: tieneAlgunaSancion ? "#EF4444" : "#10B981"
+                }}>
+                  <div className="flex justify-center">
+                    <div className={cn(
+                      "w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center",
+                      tieneAlgunaSancion ? "bg-[#EF4444]/20" : "bg-[#10B981]/20"
+                    )}>
+                      {tieneAlgunaSancion ? (
+                        <AlertCircle className="w-10 h-10 md:w-12 md:h-12 text-[#EF4444]" />
+                      ) : (
+                        <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12 text-[#10B981]" />
+                      )}
+                    </div>
+                  </div>
+
+                  <h3 className={cn(
+                    "uppercase font-bold",
+                    tieneAlgunaSancion ? "text-[#EF4444]" : "text-[#10B981]"
+                  )} style={{ ...headingBold, fontSize: "clamp(18px, 4vw, 20px)" }}>
+                    {tieneAlgunaSancion ? "🔴 CONTINUAR A DECISIÓN DE SANCIÓN" : "🟢 ARCHIVAR PROCESO"}
+                  </h3>
+
+                  <div className="space-y-2 text-left max-w-2xl mx-auto">
+                    {tieneAlgunaSancion && tipoSancionFinal && (
+                      <p className="text-foreground" style={{ ...bodyBase, lineHeight: 1.6 }}>
+                        <span style={{ fontWeight: "var(--font-weight-bold)" }}>Tipo sanción:</span> {tipoSancionFinal}
+                      </p>
+                    )}
+                    {tieneAlgunaSancion && conductaFinal && (
+                      <p className="text-foreground" style={{ ...bodyBase, lineHeight: 1.6 }}>
+                        <span style={{ fontWeight: "var(--font-weight-bold)" }}>Conducta:</span> {conductaFinal}
+                      </p>
+                    )}
+                    <p className="text-foreground" style={{ ...bodyBase, lineHeight: 1.6 }}>
+                      <span style={{ fontWeight: "var(--font-weight-bold)" }}>Fundamento:</span>{" "}
+                      {tieneAlgunaSancion
+                        ? `Al menos un cargo con sanción (${mockCargos.filter(c => c.tipo === "sancion").map((c, i) => `Cargo ${mockCargos.indexOf(c) + 1}`).join(", ")})`
+                        : "Todos los cargos archivados por cumplimiento o subsanación"
+                      }
+                    </p>
+                    {tieneAlgunaSancion && (
+                      <p className="text-foreground" style={{ ...bodyBase, lineHeight: 1.6 }}>
+                        <span style={{ fontWeight: "var(--font-weight-bold)" }}>Siguiente etapa:</span> Cálculo valor sanción
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-center pt-4">
+              <button
+                onClick={() => onOpenChange(false)}
+                className="px-6 py-2 rounded-lg border border-border bg-background hover:bg-card transition-colors text-foreground w-full sm:w-auto"
+                style={bodyBase}
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
-        </div>
+        </DialogContent>
+      </Dialog>
 
-        <div className="flex justify-center pt-4">
-          <button
-            onClick={() => onOpenChange(false)}
-            className="px-6 py-2 rounded-lg border border-border bg-background hover:bg-card transition-colors text-foreground w-full sm:w-auto"
-            style={bodyBase}
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </DialogContent>
-  </Dialog>
-
-  {selectedPeriod && (
-    <ImageGalleryModal
-      open={imageModalOpen}
-      onOpenChange={setImageModalOpen}
-      cargo={selectedPeriod.cargo}
-      periodo={selectedPeriod.periodo}
-      hallazgo={selectedPeriod.hallazgo}
-    />
-  )}
-</>
-);
+      {selectedPeriod && (
+        <ImageGalleryModal
+          open={imageModalOpen}
+          onOpenChange={setImageModalOpen}
+          cargo={selectedPeriod.cargo}
+          periodo={selectedPeriod.periodo}
+          hallazgo={selectedPeriod.hallazgo}
+        />
+      )}
+    </>
+  );
 }
 
 /* SancionesLayout */
@@ -3774,7 +3774,7 @@ function SancionesLayout() {
             <h1 className="text-primary truncate" style={{ ...headingBold, fontSize: "var(--text-lg)" }}>INTEGRATIC</h1>
           </div>
         </div>
-        
+
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -3865,7 +3865,7 @@ function useIsMobile() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768); // md breakpoint
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -3877,7 +3877,7 @@ function useIsMobile() {
 /* Componente de Breadcrumb Navegable */
 function NavigableBreadcrumb({ items }: { items: Array<{ label: string; path?: string }> }) {
   const navigate = useNavigate();
-  
+
   return (
     <div className="flex items-center gap-2 text-muted-foreground overflow-x-auto pb-3 border-b border-border mb-4" style={{ ...bodyXs, fontSize: "11px" }}>
       {items.map((item, idx) => (
@@ -3918,13 +3918,13 @@ function DocumentosPage() {
   };
 
   const handleViewDocument = (index: number) => {
-    navigate('../documento-viewer', { 
-      state: { 
-        archivos, 
-        pliego, 
-        titulo, 
-        selectedIndex: index 
-      } 
+    navigate('../documento-viewer', {
+      state: {
+        archivos,
+        pliego,
+        titulo,
+        selectedIndex: index
+      }
     });
   };
 
@@ -3941,7 +3941,7 @@ function DocumentosPage() {
           { label: "Resultados", path: -1 as any },
           { label: titulo }
         ]} />
-        
+
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
@@ -4008,13 +4008,13 @@ function DocumentosPage() {
 function DocumentoViewerPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { archivos, pliego, titulo, selectedIndex } = location.state || { 
-    archivos: [], 
-    pliego: "", 
+  const { archivos, pliego, titulo, selectedIndex } = location.state || {
+    archivos: [],
+    pliego: "",
     titulo: "Documentos",
-    selectedIndex: 0 
+    selectedIndex: 0
   };
-  
+
   const [currentIndex, setCurrentIndex] = useState(selectedIndex || 0);
   const currentDoc = archivos[currentIndex] || { nombre: "", tamano: "", tipo: "pdf" };
 
@@ -4053,7 +4053,7 @@ function DocumentoViewerPage() {
           { label: titulo, path: -1 as any },
           { label: currentDoc.nombre }
         ]} />
-        
+
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
@@ -4113,7 +4113,7 @@ function DocumentoViewerPage() {
                       </p>
                     </div>
                   </div>
-                  
+
                   {/* Contenido simulado de PDF */}
                   <div className="space-y-3 text-foreground/80">
                     <div className="h-3 bg-foreground/10 rounded w-3/4"></div>
@@ -4121,26 +4121,26 @@ function DocumentoViewerPage() {
                     <div className="h-3 bg-foreground/10 rounded w-5/6"></div>
                     <div className="h-3 bg-foreground/10 rounded w-full"></div>
                     <div className="h-3 bg-foreground/10 rounded w-2/3"></div>
-                    
+
                     <div className="py-4">
                       <div className="h-32 bg-primary/5 rounded-lg border border-primary/20 flex items-center justify-center">
                         <p className="text-xs text-primary/60">Gráfico o imagen</p>
                       </div>
                     </div>
-                    
+
                     <div className="h-3 bg-foreground/10 rounded w-full"></div>
                     <div className="h-3 bg-foreground/10 rounded w-4/5"></div>
                     <div className="h-3 bg-foreground/10 rounded w-full"></div>
                     <div className="h-3 bg-foreground/10 rounded w-3/4"></div>
                   </div>
-                  
+
                   <div className="mt-8 pt-4 border-t border-border text-center">
                     <p className="text-xs text-muted-foreground italic">
                       Vista previa simulada • En producción se integrará con PDF.js
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Footer de página PDF */}
                 <div className="bg-muted/50 px-4 py-2 border-t border-border text-center">
                   <p className="text-xs text-muted-foreground">Página 1</p>
@@ -4190,8 +4190,8 @@ function DocumentoViewerPage() {
               disabled={currentIndex === 0}
               className={cn(
                 "p-2 rounded-lg border border-border transition-colors",
-                currentIndex === 0 
-                  ? "bg-muted text-muted-foreground opacity-50" 
+                currentIndex === 0
+                  ? "bg-muted text-muted-foreground opacity-50"
                   : "bg-background hover:bg-card active:bg-primary active:text-primary-foreground"
               )}
             >
@@ -4218,19 +4218,19 @@ function DocumentoViewerPage() {
 
       {/* Footer con botones de descarga */}
       <div className="bg-background border-t border-border p-4 space-y-2">
-        <Button 
+        <Button
           onClick={handleDownload}
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground gap-2" 
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
           style={bodyXs}
         >
           <Download className="w-4 h-4" />
           Descargar este documento
         </Button>
         {archivos.length > 1 && (
-          <Button 
+          <Button
             onClick={handleDownloadAll}
             variant="outline"
-            className="w-full gap-2" 
+            className="w-full gap-2"
             style={bodyXs}
           >
             <Download className="w-4 h-4" />
@@ -4285,7 +4285,7 @@ function ValidationPage() {
           { label: "Actos de Prueba", path: -1 as any },
           { label: `Validación ${acto}` }
         ]} />
-        
+
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
@@ -4299,8 +4299,8 @@ function ValidationPage() {
             </h1>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-xs text-muted-foreground">Estado RUES:</span>
-              <StatusBadge 
-                label={estadoRUES} 
+              <StatusBadge
+                label={estadoRUES}
                 variant={estadoRUES === "Activa" ? "success" : "destructive"}
                 icon={estadoRUES === "Activa" ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XOctagon className="w-3.5 h-3.5" />}
               />
@@ -4349,21 +4349,21 @@ function ValidationPage() {
                     </button>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge 
+                    <Badge
                       className={cn(
                         "border-none",
                         periodo.hallazgo === "No pagó" ? "bg-destructive/10 text-destructive" :
-                        periodo.hallazgo === "Pagó" ? "bg-chart-2/10 text-chart-2" :
-                        periodo.hallazgo === "Pagó fuera tiempo" ? "bg-[#F97316]/10 text-[#F97316]" :
-                        periodo.hallazgo === "Subsanó" ? "bg-primary/10 text-primary" :
-                        "bg-muted text-muted-foreground"
+                          periodo.hallazgo === "Pagó" ? "bg-chart-2/10 text-chart-2" :
+                            periodo.hallazgo === "Pagó fuera tiempo" ? "bg-[#F97316]/10 text-[#F97316]" :
+                              periodo.hallazgo === "Subsanó" ? "bg-primary/10 text-primary" :
+                                "bg-muted text-muted-foreground"
                       )}
                       style={bodyXs}
                     >
                       {periodo.hallazgo}
                     </Badge>
                     <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                    <Badge 
+                    <Badge
                       className={cn(
                         "border-none",
                         periodo.resultado === "Sanción" ? "bg-destructive/10 text-destructive" : "bg-chart-2/10 text-chart-2"
@@ -4427,7 +4427,7 @@ function ImageGalleryPage() {
           { label: "Validación", path: -1 as any },
           { label: "Imágenes SER" }
         ]} />
-        
+
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
@@ -4507,7 +4507,7 @@ function CumplimientoPage() {
           { label: "Cumplimiento", path: -1 as any },
           { label: "Validación completa" }
         ]} />
-        
+
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
@@ -4565,29 +4565,29 @@ function CumplimientoPage() {
 /* Router */
 const router = createBrowserRouter([
   { path: "/", Component: LoginPage },
-  { 
-    path: "/sanciones/:moduleId", 
+  {
+    path: "/sanciones/:moduleId",
     Component: SancionesLayout,
   },
-  { 
-    path: "/sanciones/:moduleId/documentos", 
-    Component: DocumentosPage 
+  {
+    path: "/sanciones/:moduleId/documentos",
+    Component: DocumentosPage
   },
-  { 
-    path: "/sanciones/:moduleId/documento-viewer", 
-    Component: DocumentoViewerPage 
+  {
+    path: "/sanciones/:moduleId/documento-viewer",
+    Component: DocumentoViewerPage
   },
-  { 
-    path: "/sanciones/:moduleId/validacion", 
-    Component: ValidationPage 
+  {
+    path: "/sanciones/:moduleId/validacion",
+    Component: ValidationPage
   },
-  { 
-    path: "/sanciones/:moduleId/imagenes-ser", 
-    Component: ImageGalleryPage 
+  {
+    path: "/sanciones/:moduleId/imagenes-ser",
+    Component: ImageGalleryPage
   },
-  { 
-    path: "/sanciones/:moduleId/cumplimiento", 
-    Component: CumplimientoPage 
+  {
+    path: "/sanciones/:moduleId/cumplimiento",
+    Component: CumplimientoPage
   },
   { path: "*", loader: () => redirect("/") },
 ]);

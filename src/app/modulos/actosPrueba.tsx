@@ -68,7 +68,12 @@ export const modulo3Config: ModuleConfig = {
       headerTooltip: "Número de BDI completo incluyendo consecutivo y año (ejemplo: 9054-2025), permitiendo adicionalmente filtros independientes tanto por número como por vigencia.",
       filterable: false
     },
-
+    {
+      key: "fechaCorte",
+      header: "Fecha de corte",
+      headerTooltip: "Fecha en la que el usuario realiza la consulta de verificación de cumplimiento.",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "--"}</span>
+    },
     { key: "pliego", header: "Número de acto administrativo", headerTooltip: "Número del acto administrativo (pliego de cargos) que da inicio al proceso sancionatorio y dentro del cual se enmarcan los descargos y la solicitud de pruebas." },
     {
       key: "fechaActoAdministrativo",
@@ -77,6 +82,57 @@ export const modulo3Config: ModuleConfig = {
       render: (val: string, row: Record<string, any>) => {
         const fecha = `${row.dia}/${row.mes}/${row.anio}`;
         return <span className="text-foreground" style={bodyXs}>{fecha}</span>;
+      }
+    },
+    {
+      key: "cumplimiento",
+      header: "Cumplimiento",
+      headerTooltip: "Resultado de la verificación de cumplimiento del operador para el periodo evaluado.",
+      filterable: false,
+      render: (val: string) => {
+        if (!val) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
+        const config: Record<string, { variant: "success" | "destructive"; icon: React.ReactNode }> = {
+          "Cumplió": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+          "No cumplió": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
+        };
+        const cfg = config[val] || config["No cumplió"];
+        return <StatusBadge label={val} variant={cfg.variant} icon={cfg.icon} />;
+      }
+    },
+    {
+      key: "hallazgosSER",
+      header: "Hallazgos",
+      headerTooltip: "Resultados del análisis técnico del Sistema de Evaluación de Resultados (SER). Haga clic para desplegar el detalle por trimestre.",
+      expandable: true,
+      render: (val: any) => {
+        if (!val || !val.trimestres) return <span style={bodyXs}>Sin hallazgos</span>;
+        const totalTrimestres = val.trimestres.length;
+        const totalCargos = val.trimestres.reduce((sum: number, trim: any) => sum + (trim.cargos?.length || 0), 0);
+        return (
+          <div className="inline-flex justify-center w-[140px] items-center gap-1.5 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <ChevronRight className="w-3.5 h-3.5" />
+            {totalTrimestres} trim., {totalCargos} cargo{totalCargos !== 1 ? "s" : ""}
+          </div>
+        );
+      }
+    },
+    {
+      key: "documentos",
+      header: "Documentos",
+      headerTooltip: "Documentos asociados al proceso de verificación de cumplimiento, incluyendo informes, actos de archivo o resolución sancionatoria descargados de INTEGRATIC.",
+      clickable: true,
+      render: (val: any) => {
+        const count = val?.archivos?.length || 0;
+        if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
+        return (
+          <div className="inline-flex justify-center w-[110px] items-center gap-2 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <Folder className="w-3.5 h-3.5" />
+            Ver docs
+            <span className="bg-background text-primary rounded-full px-1.5 py-0.5 text-[10px] font-bold border border-primary/20 min-w-[18px] text-center flex items-center justify-center">
+              {count}
+            </span>
+          </div>
+        );
       }
     },
 
@@ -134,18 +190,22 @@ export const modulo3Config: ModuleConfig = {
         return <span className="text-foreground" style={bodyXs}>{fecha || "—"}</span>;
       }
     },
-    { key: "estadoComunicacion", header: "Estado de la notificación", headerTooltip: "Resultado o estado procesal asociado a la actuación de notificación (notificado, devuelto, pendiente, entre otros).", filterable: true, render: (val: string) => {
-      const config: Record<string, { variant: "success" | "warning" | "neutral" | "destructive"; icon: React.ReactNode }> = {
-        "Notificado": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
-        "Devuelto": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
-        "Pendiente": { variant: "neutral", icon: <Clock className="w-3.5 h-3.5" /> },
-      };
-      const cfg = config[val] || config["Pendiente"];
-      return <StatusBadge label={val} variant={cfg.variant} icon={cfg.icon} />;
-    }},
-    { key: "descargos", header: "Descargos", headerTooltip: "Indica si el operador presentó descargos en MÓDULO 2. Esta información cruza con el acto de prueba para verificar si el acto responde a la solicitud de pruebas del operador o si la entidad las decretó de oficio.", render: (val: string) => {
-      return <span className="text-foreground" style={bodyXs}>{val || "Sin descargos"}</span>;
-    }},
+    {
+      key: "estadoComunicacion", header: "Estado de la notificación", headerTooltip: "Resultado o estado procesal asociado a la actuación de notificación (notificado, devuelto, pendiente, entre otros).", filterable: true, render: (val: string) => {
+        const config: Record<string, { variant: "success" | "warning" | "neutral" | "destructive"; icon: React.ReactNode }> = {
+          "Notificado": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+          "Devuelto": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
+          "Pendiente": { variant: "neutral", icon: <Clock className="w-3.5 h-3.5" /> },
+        };
+        const cfg = config[val] || config["Pendiente"];
+        return <StatusBadge label={val} variant={cfg.variant} icon={cfg.icon} />;
+      }
+    },
+    {
+      key: "descargos", header: "Descargos", headerTooltip: "Indica si el operador presentó descargos en MÓDULO 2. Esta información cruza con el acto de prueba para verificar si el acto responde a la solicitud de pruebas del operador o si la entidad las decretó de oficio.", render: (val: string) => {
+        return <span className="text-foreground" style={bodyXs}>{val || "Sin descargos"}</span>;
+      }
+    },
 
     {
       key: "fechaLimite",
@@ -194,43 +254,7 @@ export const modulo3Config: ModuleConfig = {
         return <span className="text-foreground" style={bodyXs}>{val}</span>;
       }
     },
-    {
-      key: "documentos",
-      header: "Documentos asociados",
-      headerTooltip: "Conjunto documental relacionado con el expediente, incluyendo radicados, constancias, anexos y demás soportes asociados. Haga clic para ver o descargar los archivos.",
-      clickable: true,
-      render: (val: any) => {
-        const count = val?.archivos?.length || 0;
-        if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
-        return (
-          <div className="inline-flex justify-center w-[110px] items-center gap-2 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
-            <Folder className="w-3.5 h-3.5" />
-            Ver docs
-            <span className="bg-background text-primary rounded-full px-1.5 py-0.5 text-[10px] font-bold border border-primary/20 min-w-[18px] text-center flex items-center justify-center">
-              {count}
-            </span>
-          </div>
-        );
-      }
-    },
     { key: "fechaPresentacion", header: "Fecha presentación", headerTooltip: "Fecha en la que el operador presentó los descargos o la solicitud de pruebas." },
-    {
-      key: "hallazgosSER",
-      header: "Hallazgos",
-      headerTooltip: "Resultados del análisis técnico del Sistema de Evaluación de Resultados (SER). Haga clic para desplegar el detalle por trimestre.",
-      expandable: true,
-      render: (val: any) => {
-        if (!val || !val.trimestres) return <span style={bodyXs}>Sin hallazgos</span>;
-        const totalTrimestres = val.trimestres.length;
-        const totalCargos = val.trimestres.reduce((sum: number, trim: any) => sum + (trim.cargos?.length || 0), 0);
-        return (
-          <div className="inline-flex justify-center w-[140px] items-center gap-1.5 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
-            <ChevronRight className="w-3.5 h-3.5" />
-            {totalTrimestres} trim., {totalCargos} cargo{totalCargos !== 1 ? "s" : ""}
-          </div>
-        );
-      }
-    },
     {
       key: "actoPruebas",
       header: "Número de acto administrativo",
@@ -350,40 +374,6 @@ export const modulo3Config: ModuleConfig = {
           </div>
         );
       }
-    },
-    {
-      key: "fechaCorte",
-      header: "Fecha de corte",
-      headerTooltip: "Fecha en la que el usuario realiza la consulta de verificación de cumplimiento.",
-      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "--"}</span>
-    },
-    {
-      key: "cumplimiento",
-      header: "Cumplimiento",
-      headerTooltip: "Resultado de la verificación de cumplimiento del operador para el periodo evaluado.",
-      filterable: false,
-      render: (val: string) => {
-        if (!val) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
-        const config: Record<string, { variant: "success" | "destructive"; icon: React.ReactNode }> = {
-          "Cumplió": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
-          "No cumplió": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
-        };
-        const cfg = config[val] || config["No cumplió"];
-        return <StatusBadge label={val} variant={cfg.variant} icon={cfg.icon} />;
-      }
-    },
-    {
-      key: "acciones",
-      header: "Acciones",
-      headerTooltip: "Acciones disponibles: descargar el expediente completo en formato ZIP.",
-      render: (_val: any, _row: Record<string, any>) => (
-        <button
-          title="Descargar expediente"
-          className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-muted/60 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors border border-muted"
-        >
-          <Download className="w-3.5 h-3.5" />
-        </button>
-      )
     },
   ],
   mockData: [

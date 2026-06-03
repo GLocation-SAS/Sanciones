@@ -88,5 +88,17 @@
     "overrides": {
       "vite": "6.3.5"
     }
-  }
+  },
+  "description": "This is a code bundle for 🥑 Sanciones. The original project is available at https://www.figma.com/design/W7jpuvtspNpFsraTxSV5pg/%F0%9F%A5%91-Sanciones.",
+  "main": "test-filter.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GLocation-SAS/Sanciones.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GLocation-SAS/Sanciones/issues"
+  },
+  "homepage": "https://github.com/GLocation-SAS/Sanciones#readme"
 }

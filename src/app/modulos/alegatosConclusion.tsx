@@ -59,6 +59,64 @@ export const modulo4Config: ModuleConfig = {
       filterable: false
     },
     {
+      key: "fechaCorte",
+      header: "Fecha de corte",
+      headerTooltip: "Fecha en la que el usuario realiza la consulta de verificación de cumplimiento.",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "--"}</span>
+    },
+    {
+      key: "pliego",
+      header: "Número de acto administrativo",
+      headerTooltip: "Identificación del acto administrativo (pliego de cargos) que da inicio al proceso.",
+      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)", fontFamily: "var(--font-body)" }}>{val || "—"}</span>
+    },
+    {
+      key: "cumplimiento",
+      header: "Cumplimiento",
+      headerTooltip: "Resultado de la verificación de cumplimiento del operador para el periodo evaluado.",
+      filterable: false,
+      render: (val: string) => {
+        if (!val) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
+        const ok = val === "Cumplió";
+        return <StatusBadge label={val} variant={ok ? "success" : "destructive"} icon={ok ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XOctagon className="w-3.5 h-3.5" />} />;
+      }
+    },
+    {
+      key: "hallazgosSER",
+      header: "Hallazgos",
+      headerTooltip: "Resultados del análisis técnico del SER. Haga clic para desplegar los trimestres.",
+      expandable: true,
+      render: (val: any) => {
+        if (!val || !val.trimestres) return <span style={bodyXs}>Sin hallazgos</span>;
+        const n = val.trimestres.length;
+        return (
+          <div className="inline-flex justify-center w-[110px] items-center gap-1.5 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <ChevronRight className="w-3.5 h-3.5" />
+            Ver detalle ({n} trimestre{n !== 1 ? "s" : ""})
+          </div>
+        );
+      }
+    },
+    {
+      key: "documentos",
+      header: "Documentos",
+      headerTooltip: "Documentos asociados al proceso de verificación de cumplimiento.",
+      render: (val: any, row: Record<string, any>) => {
+        const docs = (val || row.documentos)?.archivos || [];
+        const count = docs.length;
+        if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
+        return (
+          <div className="inline-flex justify-center w-[110px] items-center gap-2 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
+            <Folder className="w-3.5 h-3.5" />
+            Ver docs
+            <span className="bg-background text-primary rounded-full px-1.5 py-0.5 text-[10px] font-bold border border-primary/20 min-w-[18px] text-center flex items-center justify-center">
+              {count}
+            </span>
+          </div>
+        );
+      }
+    },
+    {
       key: "anio",
       header: "Año de vigencia",
       headerTooltip: "Dato de identificación del proceso correspondiente al año de vigencia del expediente.",
@@ -68,12 +126,6 @@ export const modulo4Config: ModuleConfig = {
           {row.anio || val || "—"}
         </span>
       )
-    },
-    {
-      key: "pliego",
-      header: "Número de acto administrativo",
-      headerTooltip: "Identificación del acto administrativo (pliego de cargos) que da inicio al proceso.",
-      render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)", fontFamily: "var(--font-body)" }}>{val || "—"}</span>
     },
     {
       key: "fechaActoAdministrativo",
@@ -437,52 +489,6 @@ export const modulo4Config: ModuleConfig = {
           </div>
         );
       }
-    },
-    {
-      key: "fechaCorte",
-      header: "Fecha de corte",
-      headerTooltip: "Fecha en la que el usuario realiza la consulta de verificación de cumplimiento.",
-      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "--"}</span>
-    },
-    {
-      key: "cumplimiento",
-      header: "Cumplimiento",
-      headerTooltip: "Resultado de la verificación de cumplimiento del operador para el periodo evaluado.",
-      filterable: false,
-      render: (val: string) => {
-        if (!val) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
-        const ok = val === "Cumplió";
-        return <StatusBadge label={val} variant={ok ? "success" : "destructive"} icon={ok ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XOctagon className="w-3.5 h-3.5" />} />;
-      }
-    },
-    {
-      key: "hallazgosSER",
-      header: "Hallazgos",
-      headerTooltip: "Resultados del análisis técnico del SER. Haga clic para desplegar los trimestres.",
-      expandable: true,
-      render: (val: any) => {
-        if (!val || !val.trimestres) return <span style={bodyXs}>Sin hallazgos</span>;
-        const n = val.trimestres.length;
-        return (
-          <div className="inline-flex justify-center w-[110px] items-center gap-1.5 bg-primary/5 text-primary px-3 py-1.5 rounded-md text-[11px] font-medium cursor-pointer hover:bg-primary/10 transition-colors border border-primary/10">
-            <ChevronRight className="w-3.5 h-3.5" />
-            Ver detalle ({n} trimestre{n !== 1 ? "s" : ""})
-          </div>
-        );
-      }
-    },
-    {
-      key: "acciones",
-      header: "Acciones",
-      headerTooltip: "Acciones disponibles: descargar el expediente completo en formato ZIP.",
-      render: (_val: any, _row: Record<string, any>) => (
-        <button
-          title="Descargar expediente"
-          className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-muted/60 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors border border-muted"
-        >
-          <Download className="w-3.5 h-3.5" />
-        </button>
-      )
     },
   ],
   mockData: [

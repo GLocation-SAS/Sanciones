@@ -41,7 +41,7 @@ export const modulo5Config: ModuleConfig = {
     },
     {
       key: "pliego",
-      header: "Pliego",
+      header: "Número de acto administrativo",
       headerTooltip: "Número del pliego de cargos que dio inicio al proceso sancionatorio (MÓDULO 1). En este módulo se verifica si el operador cumplió con las obligaciones que generaron el pliego, lo que puede conducir al archivo o a la imposición de sanción.",
       render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)", fontFamily: "var(--font-body)" }}>{val}</span>
     },
