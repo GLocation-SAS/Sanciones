@@ -21,6 +21,7 @@ export interface ProcessingStep {
 export interface ColumnTab {
   id: string;
   label: string;
+  icon?: React.ReactNode;
   columns: string[];
 }
 

@@ -24,6 +24,7 @@ import {
   Search,
   Check,
   XCircle,
+  Database,
 } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -105,7 +106,7 @@ export function ResultsTable({
   const [selectedRow, setSelectedRow] = useState<Record<string, any> | null>(
     null
   );
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [expandedRows, setExpandedRows] = useState<Record<string, string>>({});
   const [resumenModalOpen, setResumenModalOpen] = useState(false);
   const [selectedDescargo, setSelectedDescargo] = useState<Record<
     string,
@@ -153,14 +154,16 @@ export function ResultsTable({
     setDocsModalOpen(true);
   };
 
-  const toggleRowExpand = (rowId: string) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(rowId)) {
-      newExpanded.delete(rowId);
-    } else {
-      newExpanded.add(rowId);
-    }
-    setExpandedRows(newExpanded);
+  const toggleRowExpand = (rowId: string, section: string) => {
+    setExpandedRows((prev) => {
+      const newExpanded = { ...prev };
+      if (newExpanded[rowId] === section) {
+        delete newExpanded[rowId];
+      } else {
+        newExpanded[rowId] = section;
+      }
+      return newExpanded;
+    });
   };
 
   const handleVerResumen = (row: Record<string, any>) => {
@@ -607,9 +610,14 @@ export function ResultsTable({
       {/* Tabs */}
       {columnTabs && columnTabs.length > 0 && (
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList>
+          <TabsList className="bg-primary/5 p-1.5 rounded-xl border border-primary/10 mb-4 h-auto">
             {columnTabs.map((tab) => (
-              <TabsTrigger key={tab.id} value={tab.id}>
+              <TabsTrigger 
+                key={tab.id} 
+                value={tab.id} 
+                className="flex items-center gap-2 px-4 py-2 data-[state=active]:bg-[#3F51B5]/10 data-[state=active]:text-[#3F51B5] data-[state=active]:font-bold transition-all"
+              >
+                {tab.icon}
                 {tab.label}
               </TabsTrigger>
             ))}
@@ -698,7 +706,8 @@ export function ResultsTable({
                 <React.Fragment key={row.id || index}>
                   <TableRow
                     className={cn(
-                      "border-b border-border/40",
+                      "group transition-colors border-b-border",
+                      expandedRows[row.id] && "bg-muted/10 border-b-0",
                       isDescargosModule &&
                         row.pruebas?.length > 0 &&
                         "cursor-pointer hover:bg-primary/5"
@@ -723,13 +732,16 @@ export function ResultsTable({
                             row.pruebas?.length > 0
                           ) {
                             e.stopPropagation();
-                            toggleRowExpand(row.id);
+                            toggleRowExpand(row.id, "pruebas");
                           } else if (col.key === "documentos" && row[col.key]?.archivos?.length > 0) {
                             e.stopPropagation();
                             handleViewDocs(row);
                           } else if (col.key === "eventos" && Array.isArray(row.eventos) && row.eventos.length > 0) {
                             e.stopPropagation();
-                            toggleRowExpand(row.id);
+                            toggleRowExpand(row.id, "eventos");
+                          } else if (col.key === "hallazgosSER" && row.hallazgosSER && row.hallazgosSER.trimestres) {
+                            e.stopPropagation();
+                            toggleRowExpand(row.id, "hallazgos");
                           }
                         }}
                       >
@@ -742,10 +754,17 @@ export function ResultsTable({
                           >
                             {row[col.key]}
                           </span>
+                        ) : col.key === "hallazgosSER" ? (
+                          <button
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#4CAF50]/10 text-[#4CAF50] rounded-md text-[11px] font-medium border border-[#4CAF50]/20 hover:bg-[#4CAF50]/20 transition-colors"
+                          >
+                            {expandedRows[row.id] === "hallazgos" ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                            Ver detalle (4 trimestres)
+                          </button>
                         ) : col.key === "pruebasAsociadas" || col.key === "pruebas" ? (
                           (() => {
                             const count = row.pruebas?.length || 0;
-                            const isExpanded = expandedRows.has(row.id);
+                            const isExpanded = expandedRows[row.id] === "pruebas";
                             if (count === 0) {
                               return (
                                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 text-muted-foreground rounded-md text-[11px] font-medium border border-border/50">
@@ -800,7 +819,7 @@ export function ResultsTable({
                   </TableRow>
 
                   {/* Fila expandible con pruebas */}
-                  {expandedRows.has(row.id) &&
+                  {expandedRows[row.id] === "pruebas" &&
                     row.pruebas?.length > 0 && (
                       <TableRow className="bg-muted/30 hover:bg-muted/30">
                         <TableCell
@@ -845,7 +864,7 @@ export function ResultsTable({
                     )}
 
                   {/* Fila expandible con eventos (Trazabilidad) */}
-                  {expandedRows.has(row.id) &&
+                  {expandedRows[row.id] === "eventos" &&
                     Array.isArray(row.eventos) &&
                     row.eventos.length > 0 && (
                       <TableRow className="bg-muted/10 hover:bg-muted/10 border-b-0">
@@ -946,6 +965,94 @@ export function ResultsTable({
                                           {evento.documento.nombre}
                                         </div>
                                       )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+
+                  {/* Fila expandible con Hallazgos SER (Módulo 5) */}
+                  {expandedRows[row.id] === "hallazgos" &&
+                    row.hallazgosSER && row.hallazgosSER.trimestres && (
+                      <TableRow className="bg-muted/30 hover:bg-muted/30">
+                        <TableCell colSpan={100} className="py-4 px-6">
+                          <div className="pl-10 pr-4">
+                            <div className="flex items-center gap-2 mb-3">
+                              <Database className="w-4 h-4 text-primary" />
+                              <span
+                                className="text-primary"
+                                style={{
+                                  ...bodyXs,
+                                  fontWeight: "var(--font-weight-bold)",
+                                }}
+                              >
+                                Verificación de Cumplimiento por Trimestres
+                              </span>
+                            </div>
+                            <div className="relative border-l border-border ml-3 space-y-6 pb-4">
+                              {row.hallazgosSER.trimestres.map((trim: any, idx: number) => {
+                                const hasNPA = trim.cargos.some((c: any) => c.estadoPago === "No Pagado (NPA)");
+                                const hasExtemporaneo = trim.cargos.some((c: any) => c.estadoPago === "Extemporáneo");
+                                
+                                let dotColor = "bg-[#4CAF50]";
+                                let badgeBg = "bg-[#4CAF50]/10";
+                                let badgeText = "text-[#4CAF50]";
+                                let iconoEstado = <CheckCircle2 className="w-3.5 h-3.5" />;
+                                
+                                if (hasNPA) {
+                                  dotColor = "bg-[#F44336]";
+                                  badgeBg = "bg-[#F44336]/10";
+                                  badgeText = "text-[#F44336]";
+                                  iconoEstado = <XOctagon className="w-3.5 h-3.5" />;
+                                } else if (hasExtemporaneo) {
+                                  dotColor = "bg-[#FFC107]";
+                                  badgeBg = "bg-[#FFC107]/10";
+                                  badgeText = "text-[#FFC107]";
+                                  iconoEstado = <AlertTriangle className="w-3.5 h-3.5" />;
+                                }
+
+                                return (
+                                  <div key={idx} className="relative pl-8">
+                                    {/* Timeline dot */}
+                                    <div className={cn("absolute left-[-5.5px] top-1.5 w-3 h-3 rounded-full border-2 border-background", dotColor)} />
+                                    
+                                    {/* Card */}
+                                    <div className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                                      <div className="flex items-center gap-3 mb-3 flex-wrap">
+                                        <span className="text-foreground" style={{ ...headingBold, fontSize: "0.875rem" }}>
+                                          {trim.trimestre}
+                                        </span>
+                                        <div className={cn("flex items-center gap-1.5 px-3 py-1 rounded-full", badgeBg, badgeText)} style={{ fontSize: "0.75rem", fontWeight: "var(--font-weight-medium)" }}>
+                                          {iconoEstado}
+                                          {hasNPA ? "Presenta incumplimientos" : hasExtemporaneo ? "Presenta pagos extemporáneos" : "Cumplimiento total"}
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="space-y-3 mt-4">
+                                        {trim.cargos.map((c: any, cIdx: number) => {
+                                          const isNPA = c.estadoPago === "No Pagado (NPA)";
+                                          const isExtemporaneo = c.estadoPago === "Extemporáneo";
+                                          return (
+                                            <div key={cIdx} className="flex flex-col gap-1.5 pb-3 border-b border-border/50 last:border-0 last:pb-0">
+                                              <span className="text-foreground" style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: "var(--font-weight-medium)" }}>
+                                                {c.cargo}
+                                              </span>
+                                              <span className={cn(
+                                                "inline-flex self-start px-2 py-0.5 rounded-full text-[11px] font-medium border border-transparent",
+                                                isNPA ? "bg-[#F44336]/10 text-[#F44336]" :
+                                                isExtemporaneo ? "bg-[#FFC107]/10 text-[#FFC107]" :
+                                                "bg-[#4CAF50]/10 text-[#4CAF50]"
+                                              )}>
+                                                {c.estadoPago}
+                                              </span>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
                                     </div>
                                   </div>
                                 );

@@ -19,32 +19,63 @@ export const modulo1Config: ModuleConfig = {
     { label: "Analizando notificacion con IA", icon: <Brain className="w-4 h-4" /> },
   ],
   columnTabs: [
-    {
-      id: "identificacion",
-      label: "Información de Identificación",
-      columns: ["operador", "bdi"]
-    },
+    
     {
       id: "notificacion",
       label: "Notificación",
-      columns: ["pliego", "fechaActo", "tipoNotificacionLegal", "medioEntrega", "direccionCorreo", "fechaEntrega", "fechaNotificacion", "estado", "eventos", "documentos"]
+      columns: ["operador", "bdi", "pliego", "fechaActo", "tipoNotificacionLegal", "medioEntrega", "direccionCorreo", "fechaEntrega", "fechaNotificacion", "estado", "eventos", "documentos"]
+    },
+    {
+      id: "cumplimiento",
+      label: "Verificación de Cumplimiento",
+      icon: <Database className="w-4 h-4" />,
+      columns: ["operador", "bdi", "fechaCorte", "cumplimiento", "hallazgosSER"]
     }
   ],
   resultColumns: [
     {
       key: "operador",
       header: "Razón social",
-      headerTooltip: "Corresponde al nombre o razón social del operador objeto de la actuación administrativa.",
+      headerTooltip: "Nombre o razón social",
       filterable: false,
       render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)", fontFamily: "var(--font-body)" }}>{val}</span>
     },
     {
       key: "bdi",
       header: "BDI",
-      headerTooltip: "Número de BDI completo incluyendo consecutivo y año (ejemplo: 9054-2025), permitiendo adicionalmente filtros independientes tanto por número como por vigencia.",
+      headerTooltip: "Número de BDI completo",
       filterable: false,
       render: (val: string) => <span className="text-foreground" style={{ ...bodyXs, fontFamily: "var(--font-body)" }}>{val}</span>
     },
+    {
+      key: "fechaCorte",
+      header: "Fecha de corte",
+      headerTooltip: "Fecha en la que el usuario realiza la consulta",
+      render: (val: string) => <span className="text-foreground" style={bodyXs}>{val || "--"}</span>
+    },
+    {
+      key: "cumplimiento",
+      header: "Cumplimiento",
+      headerTooltip: "Resultado de la verificación",
+      filterable: false,
+      render: (val: string) => {
+        if (!val) return <span className="text-muted-foreground" style={bodyXs}>--</span>;
+        const config: Record<string, { variant: "success" | "destructive"; icon: React.ReactNode }> = {
+          "Cumplió": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+          "No cumplió": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
+        };
+        const cfg = config[val] || config["No cumplió"];
+        return <StatusBadge label={val} variant={cfg.variant} icon={cfg.icon} />;
+      }
+    },
+    {
+      key: "hallazgosSER",
+      header: "Hallazgos",
+      headerTooltip: "Resultados del análisis técnico del Sistema de Evaluación de Resultados (SER). Despliegue para ver los trimestres."
+    },
+
+    
+    
     {
       key: "pliego",
       header: "Número del acto administrativo",
@@ -220,6 +251,14 @@ export const modulo1Config: ModuleConfig = {
       fechaNotificacion: "15/Mar/2025",
       codigo: "RE",
       estado: "Devuelto",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2025-03-15.pdf", tamano: "2.3 MB", tipo: "pdf" },
@@ -250,6 +289,14 @@ export const modulo1Config: ModuleConfig = {
       fechaNotificacion: "18/Mar/2025",
       codigo: "N/A",
       estado: "Notificado",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2025-03-18.pdf", tamano: "3.2 MB", tipo: "pdf" },
@@ -284,6 +331,14 @@ export const modulo1Config: ModuleConfig = {
       fechaNotificacion: "23/Mar/2025",
       codigo: "NE",
       estado: "Devuelto",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2025-03-22.pdf", tamano: "1.8 MB", tipo: "pdf" },
@@ -314,6 +369,14 @@ export const modulo1Config: ModuleConfig = {
       codigo: "BLL",
       subEstadoPendiente: "Buzón lleno",
       estado: "Pendiente",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2025-03-25.pdf", tamano: "2.1 MB", tipo: "pdf" },
@@ -346,6 +409,14 @@ export const modulo1Config: ModuleConfig = {
       fechaNotificacion: "01/Abr/2025",
       codigo: "DE",
       estado: "Devuelto",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2025-04-01.pdf", tamano: "2.8 MB", tipo: "pdf" },
@@ -379,6 +450,14 @@ export const modulo1Config: ModuleConfig = {
       fechaNotificacion: "05/Abr/2025",
       codigo: "N/A",
       estado: "Notificado",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2025-04-05.pdf", tamano: "2.5 MB", tipo: "pdf" },
@@ -410,6 +489,14 @@ export const modulo1Config: ModuleConfig = {
       fechaNotificacion: "11/Ene/2026",
       codigo: "NR",
       estado: "Devuelto",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2026-01-10.pdf", tamano: "2.2 MB", tipo: "pdf" },
@@ -441,6 +528,14 @@ export const modulo1Config: ModuleConfig = {
       fechaNotificacion: "15/Ene/2026",
       codigo: "N/A",
       estado: "Notificado",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2026-01-15.pdf", tamano: "3.1 MB", tipo: "pdf" },
@@ -473,6 +568,14 @@ export const modulo1Config: ModuleConfig = {
       fechaNotificacion: "20/Feb/2026",
       codigo: "N/A",
       estado: "Notificado",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2026-02-20.pdf", tamano: "2.9 MB", tipo: "pdf" },
@@ -508,6 +611,14 @@ export const modulo1Config: ModuleConfig = {
       codigo: "APN",
       subEstadoPendiente: "Apertura de notificación",
       estado: "Pendiente",
+      fechaCorte: "31/Mar/2025",
+      cumplimiento: "Cumplió",
+      hallazgosSER: {
+        trimestres: [
+          { trimestre: "Trimestre 1 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }, { cargo: "Reporte SIUST", estadoPago: "Pagado" }] },
+          { trimestre: "Trimestre 2 2024", cargos: [{ cargo: "Pago contraprestaciones", estadoPago: "Pagado" }] }
+        ]
+      },
       documentos: {
         archivos: [
           { nombre: "Radicado_SPL-2026-03-12.pdf", tamano: "2.4 MB", tipo: "pdf" },

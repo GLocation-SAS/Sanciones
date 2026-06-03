@@ -130,10 +130,10 @@ export default function Menu() {
 
   const modules = [
     { name: "Verificación de Notificación del Pliego", route: "/sanciones/notificacion-pliego" },
-    { name: "Verificación de Descargos y Pruebas", route: "/sanciones/descargos-pruebas" },
-    { name: "Verificación de Actos de Prueba", route: "/sanciones/actos-prueba" },
+    { name: "Verificación de descargos y solicitud de pruebas", route: "/sanciones/descargos-pruebas" },
+    { name: "Verificación de comunicación del Acto de Pruebas", route: "/sanciones/actos-prueba" },
     { name: "Verificación de Alegatos de Conclusión", route: "/sanciones/alegatos-conclusion" },
-    { name: "Verificación de Cumplimiento de Obligación", route: "/sanciones/cumplimiento-obligacion" },
+    { name: "Verificación de Cumplimiento", route: "/sanciones/hallazgos" },
   ];
 
   return (
