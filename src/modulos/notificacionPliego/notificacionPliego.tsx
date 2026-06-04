@@ -4,7 +4,7 @@ import { Badge } from "../../components/ui/badge";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../../components/ui/tooltip";
 import { ModuleConfig, bodyXs, StatusBadge } from "../../app/shared";
 
-export const modulo1Config: ModuleConfig = {
+export const notificacionPliego: ModuleConfig = {
   id: "notificacion-pliego",
   title: "Verificacion de notificacion del pliego",
   shortTitle: "Notificacion del Pliego",

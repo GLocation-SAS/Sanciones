@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { ChevronLeft, ChevronRight, AlertCircle, Folder, CheckCircle2, XOctagon } from "lucide-react";
 import { useNavigate, useLocation } from "../../app/router-compat";
 import { Badge } from "../ui/badge";
@@ -11,19 +10,23 @@ import { bodyXs, bodyBase, headingBold, StatusBadge } from "../../app/shared";
 export function ValidationPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { acto, estadoRUES, pliego } = location.state || { acto: "", estadoRUES: "Activa", pliego: "" };
+  const { acto = "", estadoRUES = "Activa", pliego = "" } = (location.state as any) || {};
 
   const mockCargos = [
-    { nombre: "Incumplimiento de obligaciones de contraprestación", periodos: [
+    {
+      nombre: "Incumplimiento de obligaciones de contraprestación", periodos: [
         { periodo: "Trim 1 2024", hallazgo: "No pagó", resultado: "Sanción" },
         { periodo: "Trim 2 2024", hallazgo: "Pagó", resultado: "Archivo" },
         { periodo: "Trim 3 2024", hallazgo: "No pagó", resultado: "Sanción" },
         { periodo: "Trim 4 2024", hallazgo: "Pagó fuera tiempo", resultado: "Sanción" },
-      ], recomendacion: "Continuar a sanción", razon: "3 de 4 periodos con sanción", tipo: "sancion" },
-    { nombre: "Deficiencia en calidad del servicio", periodos: [
+      ], recomendacion: "Continuar a sanción", razon: "3 de 4 periodos con sanción", tipo: "sancion"
+    },
+    {
+      nombre: "Deficiencia en calidad del servicio", periodos: [
         { periodo: "Trim 1 2024", hallazgo: "Subsanó", resultado: "Archivo" },
         { periodo: "Trim 2 2024", hallazgo: "Subsanó", resultado: "Archivo" },
-      ], recomendacion: "Archivar", razon: "Todos los periodos subsanados", tipo: "archivo" },
+      ], recomendacion: "Archivar", razon: "Todos los periodos subsanados", tipo: "archivo"
+    },
   ];
 
   const tieneAlgunaSancion = mockCargos.some(c => c.tipo === "sancion");

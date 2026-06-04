@@ -10,7 +10,10 @@ import { bodyXs, headingBold } from "../../app/shared";
 export function CumplimientoPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { acto, operador, estadoRUES } = location.state || { acto: "", operador: "", estadoRUES: "Activa" };
+  const state = (location.state as Record<string, string>) || {};
+  const acto = state.acto || "";
+  const operador = state.operador || "";
+  const estadoRUES = state.estadoRUES || "Activa";
 
   return (
     <div className="min-h-screen bg-card">

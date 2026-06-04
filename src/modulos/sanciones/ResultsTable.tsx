@@ -10,8 +10,6 @@ import {
   FileText,
   X,
   ChevronDown,
-  ChevronUp,
-  Filter,
   Calendar,
   ImageIcon,
   Paperclip,
@@ -61,6 +59,7 @@ import type { ColumnDef } from "./types";
 interface ColumnTab {
   id: string;
   label: string;
+  icon?: React.ReactNode;
   columns: string[];
 }
 
@@ -1614,8 +1613,8 @@ export function ResultsTable({
                                   </p>
                                   <span
                                     className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] ${prueba.tipo === "anexada"
-                                        ? "bg-chart-2/10 text-chart-2 border border-chart-2/20"
-                                        : "bg-chart-4/10 text-chart-4 border border-chart-4/20"
+                                      ? "bg-chart-2/10 text-chart-2 border border-chart-2/20"
+                                      : "bg-chart-4/10 text-chart-4 border border-chart-4/20"
                                       }`}
                                     style={{
                                       fontFamily: "var(--font-body)",

@@ -3,7 +3,7 @@ import { FileSearch, Search, Download, FileText, Brain, CheckCircle2, XCircle, X
 import { Badge } from "../../components/ui/badge";
 import { ModuleConfig, bodyXs, StatusBadge } from "../../app/shared";
 
-export const modulo2Config: ModuleConfig = {
+export const descargosPruebas: ModuleConfig = {
   id: "descargos-pruebas",
   title: "Verificacion de descargos y solicitud de pruebas",
   shortTitle: "Descargos y Solicitud de Pruebas",

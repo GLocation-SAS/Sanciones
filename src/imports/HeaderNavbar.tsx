@@ -1,5 +1,4 @@
 import Image from "next/image";
-import svgPaths from "./svg-jl24v6b9nh";
 import Menu from "./Menu";
 
 function Group5() {
@@ -24,7 +23,8 @@ function Group10() {
     <div className="col-1 h-[5.301px] ml-0 mt-0 relative row-1 w-[8.453px]">
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 8.45265 5.30111">
         <g id="Group 48096870">
-          <path d={svgPaths.pe947800} fill="var(--fill-0, white)" id="Vector" />
+          <path d="M4.22769 4.70436C4.70811 4.4591 4.81989 3.93573 4.4385 3.55435C4.02658 3.16243 3.48389 3.13664 3.03524 3.51751L0.75379 5.81943C0.505381 6.06484 0.508488 6.46644 0.757648 6.71559L2.54002 8.5C2.58036 8.53758 2.63598 8.56087 2.69754 8.56463C2.75909 8.56463 2.82315 8.54215 2.8681 8.49811L4.43175 7.01337L6.56687 4.71822C6.58868 4.69465 6.60955 4.66591 6.63792 4.62783C6.66062 4.59947 6.67648 4.56629 6.67914 4.52371C6.67705 4.47495 6.65646 4.42999 6.62285 4.39638C6.58924 4.36277 6.54428 4.34431 6.50303 4.3464C6.46179 4.3464 6.41823 4.36754 6.38859 4.39751L4.22769 4.70436Z" fill="white" />
+          <path d="M4.2611 0.481062C4.68824 0.696047 4.77654 1.23906 4.56155 1.66621L2.92391 4.99449C2.70892 5.42163 2.16591 5.50993 1.73876 5.29494C1.31162 5.07996 1.22332 4.53694 1.43831 4.10979L3.07595 0.781515C3.29093 0.354371 3.83395 0.266069 4.2611 0.481062Z" fill="white" />
         </g>
       </svg>
     </div>
@@ -75,7 +75,7 @@ function Group7() {
 export default function Frame() {
   return (
     <div className="content-stretch flex items-center justify-between px-[40px] relative size-full">
-      <Image src="/logo.png" alt="TIC ANIA" width={30} height={30} />
+      <Image src="/ania.png" alt="TIC ANIA" width={115} height={60} />
       <div className="flex items-center gap-6">
         <Menu />
         <Group7 />
