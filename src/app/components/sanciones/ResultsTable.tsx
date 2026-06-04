@@ -811,8 +811,36 @@ export function ResultsTable({
                           </button>
                         ) : col.render ? (
                           col.render(row[col.key], row)
+                        ) : col.expandable && Array.isArray(row[col.key]) ? (
+                          (() => {
+                            const arr: any[] = row[col.key];
+                            const count = arr.length;
+                            const section = col.key.toLowerCase().includes("prueba") ? "pruebas"
+                              : col.key.toLowerCase().includes("evento") ? "eventos"
+                              : col.key;
+                            const expandKey = ["eventos", "pruebas", "hallazgosSER", "pruebasAsociadas"].includes(col.key)
+                              ? section : section + ":" + col.key;
+                            const isExp = expandedRows[row.id] === expandKey || expandedRows[row.id]?.startsWith(expandKey);
+                            if (count === 0) {
+                              return (
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 text-muted-foreground rounded-md text-[11px] font-medium border border-border/50">
+                                  <XCircle className="w-3.5 h-3.5" />
+                                  Sin elementos
+                                </div>
+                              );
+                            }
+                            return (
+                              <button
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#3F51B5]/5 text-[#3F51B5] rounded-md text-[11px] font-medium border border-[#3F51B5]/10 hover:bg-[#3F51B5]/10 transition-colors"
+                                onClick={(e) => { e.stopPropagation(); toggleRowExpand(row.id, expandKey); }}
+                              >
+                                {isExp ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                                {count} elemento{count !== 1 ? 's' : ''}
+                              </button>
+                            );
+                          })()
                         ) : typeof row[col.key] === "object" && row[col.key] !== null ? (
-                          <span className="text-muted-foreground italic text-[11px]">No renderizable</span>
+                          <span className="text-muted-foreground italic text-[11px]">—</span>
                         ) : (
                           row[col.key]
                         )}
@@ -1044,6 +1072,58 @@ export function ResultsTable({
                                     </div>
                                   );
                                 })}
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })()
+                  }
+
+                  {/* Panel expandible genérico para arrays de pruebas (e.g. pruebasAlegatos) */}
+                  {expandedRows[row.id]?.startsWith("pruebas:") &&
+                    (() => {
+                      const colKey = expandedRows[row.id].split(":")[1];
+                      const items: any[] = Array.isArray(row[colKey]) ? row[colKey] : [];
+                      if (items.length === 0) return null;
+                      return (
+                        <TableRow className="bg-muted/30 hover:bg-muted/30">
+                          <TableCell colSpan={100} className="py-4 px-6">
+                            <div className="pl-10 pr-4">
+                              <div className="flex items-center gap-2 mb-3">
+                                <FileCheck className="w-4 h-4 text-primary" />
+                                <span className="text-primary" style={{ ...bodyXs, fontWeight: "var(--font-weight-bold)" }}>
+                                  Elementos asociados ({items.length})
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                {items.map((item: any, idx: number) => (
+                                  <div
+                                    key={`item-${row.id}-${item.id || idx}`}
+                                    className="bg-card border border-border rounded-lg p-3 flex flex-col gap-1.5 hover:border-primary/50 transition-colors"
+                                  >
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <span className="text-foreground" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
+                                        {item.nombre || item.name || item.titulo || `Elemento ${idx + 1}`}
+                                      </span>
+                                      {item.tipo && (
+                                        <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-medium", item.tipo?.toLowerCase() === "anexada" ? "bg-[#10B981]/15 text-[#10B981]" : "bg-[#3F51B5]/15 text-[#3F51B5]")}>
+                                          {item.tipo}
+                                        </span>
+                                      )}
+                                      {item.tipoPrueba && (
+                                        <span className="text-muted-foreground ml-auto" style={{ fontSize: "11px" }}>
+                                          Tipo: {item.tipoPrueba}
+                                        </span>
+                                      )}
+                                    </div>
+                                    {(item.descripcion || item.detalle) && (
+                                      <p className="text-muted-foreground" style={{ fontSize: "11px", lineHeight: 1.5 }}>
+                                        {item.descripcion || item.detalle}
+                                      </p>
+                                    )}
+                                  </div>
+                                ))}
                               </div>
                             </div>
                           </TableCell>

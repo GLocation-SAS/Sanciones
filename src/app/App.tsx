@@ -1269,6 +1269,32 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                                 ) : typeof row[col.key] === "object" && row[col.key] !== null ? null : row[col.key]}
                               </button>
                             )
+                          ) : col.expandable && col.key === "pruebasAlegatos" ? (
+                            // Módulo Alegatos de Conclusión - columna expandible de pruebas asociadas (array)
+                            (() => {
+                              const pruebasArr = Array.isArray(row.pruebasAlegatos) ? row.pruebasAlegatos : [];
+                              const count = pruebasArr.length;
+                              return count === 0 ? (
+                                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-muted/30 text-muted-foreground rounded-md opacity-60 cursor-not-allowed" style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}>
+                                  <XCircle className="w-3.5 h-3.5" />
+                                  Sin pruebas
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    const newExpanded = new Set(expandedRows);
+                                    if (newExpanded.has(row.id)) newExpanded.delete(row.id);
+                                    else newExpanded.add(row.id);
+                                    setExpandedRows(newExpanded);
+                                  }}
+                                  className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 hover:bg-primary/15 text-primary rounded-md transition-colors duration-200"
+                                  style={{ ...bodyXs, fontWeight: "var(--font-weight-medium)" }}
+                                >
+                                  {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRightIcon className="w-3.5 h-3.5" />}
+                                  {`${count} prueba${count !== 1 ? 's' : ''}`}
+                                </button>
+                              );
+                            })()
                           ) : col.expandable && col.key === "pruebas" && moduleTitle.includes("Alegatos") ? (
                             // Módulo 4: Alegatos de Conclusión - columna expandible de pruebas
                             (() => {
@@ -1542,7 +1568,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                     )}
 
                     {/* Fila expandida con grilla de pruebas */}
-                    {isExpanded && row.pruebas && row.pruebas.length > 0 && (
+                    {isExpanded && (row.pruebas?.length > 0 || row.pruebasAlegatos?.length > 0) && (
                       <TableRow>
                         <TableCell colSpan={columns.length + 1 + (showRowCheckboxColumn ? 1 : 0)} className="bg-muted/10 p-4">
                           <div className="space-y-3">
@@ -1550,7 +1576,7 @@ function ResultsTable({ columns, data, moduleTitle, onReset }: { columns: Column
                               Detalle de pruebas
                             </h4>
                             <div className="grid grid-cols-1 gap-3">
-                              {row.pruebas.map((prueba: any) => (
+                              {(row.pruebasAlegatos?.length > 0 ? row.pruebasAlegatos : row.pruebas || []).map((prueba: any) => (
                                 <div key={prueba.id} className="bg-card border border-border rounded-lg p-3 space-y-2">
                                   <div className="flex items-start justify-between gap-2">
                                     <div className="flex-1 space-y-1">

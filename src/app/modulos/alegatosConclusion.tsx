@@ -34,14 +34,14 @@ export const modulo4Config: ModuleConfig = {
       columns: ["operador", "bdi", "actoPruebas", "fechaActoPruebas", "medioEntregaPruebas", "direccionComunicacionPruebas", "fechaEntregaPruebas", "fechaEfectivaComunicacionPruebas", "estadoComunicacionPruebas", "trazabilidadPruebas", "documentosPruebas"]
     },
     {
-      id: "verificacion-cumplimiento",
-      label: "Verificación de Cumplimiento",
-      columns: ["operador", "bdi", "fechaCorte", "pliego", "cumplimiento", "hallazgosSER", "documentos", "acciones"]
-    },
-    {
       id: "alegatos",
       label: "Alegatos de conclusión",
       columns: ["operador", "bdi", "fechaLimiteAlegatos", "presentoAlegatos", "estadoTerminoAlegatos", "fechaPresentacionAlegatos", "fechaRadicacionAlegatos", "pruebasAlegatos", "documentosAlegatos", "acciones"]
+    },
+    {
+      id: "verificacion-cumplimiento",
+      label: "Verificación de Cumplimiento",
+      columns: ["operador", "bdi", "fechaCorte", "pliego", "cumplimiento", "hallazgosSER", "documentos", "acciones"]
     },
   ],
   resultColumns: [
@@ -458,18 +458,6 @@ export const modulo4Config: ModuleConfig = {
       header: "Pruebas asociadas",
       headerTooltip: "Pruebas o soportes adicionales presentados por el operador junto con sus alegatos de conclusión.",
       expandable: true,
-      render: (val: any, row: Record<string, any>) => {
-        const items = val || row.pruebasAlegatos || [];
-        const count = Array.isArray(items) ? items.length : 0;
-        if (count === 0) return <span className="text-muted-foreground" style={bodyXs}>Sin pruebas</span>;
-        return (
-          <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-            <span className="text-primary underline underline-offset-2 font-medium" style={bodyXs}>
-              {count} prueba{count !== 1 ? "s" : ""}
-            </span>
-          </div>
-        );
-      }
     },
     {
       key: "documentosAlegatos",
@@ -537,7 +525,7 @@ export const modulo4Config: ModuleConfig = {
       fechaPresentacionAlegatos: "21/May/2025",
       fechaRadicacionAlegatos: "22/May/2025",
       pruebasAlegatos: [
-        { id: "al1-1", descripcion: "Estados financieros certificados", tipo: "Documental", documento: { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" } }
+        { id: "al1-1", nombre: "Estados financieros certificados", descripcion: "Soporte contable del período evaluado", tipo: "anexada", tipoPrueba: "Documental", documento: { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" } }
       ],
       documentosAlegatos: { archivos: [{ nombre: "Alegato_RAD-AL-001.pdf", tamano: "3.2 MB", tipo: "pdf" }, { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" }] },
       documentos: { archivos: [{ nombre: "Alegato_RAD-AL-001.pdf", tamano: "3.2 MB", tipo: "pdf" }, { nombre: "Estados_financieros_certificados.pdf", tamano: "2.8 MB", tipo: "pdf" }] }
@@ -635,8 +623,8 @@ export const modulo4Config: ModuleConfig = {
       fechaPresentacionAlegatos: "03/Jul/2025",
       fechaRadicacionAlegatos: "04/Jul/2025",
       pruebasAlegatos: [
-        { id: "al3-1", descripcion: "Concepto jurídico externo", tipo: "Documental", documento: { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" } },
-        { id: "al3-2", descripcion: "Marco normativo vigente", tipo: "Documental", documento: { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" } }
+        { id: "al3-1", nombre: "Concepto jurídico externo", descripcion: "Concepto sobre interpretación normativa", tipo: "anexada", tipoPrueba: "Documental", documento: { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" } },
+        { id: "al3-2", nombre: "Marco normativo vigente", descripcion: "Normativa aplicable al caso", tipo: "anexada", tipoPrueba: "Documental", documento: { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" } }
       ],
       documentosAlegatos: { archivos: [{ nombre: "Alegato_RAD-AL-003.pdf", tamano: "3.8 MB", tipo: "pdf" }, { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" }, { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" }] },
       documentos: { archivos: [{ nombre: "Alegato_RAD-AL-003.pdf", tamano: "3.8 MB", tipo: "pdf" }, { nombre: "Concepto_juridico_externo.pdf", tamano: "1.9 MB", tipo: "pdf" }, { nombre: "Marco_normativo_vigente.pdf", tamano: "2.3 MB", tipo: "pdf" }] }
@@ -686,7 +674,7 @@ export const modulo4Config: ModuleConfig = {
       fechaPresentacionAlegatos: "09/Jul/2025",
       fechaRadicacionAlegatos: "10/Jul/2025",
       pruebasAlegatos: [
-        { id: "al4-1", descripcion: "Recibos de pago completos", tipo: "Documental", documento: { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" } }
+        { id: "al4-1", nombre: "Recibos de pago completos", descripcion: "Comprobantes bancarios del período", tipo: "anexada", tipoPrueba: "Documental", documento: { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" } }
       ],
       documentosAlegatos: { archivos: [{ nombre: "Alegato_RAD-AL-004.pdf", tamano: "2.9 MB", tipo: "pdf" }, { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" }] },
       documentos: { archivos: [{ nombre: "Alegato_RAD-AL-004.pdf", tamano: "2.9 MB", tipo: "pdf" }, { nombre: "Recibos_pago_completos.pdf", tamano: "2.4 MB", tipo: "pdf" }] }
