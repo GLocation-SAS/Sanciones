@@ -7,7 +7,7 @@ import { ModuleConfig, bodyXs, StatusBadge } from "../shared";
 
 export const modulo3Config: ModuleConfig = {
   id: "actos-prueba",
-  title: "Verificacion de Actos de Prueba",
+  title: "Verificacion de comunicacion del acto de pruebas",
   shortTitle: "Actos de Prueba",
   epicLabel: "Epica 03",
   description: "Analisis de las resoluciones (actos de prueba) que evaluan las pruebas presentadas por los operadores en la etapa anterior. Incluye validacion automatica del estado RUES, verificacion de cumplimiento por cargo y periodo segun datos del SER, y generacion de recomendaciones de sancion o archivo.",
@@ -218,15 +218,8 @@ export const modulo3Config: ModuleConfig = {
       headerTooltip: "Indica si el operador ejerció su derecho de contradicción presentando descargos dentro del término legal.",
       filterable: true,
       render: (val: string) => {
-        const si = val === "Sí" || val === "Si" || val === true || val === "true";
-        return (
-          <div className="flex items-center gap-1.5">
-            {si
-              ? <CheckCircle2 className="w-3.5 h-3.5 text-chart-2" />
-              : <XCircle className="w-3.5 h-3.5 text-destructive" />}
-            <span className="text-foreground" style={bodyXs}>{si ? "Sí" : "No"}</span>
-          </div>
-        );
+        const si = val === "Sí" || val === "Si" || val === "true";
+        return <StatusBadge label={si ? "Sí" : "No"} variant={si ? "success" : "neutral"} icon={si ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />} />;
       }
     },
     {
@@ -235,26 +228,44 @@ export const modulo3Config: ModuleConfig = {
       headerTooltip: "Indica si los descargos fueron presentados dentro del término legal (A tiempo), fuera de él (Extemporáneo), o si el operador no presentó descargos (Sin descargos).",
       filterable: true,
       render: (val: string) => {
-        const config: Record<string, { variant: "success" | "warning" | "neutral" | "destructive" }> = {
-          "A tiempo": { variant: "success" },
-          "Extemporáneo": { variant: "warning" },
-          "Sin descargos": { variant: "neutral" },
-          "Vencido": { variant: "destructive" },
+        const config: Record<string, { variant: "success" | "warning" | "neutral" | "destructive"; icon: React.ReactNode }> = {
+          "A tiempo": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+          "Dentro del término": { variant: "success", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+          "Extemporáneo": { variant: "warning", icon: <Clock className="w-3.5 h-3.5" /> },
+          "Fuera del término": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
+          "Sin descargos": { variant: "neutral", icon: <XCircle className="w-3.5 h-3.5" /> },
+          "No presentó": { variant: "neutral", icon: <XCircle className="w-3.5 h-3.5" /> },
+          "Vencido": { variant: "destructive", icon: <XOctagon className="w-3.5 h-3.5" /> },
         };
-        const cfg = config[val] || { variant: "neutral" as const };
-        return <StatusBadge label={val || "—"} variant={cfg.variant} />;
+        const cfg = config[val] || { variant: "neutral" as const, icon: <XCircle className="w-3.5 h-3.5" /> };
+        return <StatusBadge label={val || "—"} variant={cfg.variant} icon={cfg.icon} />;
       }
     },
     {
+      key: "fechaPresentacion",
+      header: "Fecha de presentación de descargos",
+      headerTooltip: "Fecha en la cual el operador presentó los descargos ante la Entidad. Se compara con la fecha límite calculada para validar el término.",
+      filterable: true
+    },
+    {
       key: "fechaRadicacion",
-      header: "Fecha de presentación / radicación de descargos",
-      headerTooltip: "Fecha en que el operador radicó formalmente su escrito de descargos y solicitud de pruebas ante la entidad.",
-      render: (val: string) => {
-        if (!val) return <span className="text-muted-foreground" style={bodyXs}>—</span>;
-        return <span className="text-foreground" style={bodyXs}>{val}</span>;
+      header: "Fecha de radicación",
+      headerTooltip: "Fecha oficial de radicación del descargo en el sistema INTEGRATIC. Puede diferir de la fecha de presentación física por los tiempos internos del sistema.",
+      filterable: true,
+      render: (val: string, row: Record<string, any>) => {
+        const dias = row.fechaRadicacionDias;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="text-foreground" style={bodyXs}>{val || "—"}</span>
+            {typeof dias === "number" && dias < 0 && (
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
+                {dias} días
+              </Badge>
+            )}
+          </div>
+        );
       }
     },
-    { key: "fechaPresentacion", header: "Fecha presentación", headerTooltip: "Fecha en la que el operador presentó los descargos o la solicitud de pruebas." },
     {
       key: "actoPruebas",
       header: "Número de acto administrativo",
@@ -420,7 +431,7 @@ export const modulo3Config: ModuleConfig = {
       descargos: "Presentado",
       presentoDescargos: "Sí",
       fechaLimite: "27/Mar/2025",
-      estadoTermino: "A tiempo",
+      estadoTermino: "Dentro del término",
       fechaRadicacion: "25/Mar/2025",
       pruebasAnexadas: 2,
       pruebasSolicitadas: 1,
@@ -495,7 +506,7 @@ export const modulo3Config: ModuleConfig = {
       descargos: "Sin descargos",
       presentoDescargos: "No",
       fechaLimite: "08/May/2025",
-      estadoTermino: "Vencido",
+      estadoTermino: "No presentó",
       fechaRadicacion: "N/A",
       pruebasAnexadas: 0,
       pruebasSolicitadas: 0,
@@ -545,7 +556,7 @@ export const modulo3Config: ModuleConfig = {
       descargos: "Presentado",
       presentoDescargos: "Sí",
       fechaLimite: "15/Jun/2025",
-      estadoTermino: "Extemporáneo",
+      estadoTermino: "Dentro del término",
       fechaRadicacion: "18/Jun/2025",
       pruebasAnexadas: 3,
       pruebasSolicitadas: 2,
@@ -624,7 +635,7 @@ export const modulo3Config: ModuleConfig = {
       descargos: "Presentado",
       presentoDescargos: "Sí",
       fechaLimite: "28/Jul/2025",
-      estadoTermino: "A tiempo",
+      estadoTermino: "Dentro del término",
       fechaRadicacion: "25/Jul/2025",
       pruebasAnexadas: 1,
       pruebasSolicitadas: 1,
@@ -686,7 +697,7 @@ export const modulo3Config: ModuleConfig = {
       descargos: "Sin descargos",
       presentoDescargos: "No",
       fechaLimite: "25/Ene/2026",
-      estadoTermino: "Vencido",
+      estadoTermino: "No presentó",
       fechaRadicacion: "N/A",
       pruebasAnexadas: 0,
       pruebasSolicitadas: 1,
@@ -756,7 +767,7 @@ export const modulo3Config: ModuleConfig = {
       descargos: "Presentado",
       presentoDescargos: "Sí",
       fechaLimite: "28/Feb/2026",
-      estadoTermino: "A tiempo",
+      estadoTermino: "Dentro del término",
       fechaRadicacion: "20/Feb/2026",
       pruebasAnexadas: 2,
       pruebasSolicitadas: 1,

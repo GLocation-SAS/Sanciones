@@ -5,7 +5,7 @@ import { ModuleConfig, bodyXs, StatusBadge } from "../shared";
 
 export const modulo2Config: ModuleConfig = {
   id: "descargos-pruebas",
-  title: "Verificacion de Descargos y Solicitud de Pruebas",
+  title: "Verificacion de descargos y solicitud de pruebas",
   shortTitle: "Descargos y Solicitud de Pruebas",
   epicLabel: "Epica 02",
   description: "Consulta, validación y trazabilidad del ejercicio del derecho de defensa: identificación del operador y expediente, cálculo automático del término de descargos a partir de la notificación, calidad de quien presenta, resumen argumentativo estructurado, actividad probatoria (pruebas anexadas, solicitadas, tipo, origen y estado) y documentos soporte.",
@@ -117,7 +117,6 @@ export const modulo2Config: ModuleConfig = {
       render: (val: string) => (
         <div className="flex items-center gap-1.5">
           <span className="text-foreground" style={bodyXs}>{val}</span>
-          <Badge className="bg-primary/10 text-primary border-none px-1.5 py-0 h-4 text-[10px]">auto</Badge>
         </div>
       )
     },

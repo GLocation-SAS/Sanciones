@@ -6,7 +6,7 @@ import { ModuleConfig, bodyXs, StatusBadge } from "../shared";
 
 export const modulo1Config: ModuleConfig = {
   id: "notificacion-pliego",
-  title: "Verificacion de Notificacion del Pliego",
+  title: "Verificacion de notificacion del pliego",
   shortTitle: "Notificacion del Pliego",
   epicLabel: "Epica 01",
   description: "Consulta, validación y trazabilidad de la notificación de pliegos de cargos dentro del proceso sancionatorio, permitiendo identificar el operador, expediente, actuación administrativa, mecanismo de notificación, medio de entrega, fechas relevantes, estado y documentos asociados.",
