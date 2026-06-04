@@ -1,7 +1,7 @@
 import React from "react";
 import { FileSearch, Search, Download, FileText, Brain, CheckCircle2, XCircle, XOctagon, Clock, HelpCircle, User, Folder, Database, ChevronRight } from "lucide-react";
 import { Badge } from "../../components/ui/badge";
-import { ModuleConfig, bodyXs, StatusBadge } from "../../shared";
+import { ModuleConfig, bodyXs, StatusBadge } from "../../app/shared";
 
 export const modulo2Config: ModuleConfig = {
   id: "descargos-pruebas",

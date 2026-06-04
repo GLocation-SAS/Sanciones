@@ -2,9 +2,9 @@
 
 import React from "react";
 import { ChevronLeft, ChevronRight, Download, FileText, Image as ImageIcon, Paperclip } from "lucide-react";
-import { useNavigate, useLocation } from "../../router-compat";
+import { useNavigate, useLocation } from "../../app/router-compat";
 import { NavigableBreadcrumb } from "../ui/NavigableBreadcrumb";
-import { bodyXs, headingBold } from "../../shared";
+import { bodyXs, headingBold } from "../../app/shared";
 
 /* Página completa de Documentos */
 export function DocumentosPage() {

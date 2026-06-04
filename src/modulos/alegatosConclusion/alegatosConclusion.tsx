@@ -1,7 +1,7 @@
 import React from "react";
 import { ClipboardCheck, Search, Download, FileText, Brain, CheckCircle2, XOctagon, Clock, Mail, Folder, Database, ChevronRight } from "lucide-react";
 import { Badge } from "../../components/ui/badge";
-import { ModuleConfig, bodyXs, StatusBadge } from "../../shared";
+import { ModuleConfig, bodyXs, StatusBadge } from "../../app/shared";
 
 export const modulo4Config: ModuleConfig = {
   id: "alegatos-conclusion",

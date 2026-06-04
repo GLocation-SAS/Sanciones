@@ -1,11 +1,12 @@
 "use client";
 
-import { DocumentosPage as DocumentosPageComponent, PrototypeBanner } from "../../../App";
+import { DocumentosPage } from "../../../components/pages/DocumentosPage";
+import { PrototypeBanner } from "../../../components/ui/PrototypeBanner";
 
 export default function DocumentosRoute() {
   return (
     <>
-      <DocumentosPageComponent />
+      <DocumentosPage />
       <PrototypeBanner />
     </>
   );

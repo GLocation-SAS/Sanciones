@@ -1,11 +1,12 @@
 "use client";
 
-import { ImageGalleryPage as Gallery, PrototypeBanner } from "../../../App";
+import { ImageGalleryPage } from "../../../../components/pages/ImageGalleryPage";
+import { PrototypeBanner } from "../../../../components/ui/PrototypeBanner";
 
 export default function ImagenesSERRoute() {
   return (
     <>
-      <Gallery />
+      <ImageGalleryPage />
       <PrototypeBanner />
     </>
   );

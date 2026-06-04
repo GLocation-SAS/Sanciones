@@ -26,12 +26,12 @@ import {
   XCircle,
   Database,
 } from "lucide-react";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { StatusBadge } from "../../shared";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Checkbox } from "../ui/checkbox";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../../components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
+import { StatusBadge } from "../../app/shared";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Checkbox } from "../../components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -39,23 +39,23 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "../../components/ui/table";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from "../ui/dialog";
+} from "../../components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../ui/tooltip";
-import { cn } from "../ui/utils";
+} from "../../components/ui/select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../components/ui/tabs";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../../components/ui/tooltip";
+import { cn } from "../../components/ui/utils";
 import type { ColumnDef } from "./types";
 
 interface ColumnTab {
@@ -139,9 +139,9 @@ export function ResultsTable({
   // Filtrar columnas según el tab activo
   const visibleColumns = columnTabs
     ? columns.filter((col) => {
-        const activeTabConfig = columnTabs.find((tab) => tab.id === activeTab);
-        return activeTabConfig?.columns.includes(col.key);
-      })
+      const activeTabConfig = columnTabs.find((tab) => tab.id === activeTab);
+      return activeTabConfig?.columns.includes(col.key);
+    })
     : columns;
 
   const handleView = (row: Record<string, any>) => {
@@ -222,7 +222,7 @@ export function ResultsTable({
         });
         if (!matchesGlobal) return false;
       }
-      
+
       // Dynamic column filters
       for (const key in columnFilters) {
         const filterVal = columnFilters[key];
@@ -279,7 +279,7 @@ export function ResultsTable({
         {visibleColumns.filter(c => c.filterable).map(col => {
           const isDate = col.key.toLowerCase().includes("fecha");
           const isDomain = ["estado", "tipoNotificacionLegal", "medioEntrega", "servicio", "estadoTermino", "dentroTerminos", "descargos", "origenPrueba", "tipoPrueba"].includes(col.key);
-          
+
           if (isDate) {
             return (
               <div key={col.key} className="relative mt-2">
@@ -288,14 +288,14 @@ export function ResultsTable({
                   type="date"
                   placeholder="Selecciona una fecha"
                   value={columnFilters[col.key] || ""}
-                  onChange={(e) => setColumnFilters(prev => ({...prev, [col.key]: e.target.value}))}
+                  onChange={(e) => setColumnFilters(prev => ({ ...prev, [col.key]: e.target.value }))}
                   className="w-full h-[38px] border-border rounded-md"
                   style={bodyXs}
                 />
               </div>
             );
           }
-          
+
           if (isDomain) {
             const uniqueValues = Array.from(new Set(data.map(d => d[col.key]).filter(Boolean)));
             const currentVal = columnFilters[col.key] || "";
@@ -322,7 +322,7 @@ export function ResultsTable({
                         <CommandGroup>
                           <CommandItem
                             value="Todos"
-                            onSelect={() => setColumnFilters(prev => ({...prev, [col.key]: ""}))}
+                            onSelect={() => setColumnFilters(prev => ({ ...prev, [col.key]: "" }))}
                             style={bodyXs}
                           >
                             Todos
@@ -332,7 +332,7 @@ export function ResultsTable({
                             <CommandItem
                               key={val}
                               value={val}
-                              onSelect={() => setColumnFilters(prev => ({...prev, [col.key]: val}))}
+                              onSelect={() => setColumnFilters(prev => ({ ...prev, [col.key]: val }))}
                               style={bodyXs}
                             >
                               {val}
@@ -347,14 +347,14 @@ export function ResultsTable({
               </div>
             );
           }
-          
+
           return (
             <div key={col.key} className="relative mt-2">
               <label className="absolute -top-2 left-2 inline-block bg-background px-1 text-[10px] text-foreground font-medium z-10 whitespace-nowrap overflow-hidden text-ellipsis max-w-[90%]" title={col.header}>{col.header}</label>
               <Input
                 placeholder="Todos"
                 value={columnFilters[col.key] || ""}
-                onChange={(e) => setColumnFilters(prev => ({...prev, [col.key]: e.target.value}))}
+                onChange={(e) => setColumnFilters(prev => ({ ...prev, [col.key]: e.target.value }))}
                 className="w-full h-[38px] border-border rounded-md"
                 style={bodyXs}
               />
@@ -614,9 +614,9 @@ export function ResultsTable({
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="bg-primary/5 p-1.5 rounded-xl border border-primary/10 mb-4 h-auto">
             {columnTabs.map((tab) => (
-              <TabsTrigger 
-                key={tab.id} 
-                value={tab.id} 
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
                 className="flex items-center gap-2 px-4 py-2 data-[state=active]:bg-[#3F51B5]/10 data-[state=active]:text-[#3F51B5] data-[state=active]:font-bold transition-all"
               >
                 {tab.icon}
@@ -711,8 +711,8 @@ export function ResultsTable({
                       "group transition-colors border-b-border",
                       expandedRows[row.id] && "bg-muted/10 border-b-0",
                       isDescargosModule &&
-                        row.pruebas?.length > 0 &&
-                        "cursor-pointer hover:bg-primary/5"
+                      row.pruebas?.length > 0 &&
+                      "cursor-pointer hover:bg-primary/5"
                     )}
                   >
                     <TableCell className="py-5 pl-6 w-12 text-center" onClick={(e) => e.stopPropagation()}>
@@ -737,7 +737,7 @@ export function ResultsTable({
                             if (Array.isArray(val) && val.length > 0) {
                               const section = col.key.toLowerCase().includes("trazabilidad") || col.key.toLowerCase().includes("eventos") ? "eventos" :
                                 col.key.toLowerCase().includes("prueba") ? "pruebas" :
-                                col.key === "hallazgosSER" ? "hallazgos" : col.key;
+                                  col.key === "hallazgosSER" ? "hallazgos" : col.key;
                               // Store which key for eventos panel
                               if (col.key !== "eventos" && col.key !== "hallazgosSER" && col.key !== "pruebasAsociadas" && col.key !== "pruebas") {
                                 toggleRowExpand(row.id, section + ":" + col.key);
@@ -817,7 +817,7 @@ export function ResultsTable({
                             const count = arr.length;
                             const section = col.key.toLowerCase().includes("prueba") ? "pruebas"
                               : col.key.toLowerCase().includes("evento") ? "eventos"
-                              : col.key;
+                                : col.key;
                             const expandKey = ["eventos", "pruebas", "hallazgosSER", "pruebasAsociadas"].includes(col.key)
                               ? section : section + ":" + col.key;
                             const isExp = expandedRows[row.id] === expandKey || expandedRows[row.id]?.startsWith(expandKey);
@@ -916,14 +916,14 @@ export function ResultsTable({
                             <h3 className="text-foreground mb-6" style={{ ...headingBold, fontSize: "1rem" }}>
                               Trazabilidad de la notificación • {row.pliego || row.expediente}
                             </h3>
-                            
+
                             <div className="relative border-l border-border ml-3 space-y-6 pb-4">
                               {row.eventos.map((evento: any, idx: number) => {
                                 // Determinar colores basados en tipo o estado
                                 let dotColor = "bg-[#3F51B5]";
                                 let badgeBg = "bg-[#3F51B5]/10";
                                 let badgeText = "text-[#3F51B5]";
-                                
+
                                 if (evento.tipo === "Devolución" || evento.resultado?.includes("Rehusado") || evento.resultado?.includes("Devuelto")) {
                                   dotColor = "bg-[#F44336]";
                                   badgeBg = "bg-[#F44336]/10";
@@ -942,7 +942,7 @@ export function ResultsTable({
                                   <div key={idx} className="relative pl-8">
                                     {/* Timeline dot */}
                                     <div className={cn("absolute left-[-5.5px] top-1.5 w-3 h-3 rounded-full border-2 border-background", dotColor)} />
-                                    
+
                                     {/* Card */}
                                     <div className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
                                       <div className="flex items-center gap-3 mb-3 flex-wrap">
@@ -960,7 +960,7 @@ export function ResultsTable({
                                           </div>
                                         )}
                                       </div>
-                                      
+
                                       <div className="space-y-2 mt-4">
                                         {evento.direccion && (
                                           <p className="m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem" }}>
@@ -980,7 +980,7 @@ export function ResultsTable({
                                             <span className="text-muted-foreground">{evento.observacion}</span>
                                           </p>
                                         )}
-                                        
+
                                         {/* Technical Identifiers */}
                                         {(row.idCertimail || row.radicadoConstancia) && (evento.tipo === "Envío electrónico" || evento.tipo === "Entrega física") && (
                                           <p className="m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem" }}>
@@ -988,19 +988,19 @@ export function ResultsTable({
                                             <span className="text-muted-foreground font-mono text-xs bg-muted px-2 py-0.5 rounded">{row.idCertimail || row.radicadoConstancia}</span>
                                           </p>
                                         )}
-                                        
+
                                         {/* Validation Alerts */}
                                         {(evento.alerta || (row.alertaValidacion && row.alertaValidacion !== "N/A" && (evento.tipo === "Devolución" || evento.tipo === "Entrega física"))) && (
                                           <div className="mt-2">
-                                            <StatusBadge 
-                                              label={evento.alerta || row.alertaValidacion} 
-                                              variant="warning" 
-                                              icon={<AlertTriangle className="w-3.5 h-3.5" />} 
+                                            <StatusBadge
+                                              label={evento.alerta || row.alertaValidacion}
+                                              variant="warning"
+                                              icon={<AlertTriangle className="w-3.5 h-3.5" />}
                                             />
                                           </div>
                                         )}
                                       </div>
-                                      
+
                                       {/* Document Viewer Button */}
                                       {evento.documento && (
                                         <div className="mt-4 inline-flex items-center gap-2 bg-[#3F51B5]/5 text-[#3F51B5] hover:bg-[#3F51B5]/10 px-3 py-2 rounded-lg border border-[#3F51B5]/10 cursor-pointer transition-colors" style={{ fontSize: "0.75rem", fontWeight: "var(--font-weight-medium)" }} onClick={() => setViewerOpen(true)}>
@@ -1154,12 +1154,12 @@ export function ResultsTable({
                               {row.hallazgosSER.trimestres.map((trim: any, idx: number) => {
                                 const hasNPA = trim.cargos.some((c: any) => c.estadoPago === "No Pagado (NPA)");
                                 const hasExtemporaneo = trim.cargos.some((c: any) => c.estadoPago === "Extemporáneo");
-                                
+
                                 let dotColor = "bg-[#4CAF50]";
                                 let badgeBg = "bg-[#4CAF50]/10";
                                 let badgeText = "text-[#4CAF50]";
                                 let iconoEstado = <CheckCircle2 className="w-3.5 h-3.5" />;
-                                
+
                                 if (hasNPA) {
                                   dotColor = "bg-[#F44336]";
                                   badgeBg = "bg-[#F44336]/10";
@@ -1176,7 +1176,7 @@ export function ResultsTable({
                                   <div key={idx} className="relative pl-8">
                                     {/* Timeline dot */}
                                     <div className={cn("absolute left-[-5.5px] top-1.5 w-3 h-3 rounded-full border-2 border-background", dotColor)} />
-                                    
+
                                     {/* Card */}
                                     <div className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
                                       <div className="flex items-center gap-3 mb-3 flex-wrap">
@@ -1188,7 +1188,7 @@ export function ResultsTable({
                                           {hasNPA ? "Presenta incumplimientos" : hasExtemporaneo ? "Presenta pagos extemporáneos" : "Cumplimiento total"}
                                         </div>
                                       </div>
-                                      
+
                                       <div className="space-y-3 mt-4">
                                         {trim.cargos.map((c: any, cIdx: number) => {
                                           const isNPA = c.estadoPago === "No Pagado (NPA)";
@@ -1201,8 +1201,8 @@ export function ResultsTable({
                                               <span className={cn(
                                                 "inline-flex self-start px-2 py-0.5 rounded-full text-[11px] font-medium border border-transparent",
                                                 isNPA ? "bg-[#F44336]/10 text-[#F44336]" :
-                                                isExtemporaneo ? "bg-[#FFC107]/10 text-[#FFC107]" :
-                                                "bg-[#4CAF50]/10 text-[#4CAF50]"
+                                                  isExtemporaneo ? "bg-[#FFC107]/10 text-[#FFC107]" :
+                                                    "bg-[#4CAF50]/10 text-[#4CAF50]"
                                               )}>
                                                 {c.estadoPago}
                                               </span>
@@ -1613,11 +1613,10 @@ export function ResultsTable({
                                     {prueba.nombre}
                                   </p>
                                   <span
-                                    className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] ${
-                                      prueba.tipo === "anexada"
+                                    className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] ${prueba.tipo === "anexada"
                                         ? "bg-chart-2/10 text-chart-2 border border-chart-2/20"
                                         : "bg-chart-4/10 text-chart-4 border border-chart-4/20"
-                                    }`}
+                                      }`}
                                     style={{
                                       fontFamily: "var(--font-body)",
                                       fontWeight: "var(--font-weight-medium)",
@@ -1768,7 +1767,7 @@ export function ResultsTable({
         <DialogContent className="max-w-[95vw] w-full md:max-w-[80vw] lg:max-w-[1100px] h-[85vh] p-0 gap-0 bg-background rounded-xl overflow-hidden flex flex-col border-none outline-none shadow-elevation-sm [&>button]:hidden">
           <DialogTitle className="sr-only">Documentos de Notificación</DialogTitle>
           <DialogDescription className="sr-only">Visor de documentos asociados al registro</DialogDescription>
-          
+
           {selectedDocsRow && (
             <>
               {/* Header */}
@@ -1788,66 +1787,66 @@ export function ResultsTable({
               <div className="flex-1 flex overflow-hidden">
                 {/* Left Sidebar - File List */}
                 <div className="w-[300px] border-r border-border bg-card/30 flex flex-col overflow-y-auto p-4 gap-3 shrink-0">
-                {(() => {
-                  const docsData = (selectedDocsRow[docsModalKey] ?? selectedDocsRow.documentos);
-                  return docsData?.archivos?.map((file: any, idx: number) => {
-                    const isActive = idx === selectedDocIndex;
-                    return (
-                      <div 
-                        key={idx} 
-                        className={cn(
-                          "flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors",
-                          isActive ? "bg-[#3F51B5] border-[#3F51B5] text-white shadow-md" : "bg-card border-border hover:border-primary/40 text-foreground"
-                        )}
-                        onClick={() => setSelectedDocIndex(idx)}
-                      >
-                        <div className="flex items-center gap-3 overflow-hidden">
-                          <FileText className={cn("w-4 h-4 shrink-0", isActive ? "text-white" : "text-muted-foreground")} />
-                          <div className="min-w-0">
-                            <p className="truncate m-0" style={{ ...headingBold, fontSize: "0.75rem" }}>{file.nombre}</p>
-                            <p className={cn("m-0 mt-0.5", isActive ? "text-white/80" : "text-muted-foreground")} style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem" }}>{file.tamano}</p>
+                  {(() => {
+                    const docsData = (selectedDocsRow[docsModalKey] ?? selectedDocsRow.documentos);
+                    return docsData?.archivos?.map((file: any, idx: number) => {
+                      const isActive = idx === selectedDocIndex;
+                      return (
+                        <div
+                          key={idx}
+                          className={cn(
+                            "flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors",
+                            isActive ? "bg-[#3F51B5] border-[#3F51B5] text-white shadow-md" : "bg-card border-border hover:border-primary/40 text-foreground"
+                          )}
+                          onClick={() => setSelectedDocIndex(idx)}
+                        >
+                          <div className="flex items-center gap-3 overflow-hidden">
+                            <FileText className={cn("w-4 h-4 shrink-0", isActive ? "text-white" : "text-muted-foreground")} />
+                            <div className="min-w-0">
+                              <p className="truncate m-0" style={{ ...headingBold, fontSize: "0.75rem" }}>{file.nombre}</p>
+                              <p className={cn("m-0 mt-0.5", isActive ? "text-white/80" : "text-muted-foreground")} style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem" }}>{file.tamano}</p>
+                            </div>
                           </div>
+                          {isActive && <CheckCircle2 className="w-4 h-4 text-white shrink-0 ml-2" />}
                         </div>
-                        {isActive && <CheckCircle2 className="w-4 h-4 text-white shrink-0 ml-2" />}
-                      </div>
-                    );
-                  });
-                })()}
+                      );
+                    });
+                  })()}
                 </div>
 
                 {/* Right Area - Viewer */}
                 <div className="flex-1 flex flex-col bg-muted/10 overflow-hidden relative p-4">
-                {(() => {
-                  const docsData = (selectedDocsRow[docsModalKey] ?? selectedDocsRow.documentos);
-                  const activeFile = docsData?.archivos?.[selectedDocIndex];
-                  if (!activeFile) return null;
-                  return (
-                    <>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <FileText className="w-5 h-5 text-foreground" />
-                          <div>
-                            <p className="text-foreground m-0" style={{ ...headingBold, fontSize: "1rem" }}>{activeFile.nombre}</p>
-                            <p className="text-muted-foreground m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem" }}>{activeFile.tamano}</p>
+                  {(() => {
+                    const docsData = (selectedDocsRow[docsModalKey] ?? selectedDocsRow.documentos);
+                    const activeFile = docsData?.archivos?.[selectedDocIndex];
+                    if (!activeFile) return null;
+                    return (
+                      <>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                            <FileText className="w-5 h-5 text-foreground" />
+                            <div>
+                              <p className="text-foreground m-0" style={{ ...headingBold, fontSize: "1rem" }}>{activeFile.nombre}</p>
+                              <p className="text-muted-foreground m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem" }}>{activeFile.tamano}</p>
+                            </div>
+                          </div>
+                          <Button className="bg-[#3F51B5] hover:bg-[#3F51B5]/90 text-white gap-2 h-9 px-4">
+                            <Download className="w-4 h-4" />
+                            Descargar
+                          </Button>
+                        </div>
+
+                        <div className="flex-1 bg-card rounded-xl border border-border shadow-sm flex items-center justify-center relative overflow-hidden">
+                          <div className="text-center">
+                            <FileText className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
+                            <h3 className="text-muted-foreground m-0" style={{ ...headingBold, fontSize: "1.25rem" }}>Vista previa de PDF</h3>
+                            <p className="text-muted-foreground/60 mt-2 m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem" }}>"{activeFile.nombre}"</p>
+                            <p className="text-muted-foreground/40 mt-6 m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem" }}>En producción, aquí se mostraría el PDF usando un visor embebido</p>
                           </div>
                         </div>
-                        <Button className="bg-[#3F51B5] hover:bg-[#3F51B5]/90 text-white gap-2 h-9 px-4">
-                          <Download className="w-4 h-4" />
-                          Descargar
-                        </Button>
-                      </div>
-                      
-                      <div className="flex-1 bg-card rounded-xl border border-border shadow-sm flex items-center justify-center relative overflow-hidden">
-                        <div className="text-center">
-                          <FileText className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-                          <h3 className="text-muted-foreground m-0" style={{ ...headingBold, fontSize: "1.25rem" }}>Vista previa de PDF</h3>
-                          <p className="text-muted-foreground/60 mt-2 m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem" }}>"{activeFile.nombre}"</p>
-                          <p className="text-muted-foreground/40 mt-6 m-0" style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem" }}>En producción, aquí se mostraría el PDF usando un visor embebido</p>
-                        </div>
-                      </div>
-                    </>
-                  );
-                })()}
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
 

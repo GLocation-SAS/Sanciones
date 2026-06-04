@@ -1,6 +1,6 @@
 import React from "react";
-import { Badge } from "./components/ui/badge";
-import { cn } from "./components/ui/utils";
+import { Badge } from "../components/ui/badge";
+import { cn } from "../components/ui/utils";
 
 export interface ColumnDef {
   key: string;

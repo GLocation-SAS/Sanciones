@@ -1,11 +1,12 @@
 "use client";
 
-import { CumplimientoPage as Cumplimiento, PrototypeBanner } from "../../../App";
+import { CumplimientoPage } from "../../../../components/pages/CumplimientoPage";
+import { PrototypeBanner } from "../../../../components/ui/PrototypeBanner";
 
 export default function CumplimientoRoute() {
   return (
     <>
-      <Cumplimiento />
+      <CumplimientoPage />
       <PrototypeBanner />
     </>
   );

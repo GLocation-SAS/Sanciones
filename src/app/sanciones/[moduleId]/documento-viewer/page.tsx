@@ -1,11 +1,12 @@
 "use client";
 
-import { DocumentoViewerPage as Viewer, PrototypeBanner } from "../../../App";
+import { DocumentoViewerPage } from "../../../../components/pages/DocumentoViewerPage";
+import { PrototypeBanner } from "../../../../components/ui/PrototypeBanner";
 
 export default function DocumentoViewerRoute() {
   return (
     <>
-      <Viewer />
+      <DocumentoViewerPage />
       <PrototypeBanner />
     </>
   );

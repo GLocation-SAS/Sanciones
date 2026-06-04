@@ -1,6 +1,7 @@
 "use client";
 
-import { SancionesLayout, PrototypeBanner } from "../../App";
+import { SancionesLayout } from "../../../components/layout/SancionesLayout";
+import { PrototypeBanner } from "../../../components/ui/PrototypeBanner";
 
 export default function SancionesModulePage() {
   return (

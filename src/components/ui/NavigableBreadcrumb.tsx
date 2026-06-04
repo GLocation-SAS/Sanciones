@@ -2,9 +2,9 @@
 
 import React from "react";
 import { Home, ChevronRight } from "lucide-react";
-import { useNavigate } from "../../router-compat";
+import { useNavigate } from "../../app/router-compat";
 import { cn } from "./utils";
-import { bodyXs } from "../../shared";
+import { bodyXs } from "../../app/shared";
 
 /* Componente de Breadcrumb Navegable */
 export function NavigableBreadcrumb({ items }: { items: Array<{ label: string; path?: string }> }) {

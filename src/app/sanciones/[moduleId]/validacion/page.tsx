@@ -1,11 +1,12 @@
 "use client";
 
-import { ValidationPage as Validation, PrototypeBanner } from "../../../App";
+import { ValidationPage } from "../../../components/pages/ValidationPage";
+import { PrototypeBanner } from "../../../components/ui/PrototypeBanner";
 
 export default function ValidacionRoute() {
   return (
     <>
-      <Validation />
+      <ValidationPage />
       <PrototypeBanner />
     </>
   );

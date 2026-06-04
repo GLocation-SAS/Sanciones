@@ -2,15 +2,15 @@
 
 import React, { useState } from "react";
 import { X, ChevronDown, LogOut } from "lucide-react";
-import { useNavigate, useLocation } from "../../router-compat";
-import { headingBold, ModuleConfig } from "../../shared";
-import HeaderFrame from "../../../imports/Frame1321316704";
-import { SancionesModule } from "../sanciones/SancionesModule";
-import { modulo1Config } from "../../modulos/notificacionPliego/notificacionPliego";
-import { modulo2Config } from "../../modulos/descargosPruebas/descargosPruebas";
-import { modulo3Config } from "../../modulos/actosPrueba/actosPrueba";
-import { modulo4Config } from "../../modulos/alegatosConclusion/alegatosConclusion";
-import { modulo5Config } from "../../modulos/hallazgos/hallazgos";
+import { useNavigate, useLocation } from "../../app/router-compat";
+import { headingBold, ModuleConfig } from "../../app/shared";
+import HeaderFrame from "@/imports/Frame1321316704";
+import { SancionesModule } from "../../modulos/sanciones/SancionesModule";
+import { modulo1Config } from "@/modulos/notificacionPliego/notificacionPliego";
+import { modulo2Config } from "@/modulos/descargosPruebas/descargosPruebas";
+import { modulo3Config } from "@/modulos/actosPrueba/actosPrueba";
+import { modulo4Config } from "@/modulos/alegatosConclusion/alegatosConclusion";
+import { modulo5Config } from "@/modulos/hallazgos/hallazgos";
 
 const ALL_CONFIGS: ModuleConfig[] = [modulo1Config, modulo2Config, modulo3Config, modulo4Config, modulo5Config];
 

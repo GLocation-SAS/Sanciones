@@ -2,15 +2,15 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "../../router-compat";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { bodyXs, headingBold } from "../../shared";
-import TicLogo from "../../../imports/Svg";
+import { useNavigate } from "@/app/router-compat";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import Image from "next/image";
+import { bodyXs, headingBold } from "@/app/shared";
+import TicLogo from "@/imports/Svg";
 
 /* LoginPage Component */
-export function LoginPage() {
+export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,7 +56,7 @@ export function LoginPage() {
           </div>
         </div>
         <div className="hidden md:block w-[45%] relative overflow-hidden">
-          <ImageWithFallback src="https://images.unsplash.com/photo-1744868562210-fffb7fa882d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjbG91ZCUyMHRlY2hub2xvZ3klMjBkaWdpdGFsJTIwbmV0d29ya3xlbnwxfHx8fDE3NzMzMjU0MDR8MA&ixlib=rb-4.1.0&q=80&w=1080" alt="Cloud technology" className="w-full h-full object-cover" />
+          <Image src="/fotologin.png" alt="Login" width={500} height={700} />
         </div>
       </div>
     </div>

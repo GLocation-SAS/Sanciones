@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Upload, X, AlertCircle, CheckCircle, Download, Search, FileSpreadsheet } from "lucide-react";
-import { cn } from "../ui/utils";
+import { cn } from "../../components/ui/utils";
 
 interface ExcelUploadProps {
   onFileAccepted: (file: File) => void;
@@ -256,8 +256,8 @@ export function ExcelUpload({ onFileAccepted, onIndividualSearch, onSearchModeCh
               className={cn(
                 "border rounded-lg px-8 py-2.5 transition-colors flex items-center gap-2",
                 searchValue &&
-                searchValue.split("-")[0]?.length === 5 &&
-                searchValue.split("-")[1]?.length === 4
+                  searchValue.split("-")[0]?.length === 5 &&
+                  searchValue.split("-")[1]?.length === 4
                   ? "border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                   : "border-border text-muted-foreground cursor-not-allowed"
               )}
@@ -348,103 +348,103 @@ export function ExcelUpload({ onFileAccepted, onIndividualSearch, onSearchModeCh
                   : "border-border hover:border-primary/40 cursor-pointer bg-background"
             )}
           >
-        <input
-          ref={inputRef}
-          type="file"
-          accept=".xlsx,.xls"
-          onChange={handleInputChange}
-          className="hidden"
-        />
+            <input
+              ref={inputRef}
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={handleInputChange}
+              className="hidden"
+            />
 
-        {file ? (
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
-              <CheckCircle className="w-7 h-7 text-primary" />
-            </div>
-            <div>
-              <p
-                className="text-foreground"
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-base)",
-                  fontWeight: "var(--font-weight-bold)",
-                }}
-              >
-                {file.name}
-              </p>
-              <p
-                className="text-muted-foreground mt-1"
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-xs)",
-                  fontWeight: "var(--font-weight-normal)",
-                }}
-              >
-                {(file.size / 1024).toFixed(1)} KB
-              </p>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRemove();
-              }}
-              className="flex items-center gap-1.5 text-destructive hover:text-destructive/80 transition-colors"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-xs)",
-                fontWeight: "var(--font-weight-medium)",
-              }}
-            >
-              <X className="w-4 h-4" />
-              Eliminar archivo
-            </button>
+            {file ? (
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <CheckCircle className="w-7 h-7 text-primary" />
+                </div>
+                <div>
+                  <p
+                    className="text-foreground"
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "var(--text-base)",
+                      fontWeight: "var(--font-weight-bold)",
+                    }}
+                  >
+                    {file.name}
+                  </p>
+                  <p
+                    className="text-muted-foreground mt-1"
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "var(--text-xs)",
+                      fontWeight: "var(--font-weight-normal)",
+                    }}
+                  >
+                    {(file.size / 1024).toFixed(1)} KB
+                  </p>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemove();
+                  }}
+                  className="flex items-center gap-1.5 text-destructive hover:text-destructive/80 transition-colors"
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "var(--text-xs)",
+                    fontWeight: "var(--font-weight-medium)",
+                  }}
+                >
+                  <X className="w-4 h-4" />
+                  Eliminar archivo
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-5">
+                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Upload className="w-7 h-7 text-primary" />
+                </div>
+
+                <div className="space-y-1">
+                  <p
+                    className="text-foreground"
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "var(--text-base)",
+                      fontWeight: "var(--font-weight-medium)",
+                    }}
+                  >
+                    Selecciona un archivo o arrástralo aquí
+                  </p>
+                  <p
+                    className="text-muted-foreground"
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "var(--text-xs)",
+                      fontWeight: "var(--font-weight-normal)",
+                    }}
+                  >
+                    Cada archivo debe estar en formato .xlsx
+                  </p>
+                </div>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    inputRef.current?.click();
+                  }}
+                  className="border border-primary text-primary bg-background hover:bg-primary/5 rounded-lg px-6 py-2.5 transition-colors"
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "var(--text-xs)",
+                    fontWeight: "var(--font-weight-medium)",
+                  }}
+                >
+                  Seleccionar Archivo
+                </button>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="flex flex-col items-center gap-5">
-            <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Upload className="w-7 h-7 text-primary" />
-            </div>
-
-            <div className="space-y-1">
-              <p
-                className="text-foreground"
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-base)",
-                  fontWeight: "var(--font-weight-medium)",
-                }}
-              >
-                Selecciona un archivo o arrástralo aquí
-              </p>
-              <p
-                className="text-muted-foreground"
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--text-xs)",
-                  fontWeight: "var(--font-weight-normal)",
-                }}
-              >
-                Cada archivo debe estar en formato .xlsx
-              </p>
-            </div>
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                inputRef.current?.click();
-              }}
-              className="border border-primary text-primary bg-background hover:bg-primary/5 rounded-lg px-6 py-2.5 transition-colors"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--text-xs)",
-                fontWeight: "var(--font-weight-medium)",
-              }}
-            >
-              Seleccionar Archivo
-            </button>
-          </div>
-        )}
-      </div>
 
           {error && (
             <div

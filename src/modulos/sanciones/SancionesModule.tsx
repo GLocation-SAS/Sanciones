@@ -3,7 +3,7 @@ import { Home, ChevronRight, Check } from "lucide-react";
 import { ExcelUpload } from "./ExcelUpload";
 import { Processing } from "./Processing";
 import { ResultsTable } from "./ResultsTable";
-import { cn } from "../ui/utils";
+import { cn } from "../../components/ui/utils";
 import type { ModuleConfig } from "./types";
 
 type Step = "upload" | "processing" | "results";

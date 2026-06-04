@@ -1,4 +1,5 @@
 import svgPaths from "./svg-n58bn78zpj";
+import Image from "next/image";
 
 function Frame() {
   return (
@@ -280,68 +281,6 @@ function Group10() {
     </div>
   );
 }
-
-function Group() {
-  return (
-    <div className="absolute inset-[6.25%_76.69%_4.17%_3.66%]">
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 22.6059 44.7923">
-        <g id="Group 48096752">
-          <g id="Group">
-            <path d={svgPaths.p1285f100} fill="var(--fill-0, #504F4E)" id="Vector" />
-            <path d={svgPaths.p37ed5a80} fill="var(--fill-0, #504F4E)" id="Vector_2" />
-            <path d={svgPaths.p3bac1a80} fill="var(--fill-0, #504F4E)" id="Vector_3" />
-          </g>
-          <path d={svgPaths.p2bb79480} fill="var(--fill-0, #504F4E)" id="Vector_4" />
-          <path d={svgPaths.p3795f780} fill="var(--fill-0, #504F4E)" id="Vector_5" />
-          <path d={svgPaths.p356fdf00} fill="var(--fill-0, #504F4E)" id="Vector_6" />
-          <path d={svgPaths.p3afefe00} fill="var(--fill-0, #504F4E)" id="Vector_7" />
-          <path d={svgPaths.p2de5f700} fill="var(--fill-0, #504F4E)" id="Vector_8" />
-          <path d={svgPaths.p33b7b080} fill="var(--fill-0, #504F4E)" id="Vector_9" />
-          <path d={svgPaths.p13ac8400} fill="var(--fill-0, #504F4E)" id="Vector_10" />
-          <path d={svgPaths.p2a3b00} fill="var(--fill-0, #504F4E)" id="Vector_11" />
-          <path d={svgPaths.p305bfd60} fill="var(--fill-0, #504F4E)" id="Vector_12" />
-          <path d={svgPaths.p2e32b900} fill="var(--fill-0, #504F4E)" id="Vector_13" />
-          <path d={svgPaths.p23e000} fill="var(--fill-0, #504F4E)" id="Vector_14" />
-          <path d={svgPaths.p19edbd00} fill="var(--fill-0, #504F4E)" id="Vector_15" />
-          <path d={svgPaths.p19e8a510} fill="var(--fill-0, #FDC603)" id="Vector_16" />
-          <path d={svgPaths.p3be19000} fill="var(--fill-0, #233A7A)" id="Vector_17" />
-          <path d={svgPaths.pea2dd00} fill="var(--fill-0, #D70E27)" id="Vector_18" />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function Group1() {
-  return (
-    <div className="absolute contents inset-[0_73.49%_0_0]">
-      <div className="absolute bg-[rgba(255,255,255,0)] inset-[0_73.49%_0_0]" />
-      <Group />
-    </div>
-  );
-}
-
-function TicAnia() {
-  return (
-    <div className="absolute h-[50px] left-[33px] top-[32px] w-[115px]" data-name="TIC + ANIA">
-      <Group1 />
-      <div className="absolute inset-[18.75%_63.5%_18.75%_36.5%]">
-        <div className="absolute inset-[0_-0.5px]">
-          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 1 31.25">
-            <path d="M0.5 0V31.25" id="Vector 216" stroke="var(--stroke-0, #BDBDBD)" />
-          </svg>
-        </div>
-      </div>
-      <div className="absolute flex flex-col font-['Montserrat:Bold',sans-serif] font-bold inset-[26%_-36.52%_20%_46.09%] justify-center leading-[0] text-[#3063f6] text-[0px]">
-        <p className="text-[22px] whitespace-pre-wrap">
-          <span className="leading-[normal] text-[#241198]">A</span>
-          <span className="leading-[normal] text-[#1664ff]">NIA</span>
-        </p>
-      </div>
-    </div>
-  );
-}
-
 function Frame3() {
   return (
     <div className="absolute content-stretch flex gap-[31px] items-center left-[calc(4.17%+58px)] top-[160px]">
@@ -619,7 +558,7 @@ export default function RevisionDeArchivos() {
       <div className="-translate-y-1/2 absolute flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] left-[calc(41.67%+55px)] not-italic text-[24px] text-white top-[650.5px] whitespace-nowrap">
         <p className="leading-[normal]">Fecha carga</p>
       </div>
-      <TicAnia />
+      <Image src="/images/TIC_ANIA.svg" alt="TIC ANIA" width={100} height={100} />
       <Frame3 />
       <div className="-translate-y-1/2 absolute flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] left-[calc(4.17%+46px)] not-italic text-[#3f51b5] text-[40px] top-[321px] w-[1024px]">
         <p className="leading-[normal] whitespace-pre-wrap">Revisión archivos</p>

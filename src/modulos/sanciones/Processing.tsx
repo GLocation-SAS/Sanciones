@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Loader2, CheckCircle } from "lucide-react";
-import { Progress } from "../ui/progress";
-import { cn } from "../ui/utils";
+import { Progress } from "../../components/ui/progress";
+import { cn } from "../../components/ui/utils";
 import type { ProcessingStep } from "./types";
 
 interface ProcessingProps {

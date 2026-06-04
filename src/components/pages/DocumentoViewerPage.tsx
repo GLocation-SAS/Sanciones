@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight as ChevronRightIcon, Download, FileText, Image as ImageIcon, Paperclip } from "lucide-react";
-import { useNavigate, useLocation } from "../../router-compat";
+import { useNavigate, useLocation } from "../../app/router-compat";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { NavigableBreadcrumb } from "../ui/NavigableBreadcrumb";
 import { cn } from "../ui/utils";
-import { bodyXs, bodyBase, headingBold } from "../../shared";
+import { bodyXs, bodyBase, headingBold } from "../../app/shared";
 
 export function DocumentoViewerPage() {
   const navigate = useNavigate();
