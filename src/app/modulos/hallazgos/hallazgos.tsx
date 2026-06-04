@@ -1,8 +1,8 @@
 import React from "react";
 import { ShieldCheck, Database, Search, Download, Image as ImageIcon, Brain, CheckCircle2, XOctagon, AlertCircle, AlertTriangle, Folder, XCircle, Archive, Gavel, FileText } from "lucide-react";
-import { Badge } from "../components/ui/badge";
-import { cn } from "../components/ui/utils";
-import { ModuleConfig, bodyXs, StatusBadge } from "../shared";
+import { Badge } from "../../components/ui/badge";
+import { cn } from "../../components/ui/utils";
+import { ModuleConfig, bodyXs, StatusBadge } from "../../shared";
 
 export const modulo5Config: ModuleConfig = {
   id: "hallazgos",

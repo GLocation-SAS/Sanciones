@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Loader2, CheckCircle } from "lucide-react";
 import { Progress } from "../ui/progress";
 import { cn } from "../ui/utils";
@@ -27,29 +27,59 @@ const headingBold = {
 export function Processing({ steps, onComplete }: ProcessingProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const onCompleteRef = useRef(onComplete);
 
+  // Mantener la referencia actualizada sin re-ejecutar efectos
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  // Efecto principal de progreso — solo depende de steps.length para no reiniciarse
   useEffect(() => {
     const totalSteps = steps.length;
+    let currentStepLocal = 0;
+    let progressLocal = 0;
+    let done = false;
 
     const interval = setInterval(() => {
-      setProgress((prev) => {
-        const target = ((currentStep + 1) / totalSteps) * 100;
-        const next = prev + 1.5;
-        if (next >= target) {
-          if (currentStep < totalSteps - 1) {
-            setCurrentStep((s) => s + 1);
-          } else if (next >= 100) {
-            clearInterval(interval);
-            setTimeout(onComplete, 600);
-            return 100;
-          }
+      if (done) return;
+
+      progressLocal += 1.5;
+      const target = ((currentStepLocal + 1) / totalSteps) * 100;
+
+      if (progressLocal >= target) {
+        if (currentStepLocal < totalSteps - 1) {
+          currentStepLocal++;
+          setCurrentStep(currentStepLocal);
+        } else if (progressLocal >= 100) {
+          progressLocal = 100;
+          done = true;
+          clearInterval(interval);
+          setProgress(100);
+          setCompleted(true);
+          return;
         }
-        return Math.min(next, 100);
-      });
+      }
+
+      setProgress(Math.min(progressLocal, 100));
     }, 50);
 
-    return () => clearInterval(interval);
-  }, [currentStep, steps.length, onComplete]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [steps.length]);
+
+  // Efecto separado para disparar onComplete cuando completed = true
+  useEffect(() => {
+    if (!completed) return;
+
+    const timeout = setTimeout(() => {
+      onCompleteRef.current();
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  }, [completed]);
 
   return (
     <div className="flex flex-col items-center justify-center py-20 px-6">

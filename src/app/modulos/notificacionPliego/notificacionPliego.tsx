@@ -1,8 +1,8 @@
 import React from "react";
 import { FileCheck, Database, Download, FileText, Brain, CheckCircle2, XOctagon, Clock, HelpCircle, Folder, ChevronRight } from "lucide-react";
-import { Badge } from "../components/ui/badge";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../components/ui/tooltip";
-import { ModuleConfig, bodyXs, StatusBadge } from "../shared";
+import { Badge } from "../../components/ui/badge";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../../components/ui/tooltip";
+import { ModuleConfig, bodyXs, StatusBadge } from "../../shared";
 
 export const modulo1Config: ModuleConfig = {
   id: "notificacion-pliego",

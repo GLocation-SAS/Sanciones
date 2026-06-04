@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useLocation, createBrowserRouter, RouterProvider, redirect } from "react-router";
+import { useNavigate, useLocation } from "./router-compat";
 import { Eye, EyeOff, Home, ChevronRight, Check, Upload, X, AlertCircle, CheckCircle, Loader2, FileSpreadsheet, Download, FileText, ChevronsLeft, ChevronLeft, ChevronRight as ChevronRightIcon, ChevronsRight, Brain, Search, Trash2, Filter, XCircle, LogOut, Folder, Paperclip, AlertTriangle, HelpCircle, ArrowUpDown, ChevronDown, ChevronUp, FileQuestion, Image as ImageIcon, CheckCircle2, XOctagon, Clock, Database, FileCheck, FileSearch, Gavel, ClipboardCheck, ShieldCheck, Mail, Building2, User } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
@@ -16,12 +18,12 @@ import TicLogo from "../imports/Svg";
 import HeaderFrame from "../imports/Frame1321316704";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { ColumnDef, ProcessingStep, ModuleConfig, bodyXs, bodyBase, headingBold, headingBoldItalic, StatusBadge } from "./shared";
-import { modulo1Config } from "./modulos/notificacioPliego";
-import { modulo2Config } from "./modulos/descargosPruebas";
+import { modulo1Config } from "./modulos/notificacionPliego/notificacionPliego";
+import { modulo2Config } from "./modulos/descargosPruebas/descargosPruebas";
 import { SancionesModule } from "./components/sanciones/SancionesModule";
-import { modulo3Config } from "./modulos/actosPrueba";
-import { modulo4Config } from "./modulos/alegatosConclusion";
-import { modulo5Config } from "./modulos/hallazgos";
+import { modulo3Config } from "./modulos/actosPrueba/actosPrueba";
+import { modulo4Config } from "./modulos/alegatosConclusion/alegatosConclusion";
+import { modulo5Config } from "./modulos/hallazgos/hallazgos";
 
 /* ConfirmDialog */
 function ConfirmDialog({
@@ -3785,7 +3787,7 @@ function ValidationModal({
 }
 
 /* SancionesLayout */
-function SancionesLayout() {
+export function SancionesLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const currentConfig = ALL_CONFIGS.find((c) => location.pathname.includes(c.id)) || modulo1Config;
@@ -3830,7 +3832,7 @@ function SancionesLayout() {
 }
 
 /* LoginPage Component */
-function LoginPage() {
+export function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -3932,7 +3934,7 @@ function NavigableBreadcrumb({ items }: { items: Array<{ label: string; path?: s
 }
 
 /* Página completa de Documentos */
-function DocumentosPage() {
+export function DocumentosPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { archivos, pliego, titulo } = location.state || { archivos: [], pliego: "", titulo: "Documentos" };
@@ -4031,7 +4033,7 @@ function DocumentosPage() {
 }
 
 /* Página de visualización de documento individual */
-function DocumentoViewerPage() {
+export function DocumentoViewerPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { archivos, pliego, titulo, selectedIndex } = location.state || {
@@ -4269,7 +4271,7 @@ function DocumentoViewerPage() {
 }
 
 /* Página completa de Validación */
-function ValidationPage() {
+export function ValidationPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { acto, estadoRUES, pliego } = location.state || { acto: "", estadoRUES: "Activa", pliego: "" };
@@ -4438,7 +4440,7 @@ function ValidationPage() {
 }
 
 /* Página completa de Galería de Imágenes SER */
-function ImageGalleryPage() {
+export function ImageGalleryPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { cargo, periodo, hallazgo } = location.state || { cargo: "", periodo: "", hallazgo: "" };
@@ -4520,7 +4522,7 @@ function ImageGalleryPage() {
 }
 
 /* Página completa de Cumplimiento */
-function CumplimientoPage() {
+export function CumplimientoPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { acto, operador, estadoRUES } = location.state || { acto: "", operador: "", estadoRUES: "Activa" };
@@ -4588,39 +4590,12 @@ function CumplimientoPage() {
   );
 }
 
-/* Router */
-const router = createBrowserRouter([
-  { path: "/", Component: LoginPage },
-  {
-    path: "/sanciones/:moduleId",
-    Component: SancionesLayout,
-  },
-  {
-    path: "/sanciones/:moduleId/documentos",
-    Component: DocumentosPage
-  },
-  {
-    path: "/sanciones/:moduleId/documento-viewer",
-    Component: DocumentoViewerPage
-  },
-  {
-    path: "/sanciones/:moduleId/validacion",
-    Component: ValidationPage
-  },
-  {
-    path: "/sanciones/:moduleId/imagenes-ser",
-    Component: ImageGalleryPage
-  },
-  {
-    path: "/sanciones/:moduleId/cumplimiento",
-    Component: CumplimientoPage
-  },
-  { path: "*", loader: () => redirect("/") },
-]);
-
 /* Prototype banner */
-function PrototypeBanner() {
-  const [visible, setVisible] = useState(() => localStorage.getItem("prototype-banner-closed") !== "1");
+export function PrototypeBanner() {
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("prototype-banner-closed") !== "1";
+  });
 
   if (!visible) return null;
 
@@ -4647,16 +4622,6 @@ function PrototypeBanner() {
         Este sitio es un prototipo visual creado como maqueta de navegación y diseño. No cuenta con datos reales ni funcionalidades integradas. Su propósito es simular la experiencia general del sitio antes de su desarrollo final.
       </p>
     </div>
-  );
-}
-
-/* App */
-export default function App() {
-  return (
-    <>
-      <RouterProvider router={router} />
-      <PrototypeBanner />
-    </>
   );
 }
 

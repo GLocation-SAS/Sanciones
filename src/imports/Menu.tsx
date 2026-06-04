@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useState } from "react";
 import { Scale } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "../app/router-compat";
 import svgPaths from "./svg-vwgelfauz4";
 
 // --- Helper Components ---

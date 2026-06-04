@@ -1,9 +1,8 @@
 import React from "react";
 import { Gavel, Search, Download, FileText, Database, Building2, Brain, CheckCircle2, XOctagon, Clock, Mail, User, Paperclip, Plus, FileCheck, Ban, UserX, Eye, Folder, AlertTriangle, XCircle, ChevronRight } from "lucide-react";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "../components/ui/tooltip";
-import { Badge } from "../components/ui/badge";
-import { cn } from "../components/ui/utils";
-import { ModuleConfig, bodyXs, StatusBadge } from "../shared";
+import { Badge } from "../../components/ui/badge";
+import { cn } from "../../components/ui/utils";
+import { ModuleConfig, bodyXs, StatusBadge } from "../../shared";
 
 export const modulo3Config: ModuleConfig = {
   id: "actos-prueba",

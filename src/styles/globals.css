@@ -1,0 +1,4 @@
+/* Global CSS entry point for Next.js */
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
