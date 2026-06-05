@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { ColumnTab } from "../../app/shared";
 
 export interface ColumnDef {
   key: string;
@@ -24,4 +25,5 @@ export interface ModuleConfig {
   processingSteps: ProcessingStep[];
   resultColumns: ColumnDef[];
   mockData: Record<string, any>[];
+  columnTabs?: ColumnTab[];
 }

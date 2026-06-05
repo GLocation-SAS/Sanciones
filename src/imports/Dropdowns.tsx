@@ -1,11 +1,12 @@
-import svgPaths from "./svg-jyc3reoume";
+// SVG path para el ícono calendar-check (inline, reemplaza el módulo svg-jyc3reoume que no está en el repo)
+const calendarCheckPath = "M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4";
 
 function CalendarCheck() {
   return (
     <div className="relative shrink-0 size-[24px]" data-name="calendar-check">
       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
         <g id="calendar-check">
-          <path d={svgPaths.p13d206a0} id="Icon" stroke="var(--stroke-0, #BDBDBD)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+          <path d={calendarCheckPath} id="Icon" stroke="var(--stroke-0, #BDBDBD)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
         </g>
       </svg>
     </div>

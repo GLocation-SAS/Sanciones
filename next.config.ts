@@ -1,11 +1,28 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* Habilitar Turbopack para desarrollo */
-  // turbopack: true, // descomenta si quieres usar Turbopack (experimental)
+  /* ── GitHub Pages: exportación estática ── */
+  output: "export",
 
-  /* Imágenes remotas (unsplash usadas en LoginPage) */
+  /**
+   * basePath debe coincidir con el nombre del repositorio en GitHub.
+   * Si el repo se llama "Sanciones", la URL será:
+   *   https://GLocation-SAS.github.io/Sanciones
+   */
+  basePath: "/Sanciones",
+
+  /**
+   * trailingSlash evita problemas de rutas en servidores estáticos.
+   * /login → /login/index.html  (GitHub Pages lo sirve correctamente)
+   */
+  trailingSlash: true,
+
+  /* Imágenes: el optimizador de Next.js requiere servidor Node.
+   * En modo export se debe usar unoptimized: true.
+   * Las imágenes de unsplash seguirán funcionando con <img> nativo o
+   * añadiendo loader="custom" si se prefiere. */
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -14,11 +31,10 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  /* Desactivar strict mode en desarrollo si da doble render */
+  /* Modo estricto de React */
   reactStrictMode: true,
 
   /* 
-   * Permitir que Next.js transpile los paquetes que lo necesiten.
    * Tailwind CSS v4 funciona con PostCSS — no se necesita @tailwindcss/vite.
    */
 };

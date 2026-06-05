@@ -6,10 +6,10 @@ import { ModuleConfig, bodyXs, StatusBadge } from "../../app/shared";
 
 export const modulo3Config: ModuleConfig = {
   id: "actos-prueba",
-  title: "Verificacion de comunicacion del acto de pruebas",
+  title: "Verificación de comunicación del acto de pruebas",
   shortTitle: "Actos de Prueba",
   epicLabel: "Epica 03",
-  description: "Analisis de las resoluciones (actos de prueba) que evaluan las pruebas presentadas por los operadores en la etapa anterior. Incluye validacion automatica del estado RUES, verificacion de cumplimiento por cargo y periodo segun datos del SER, y generacion de recomendaciones de sancion o archivo.",
+  description: "Analisis de las resoluciones (actos de prueba) que evaluan las pruebas presentadas por los operadores en la etapa anterior. Incluye validacion automatica del estado RUES, verificación de cumplimiento por cargo y periodo segun datos del SER, y generacion de recomendaciones de sancion o archivo.",
   excelFields: ["Numero de acto de prueba", "Año", "Mes", "Día"],
   navIcon: <Gavel className="w-4 h-4" />,
   processingSteps: [

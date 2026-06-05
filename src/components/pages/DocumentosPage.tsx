@@ -10,7 +10,7 @@ import { bodyXs, headingBold } from "../../app/shared";
 export function DocumentosPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { archivos, pliego, titulo } = location.state || { archivos: [], pliego: "", titulo: "Documentos" };
+  const { archivos, pliego, titulo } = (location.state as { archivos: any[]; pliego: string; titulo: string }) || { archivos: [], pliego: "", titulo: "Documentos" };
 
   const getFileIcon = (tipo: string) => {
     if (tipo === "pdf") return <FileText className="w-4 h-4" />;

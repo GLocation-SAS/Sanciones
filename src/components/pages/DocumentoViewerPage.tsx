@@ -12,7 +12,12 @@ import { bodyXs, bodyBase, headingBold } from "../../app/shared";
 export function DocumentoViewerPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { archivos, pliego, titulo, selectedIndex } = location.state || {
+  const { archivos, pliego, titulo, selectedIndex } = (location.state as {
+    archivos: any[];
+    pliego: string;
+    titulo: string;
+    selectedIndex: number;
+  }) || {
     archivos: [], pliego: "", titulo: "Documentos", selectedIndex: 0
   };
   const [currentIndex, setCurrentIndex] = useState(selectedIndex || 0);

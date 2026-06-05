@@ -6,8 +6,8 @@ import { ModuleConfig, bodyXs, StatusBadge } from "../../app/shared";
 
 export const notificacionPliego: ModuleConfig = {
   id: "notificacion-pliego",
-  title: "Verificacion de notificacion del pliego",
-  shortTitle: "Notificacion del Pliego",
+  title: "Verificación de notificación del pliego",
+  shortTitle: "Notificación del Pliego",
   epicLabel: "Epica 01",
   description: "Consulta, validación y trazabilidad de la notificación de pliegos de cargos dentro del proceso sancionatorio, permitiendo identificar el operador, expediente, actuación administrativa, mecanismo de notificación, medio de entrega, fechas relevantes, estado y documentos asociados.",
   excelFields: ["Pliego", "Año"],
@@ -16,7 +16,7 @@ export const notificacionPliego: ModuleConfig = {
     { label: "Consultando API Integratic", icon: <Database className="w-4 h-4" /> },
     { label: "Descargando documentos anexos", icon: <Download className="w-4 h-4" /> },
     { label: "Almacenando en Cloud Storage", icon: <FileText className="w-4 h-4" /> },
-    { label: "Analizando notificacion con IA", icon: <Brain className="w-4 h-4" /> },
+    { label: "Analizando notificación con IA", icon: <Brain className="w-4 h-4" /> },
   ],
   columnTabs: [
 

@@ -12,7 +12,7 @@ import { bodyXs, bodyBase, headingBold } from "../../app/shared";
 export function ImageGalleryPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { cargo, periodo, hallazgo } = location.state || { cargo: "", periodo: "", hallazgo: "" };
+  const { cargo, periodo, hallazgo } = (location.state as { cargo: string; periodo: string; hallazgo: string }) || { cargo: "", periodo: "", hallazgo: "" };
   const [currentIndex, setCurrentIndex] = useState(0);
   const totalImages = 3;
 

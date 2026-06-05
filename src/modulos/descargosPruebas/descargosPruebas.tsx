@@ -5,7 +5,7 @@ import { ModuleConfig, bodyXs, StatusBadge } from "../../app/shared";
 
 export const descargosPruebas: ModuleConfig = {
   id: "descargos-pruebas",
-  title: "Verificacion de descargos y solicitud de pruebas",
+  title: "Verificación de descargos y solicitud de pruebas",
   shortTitle: "Descargos y Solicitud de Pruebas",
   epicLabel: "Epica 02",
   description: "Consulta, validación y trazabilidad del ejercicio del derecho de defensa: identificación del operador y expediente, cálculo automático del término de descargos a partir de la notificación, calidad de quien presenta, resumen argumentativo estructurado, actividad probatoria (pruebas anexadas, solicitadas, tipo, origen y estado) y documentos soporte.",

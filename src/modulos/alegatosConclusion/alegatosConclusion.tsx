@@ -5,8 +5,8 @@ import { ModuleConfig, bodyXs, StatusBadge } from "../../app/shared";
 
 export const modulo4Config: ModuleConfig = {
   id: "alegatos-conclusion",
-  title: "Verificacion de alegatos de conclusion",
-  shortTitle: "Alegatos de Conclusion",
+  title: "Verificación de alegatos de conclusión",
+  shortTitle: "Alegatos de Conclusión",
   epicLabel: "Epica 04",
   description: "Consulta y trazabilidad acumulada del proceso sancionatorio hasta la etapa de alegatos de conclusión. Incluye el historial de notificación del pliego, descargos y solicitud de pruebas, comunicación del acto de pruebas, y los alegatos de conclusión presentados por los operadores.",
   excelFields: ["Acto de prueba", "Año"],
