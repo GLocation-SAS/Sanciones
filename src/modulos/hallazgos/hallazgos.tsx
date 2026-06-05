@@ -7,7 +7,7 @@ export const modulo5Config: ModuleConfig = {
   title: "Verificación de Cumplimiento",
   shortTitle: "Cumplimiento",
   epicLabel: "Epica 05",
-  description: "Determinacion del cumplimiento de obligaciones de pago de contraprestaciones consultando los sistemas SER e INTEGRATIC para generar el informe final que soporte la toma de decisiones. Consolida toda la informacion de las etapas anteriores por cargo y periodo para recomendar archivo o sancion.",
+  description: "Determinación del cumplimiento de obligaciones de pago de contraprestaciones consultando los sistemas SER e INTEGRATIC para generar el informe final que soporte la toma de decisiones. Consolida toda la información de las etapas anteriores por cargo y periodo para recomendar archivo o sanción.",
   excelFields: ["Numeros BDI", "Año"],
   navIcon: <ShieldCheck className="w-4 h-4" />,
   processingSteps: [

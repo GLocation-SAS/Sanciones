@@ -6,6 +6,7 @@ import { useNavigate } from "@/app/router-compat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import { img } from "@/lib/basePath";
 import { bodyXs, headingBold } from "@/app/shared";
 
 /* LoginPage Component */
@@ -21,7 +22,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-3 sm:p-4" style={{ fontFamily: "var(--font-body)" }}>
       <div className="w-full max-w-[900px] bg-card rounded-lg overflow-hidden flex flex-col md:flex-row shadow-elevation-sm">
         <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8 py-8 sm:py-10 md:px-12 bg-background">
-          <div className="flex flex-col items-center mb-6"><div className="w-[65px] h-[118px] mb-2"><Image src="/logo.png" alt="MinTic" width={65} height={118} /></div></div>
+          <div className="flex flex-col items-center mb-6"><div className="w-[65px] h-[118px] mb-2"><Image src={img("/logo.png")} alt="MinTic" width={65} height={118} /></div></div>
           <h2 className="mb-1 text-center text-secondary" style={{ ...headingBold, fontSize: "var(--text-2xl)" }}>Bienvenido</h2>
           <p className="text-center mb-8 text-muted-foreground" style={bodyXs}>a nuestro sistema de analisis de procesos sancionatorios</p>
           <div className="w-full max-w-[320px] mb-6">
@@ -54,8 +55,8 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
-        <div className="hidden md:block w-[45%] relative overflow-hidden">
-          <Image src="/fotologin.png" alt="Login" width={500} height={700} />
+        <div className="hidden md:block w-[45%] relative overflow-hidden self-stretch">
+          <Image src={img("/fotologin.png")} alt="Login" fill style={{ objectFit: "cover", objectPosition: "center" }} />
         </div>
       </div>
     </div>

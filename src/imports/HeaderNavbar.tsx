@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { img } from "@/lib/basePath";
 import Menu from "./Menu";
 
 function Group5() {
@@ -75,7 +76,7 @@ function Group7() {
 export default function Frame() {
   return (
     <div className="content-stretch flex items-center justify-between px-[40px] relative size-full">
-      <Image src="/ania.png" alt="TIC ANIA" width={115} height={60} />
+      <Image src={img("/ania.png")} alt="TIC ANIA" width={115} height={60} />
       <div className="flex items-center gap-6">
         <Menu />
         <Group7 />
